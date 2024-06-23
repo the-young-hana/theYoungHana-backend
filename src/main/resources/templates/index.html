@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THEYOUNGHANA</title>
+    <meta name="description" content="사회에 첫 발을 디딘 MZ세대 대학생들을 위한 맞춤형 금융 서비스">
+    <meta name="keywords" content="금융, 대학생, MZ세대, 금융 서비스">
+    <meta name="author" content="THEYOUNGHANA">
+    <meta property="og:title" content="THEYOUNGHANA - 대학생을 위한 금융 생활 동반자">
+    <meta property="og:description" content="사회에 첫 발을 디딘 MZ세대 대학생들을 위한 맞춤형 금융 서비스">
+    <meta property="og:image" content="https://repository-images.githubusercontent.com/817622930/7e96d62f-3fbc-4c90-abd1-eba331f61291">
+    <meta property="og:url" content="https://theyounghana.kro.kr">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="THEYOUNGHANA - 대학생을 위한 금융 생활 동반자">
+    <meta name="twitter:description" content="사회에 첫 발을 디딘 MZ세대 대학생들을 위한 맞춤형 금융 서비스">
+    <meta name="twitter:image" content="https://repository-images.githubusercontent.com/817622930/7e96d62f-3fbc-4c90-abd1-eba331f61291">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --hana-green: #008C8C;
+            --hana-red: #D70037;
+            --hana-gold: #B27A3E;
+            --hana-silver: #B5B5B5;
+            --hana-black: #000000;
+            --hana-white: #FFFFFF;
+            --hana-pink: #E40054;
+        }
+        .bg-hana-green { background-color: var(--hana-green); }
+        .bg-hana-red { background-color: var(--hana-red); }
+        .bg-hana-gold { background-color: var(--hana-gold); }
+        .bg-hana-silver { background-color: var(--hana-silver); }
+        .bg-hana-black { background-color: var(--hana-black); }
+        .bg-hana-white { background-color: var(--hana-white); }
+        .bg-hana-pink { background-color: var(--hana-pink); }
+        .text-hana-green { color: var(--hana-green); }
+        .text-hana-red { color: var(--hana-red); }
+        .text-hana-gold { color: var(--hana-gold); }
+        .text-hana-silver { color: var(--hana-silver); }
+        .text-hana-black { color: var(--hana-black); }
+        .text-hana-white { color: var(--hana-white); }
+        .text-hana-pink { color: var(--hana-pink); }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        main {
+            flex: 1;
+        }
+        body.dark-mode {
+            background-color: #1a1a1a;
+            color: #e4e4e4;
+        }
+        body.dark-mode .bg-white {
+            background-color: #333;
+        }
+        body.dark-mode .text-gray-800 {
+            color: #e4e4e4;
+        }
+        .slider {
+            position: relative;
+            overflow: hidden;
+        }
+        .slides {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+        .slide {
+            min-width: 100%;
+            box-sizing: border-box;
+        }
+        .prev-slide, .next-slide {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+        .prev-slide {
+            left: 10px;
+        }
+        .next-slide {
+            right: 10px;
+        }
+        #dark-mode-toggle {
+            z-index: 1;
+            width: 40px;
+            height: 40px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+<main>
+    <button id="dark-mode-toggle" class="always-front fixed bottom-4 right-4 p-2 bg-gray-800 text-white rounded-full focus:outline-none">
+        <i class="fas fa-moon"></i>
+    </button>
+    <section class="py-8 md:py-16">
+        <div class="container mx-auto text-center px-4">
+            <div class="flex justify-center mb-4 md:mb-8">
+                <img src="https://repository-images.githubusercontent.com/817622930/7e96d62f-3fbc-4c90-abd1-eba331f61291" alt="더영하나" class="mx-auto">
+            </div>
+            <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold mb-2 md:mb-4">대학생을 위한 금융 생활 동반자</h2>
+            <p class="text-base md:text-lg lg:text-xl">사회에 첫 발을 디딘 MZ세대 대학생들을 위한 맞춤형 금융 서비스</p>
+        </div>
+    </section>
+    <section class="py-8 md:py-16 bg-white shadow mb-4 md:mb-8 rounded-lg m-5">
+        <div class="container mx-auto px-4">
+            <h3 class="text-xl md:text-2xl font-bold mb-4">프로젝트 기획서</h3>
+            <div class="slider rounded-lg">
+                <div class="slides">
+                    <img src="plan/slide1.png" alt="프로젝트 기획서 1" class="slide">
+                    <img src="plan/slide2.png" alt="프로젝트 기획서 2" class="slide">
+                    <img src="plan/slide3.png" alt="프로젝트 기획서 3" class="slide">
+                    <img src="plan/slide4.png" alt="프로젝트 기획서 4" class="slide">
+                    <img src="plan/slide5.png" alt="프로젝트 기획서 5" class="slide">
+                    <img src="plan/slide6.png" alt="프로젝트 기획서 6" class="slide">
+                    <img src="plan/slide7.png" alt="프로젝트 기획서 7" class="slide">
+                    <img src="plan/slide8.png" alt="프로젝트 기획서 8" class="slide">
+                    <img src="plan/slide9.png" alt="프로젝트 기획서 9" class="slide">
+                    <img src="plan/slide10.png" alt="프로젝트 기획서 10" class="slide">
+                    <img src="plan/slide11.png" alt="프로젝트 기획서 11" class="slide">
+                    <img src="plan/slide12.png" alt="프로젝트 기획서 12" class="slide">
+                </div>
+                <button class="prev-slide">&lt;</button>
+                <button class="next-slide">&gt;</button>
+            </div>
+        </div>
+    </section>
+    <section class="py-8 md:py-16 bg-white shadow mb-4 md:mb-8 rounded-lg m-5">
+        <div class="container mx-auto px-4">
+            <h3 class="text-xl md:text-2xl font-bold mb-4">화면 정의서</h3>
+            <div class="slider rounded-lg">
+                <div class="slides">
+                    <img src="wireframe/slide1.png" alt="화면 정의서 1" class="slide">
+                    <img src="wireframe/slide2.png" alt="화면 정의서 2" class="slide">
+                    <img src="wireframe/slide3.png" alt="화면 정의서 3" class="slide">
+                    <img src="wireframe/slide4.png" alt="화면 정의서 4" class="slide">
+                    <img src="wireframe/slide5.png" alt="화면 정의서 5" class="slide">
+                    <img src="wireframe/slide6.png" alt="화면 정의서 6" class="slide">
+                    <img src="wireframe/slide7.png" alt="화면 정의서 7" class="slide">
+                    <img src="wireframe/slide8.png" alt="화면 정의서 8" class="slide">
+                    <img src="wireframe/slide9.png" alt="화면 정의서 9" class="slide">
+                    <img src="wireframe/slide10.png" alt="화면 정의서 10" class="slide">
+                    <img src="wireframe/slide11.png" alt="화면 정의서 11" class="slide">
+                    <img src="wireframe/slide12.png" alt="화면 정의서 12" class="slide">
+                    <img src="wireframe/slide13.png" alt="화면 정의서 13" class="slide">
+                    <img src="wireframe/slide14.png" alt="화면 정의서 14" class="slide">
+                    <img src="wireframe/slide15.png" alt="화면 정의서 15" class="slide">
+                    <img src="wireframe/slide16.png" alt="화면 정의서 16" class="slide">
+                    <img src="wireframe/slide17.png" alt="화면 정의서 17" class="slide">
+                    <img src="wireframe/slide18.png" alt="화면 정의서 18" class="slide">
+                    <img src="wireframe/slide19.png" alt="화면 정의서 19" class="slide">
+                    <img src="wireframe/slide20.png" alt="화면 정의서 20" class="slide">
+                    <img src="wireframe/slide21.png" alt="화면 정의서 21" class="slide">
+                    <img src="wireframe/slide22.png" alt="화면 정의서 22" class="slide">
+                    <img src="wireframe/slide23.png" alt="화면 정의서 23" class="slide">
+                    <img src="wireframe/slide24.png" alt="화면 정의서 24" class="slide">
+                    <img src="wireframe/slide25.png" alt="화면 정의서 25" class="slide">
+                    <img src="wireframe/slide26.png" alt="화면 정의서 26" class="slide">
+                    <img src="wireframe/slide27.png" alt="화면 정의서 27" class="slide">
+                </div>
+                <button class="prev-slide">&lt;</button>
+                <button class="next-slide">&gt;</button>
+            </div>
+        </div>
+    </section>
+    <section class="py-8 md:py-16 bg-white shadow mb-4 md:mb-8 rounded-lg m-5">
+        <div class="container mx-auto px-4">
+            <h3 class="text-xl md:text-2xl font-bold mb-4">프로토타입</h3>
+            <div class="embed-responsive">
+                <video controls class="w-full">
+                    <source src="prototype/prototype.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const toggleButton = document.getElementById('dark-mode-toggle');
+        const body = document.body;
+
+        const sliders = document.querySelectorAll('.slider');
+        const lightModeIcon = '<i class="fas fa-sun"></i>';
+        const darkModeIcon = '<i class="fas fa-moon"></i>';
+
+        function updateIcon() {
+            if (body.classList.contains('dark-mode')) {
+                toggleButton.innerHTML = lightModeIcon;
+            } else {
+                toggleButton.innerHTML = darkModeIcon;
+            }
+        }
+
+        if (localStorage.getItem('dark-mode') === 'true') {
+            body.classList.add('dark-mode');
+        }
+
+        updateIcon();
+
+        toggleButton.addEventListener('click', function () {
+            body.classList.toggle('dark-mode');
+            localStorage.setItem('dark-mode', body.classList.contains('dark-mode'));
+            updateIcon();
+        });
+
+        sliders.forEach((slider) => {
+            const slidesContainer = slider.querySelector('.slides');
+            const slides = slidesContainer.querySelectorAll('.slide');
+            const prevButton = slider.querySelector('.prev-slide');
+            const nextButton = slider.querySelector('.next-slide');
+            let currentIndex = 0;
+
+            function showSlide(index) {
+                if (index < 0) {
+                    currentIndex = slides.length - 1;
+                } else if (index >= slides.length) {
+                    currentIndex = 0;
+                } else {
+                    currentIndex = index;
+                }
+                slidesContainer.style.transform = `translateX(-${currentIndex * 100}%)`;
+            }
+
+            prevButton.addEventListener('click', function () {
+                showSlide(currentIndex - 1);
+            });
+
+            nextButton.addEventListener('click', function () {
+                showSlide(currentIndex + 1);
+            });
+
+            showSlide(currentIndex);
+        });
+    });
+</script>
+
+</body>
+</html>

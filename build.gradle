@@ -1,0 +1,115 @@
+buildscript {
+	ext {
+		springBootVersion = '3.3.1'
+		testContainerVersion = '1.19.5'
+		lombokVersion = '1.18.32'
+		jwtVersion = '0.11.5'
+	}
+}
+
+plugins {
+	id 'java'
+	id 'java-library'
+	id 'org.springframework.boot' version "${springBootVersion}"
+	id 'io.spring.dependency-management' version '1.1.4'
+	id 'com.diffplug.spotless' version '6.25.0'
+	id 'jacoco'
+	id 'org.sonarqube' version "5.0.0.4638"
+}
+
+wrapper {
+	gradleVersion = '8.7'
+	distributionUrl = distributionUrl.replace("bin", "all")
+}
+
+group = 'the.young.hana'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '17'
+}
+
+repositories {
+	mavenCentral()
+}
+
+apply from: "$rootDir/spotless.gradle"
+apply from: "$rootDir/jacoco.gradle"
+apply from: "$rootDir/sonarqube.gradle"
+
+dependencies {
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter', version: springBootVersion
+	testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: springBootVersion
+	testRuntimeOnly group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.10.2'
+	compileOnly group: 'org.projectlombok', name: 'lombok', version: lombokVersion
+	annotationProcessor group: 'org.projectlombok', name: 'lombok', version: lombokVersion
+	testCompileOnly group: 'org.projectlombok', name: 'lombok', version: lombokVersion
+	testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: lombokVersion
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-log4j2', version: springBootVersion
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version: springBootVersion
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: springBootVersion
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: springBootVersion
+	developmentOnly group: 'org.springframework.boot', name: 'spring-boot-docker-compose', version: springBootVersion
+	testImplementation group: 'org.testcontainers', name: 'testcontainers', version: testContainerVersion
+	testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: testContainerVersion
+	implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.5.0'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: springBootVersion
+	implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.4.0'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: springBootVersion
+	implementation group: 'io.micrometer', name: 'micrometer-registry-prometheus', version: '1.13.1'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: springBootVersion
+	annotationProcessor group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version: springBootVersion
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: springBootVersion
+	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: jwtVersion
+	implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: jwtVersion
+	implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: jwtVersion
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: springBootVersion
+}
+
+configurations {
+	all{
+		exclude module: 'spring-boot-starter-logging'
+	}
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+
+	testLogging {
+		events 'PASSED', 'FAILED', 'SKIPPED'
+		showStandardStreams = true
+	}
+}
+
+tasks.register('preCommitHook') {
+	doLast {
+		def gitHooksDirectory = new File("$project.rootDir/.git/hooks/")
+		if (!gitHooksDirectory.exists()) {
+			gitHooksDirectory.mkdirs()
+		}
+		new File("$project.rootDir/.git/hooks", "pre-commit").text =
+				"""#!/bin/bash
+echo "코드 포맷팅을 검사합니다."
+./gradlew spotlessCheck
+STYLE_RESULT=\$?
+if [ \$STYLE_RESULT -eq 0 ]
+then
+	echo "코드 포맷팅 검사에 통과하였습니다."
+	echo "테스트를 실행합니다."
+	./gradlew test
+	TEST_RESULT=\$?
+	if [ \$TEST_RESULT -eq 0 ]
+	then
+		echo "테스트가 성공하였습니다."
+	else
+		echo "테스트가 실패하였습니다." >&2
+		exit 1
+	fi
+else
+	echo "코드 포맷팅 검사에 실패하였습니다." >&2
+	exit 1
+fi
+"""
+		"chmod +x .git/hooks/pre-commit".execute()
+	}
+}

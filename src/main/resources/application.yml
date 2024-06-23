@@ -1,0 +1,50 @@
+spring:
+  application:
+    name: the-young-hana
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: ${JPA_DDL_AUTO:none}
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: ${JPA_FORMAT_SQL:true}
+        show_sql: ${JPA_SHOW_SQL:true}
+        default_batch_fetch_size: ${JPA_BATCH_FETCH_SIZE:100}
+        jdbc:
+          batch_size: ${JPA_JDBC_BATCH_SIZE:100}
+        order_inserts: ${JPA_ORDER_INSERTS:true}
+        order_updates: ${JPA_ORDER_UPDATES:true}
+        use_sql_comments: ${JPA_USE_SQL_COMMENTS:true}
+    defer-datasource-initialization: ${JPA_DETER_DATASOURCE_INITIALIZATION:true}
+  cache:
+    type:
+    redis:
+      cache-null-values: true # 캐시에 null 값도 저장
+  docker:
+    compose:
+      enabled: ${DOCKER_COMPOSE_ENABLED:false}
+      lifecycle-management: start_and_stop
+      stop:
+        command: down
+        timeout: 1m
+server:
+  port: ${SERVER_PORT:8080}
+logging:
+  level:
+    root: ${LOGGING_LEVEL:INFO}
+  config: classpath:log4j2.xml
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics, prometheus

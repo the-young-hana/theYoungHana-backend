@@ -1,0 +1,48 @@
+version: ${DOCKER_COMPOSE_VERSION}
+
+services:
+  mysql:
+    image: mysql:${MYSQL_VERSION}
+    container_name: mysql
+    hostname: mysql
+    ports:
+      - ${MYSQL_PORT}:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USERNAME}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      TZ: Asia/Seoul
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
+    networks:
+      - hana-network
+    restart: ${DOCKER_RESTART_POLICY}
+    labels:
+      org.springframework.boot.service-connection: mysql
+  redis:
+    image: redis:${REDIS_VERSION}
+    container_name: redis
+    hostname: redis
+    ports:
+      - ${REDIS_PORT}:6379
+    command: >
+      bash -c "
+      redis-server --port ${REDIS_PORT} --requirepass ${REDIS_PASSWORD}
+      "
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
+    networks:
+      - hana-network
+    restart: ${DOCKER_RESTART_POLICY}
+    labels:
+      org.springframework.boot.service-connection: redis
+networks:
+  hana-network:
+    driver: bridge
