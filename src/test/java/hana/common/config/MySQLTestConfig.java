@@ -59,7 +59,7 @@ public class MySQLTestConfig implements BeforeAllCallback {
 
     @MethodInfo(name = "createTestTable", description = "테스트 테이블을 생성합니다.")
     private void createTestTable() {
-        List<String> sqlStatements = readSqlFile();
+        List<String> sqlStatements = readSqlFile("schema.sql");
 
         JdbcTemplate jdbcTemplate = new JdbcTemplate(buildDataSource());
         for (String sqlStatement : sqlStatements) {
@@ -67,7 +67,7 @@ public class MySQLTestConfig implements BeforeAllCallback {
         }
     }
 
-    @MethodInfo(name = "MySQLTestConfig.buildDataSource", description = "데이터 소스를 생성합니다.")
+    @MethodInfo(name = "buildDataSource", description = "데이터 소스를 생성합니다.")
     private DataSource buildDataSource() {
         org.springframework.jdbc.datasource.DriverManagerDataSource dataSource =
                 new org.springframework.jdbc.datasource.DriverManagerDataSource();
@@ -77,12 +77,10 @@ public class MySQLTestConfig implements BeforeAllCallback {
         return dataSource;
     }
 
-    @MethodInfo(
-            name = "MySQLTestConfig.readSqlFile",
-            description = "SQL 파일을 읽어 이를 여러 개의 SQL 문으로 분리합니다.")
-    private List<String> readSqlFile() {
+    @MethodInfo(name = "readSqlFile", description = "SQL 파일을 읽어 이를 여러 개의 SQL 문으로 분리합니다.")
+    private List<String> readSqlFile(String sqlFileName) {
         try {
-            ClassPathResource classPathResource = new ClassPathResource("db.sql");
+            ClassPathResource classPathResource = new ClassPathResource(sqlFileName);
             InputStream inputStream = classPathResource.getInputStream();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
@@ -101,7 +99,7 @@ public class MySQLTestConfig implements BeforeAllCallback {
 
             return sqlStatements;
         } catch (IOException ioException) {
-            throw new RuntimeException("Failed to read SQL file: " + "db.sql", ioException);
+            throw new RuntimeException("SQL 파일을 가져오는 데에 실패하였습니다. : " + sqlFileName, ioException);
         }
     }
 }
