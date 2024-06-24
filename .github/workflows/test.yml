@@ -54,6 +54,9 @@ jobs:
             echo "ENV JPA_ORDER_UPDATES=${{ secrets.JPA_ORDER_UPDATES }}" >> dockerfile.temp
             echo "ENV JPA_USE_SQL_COMMENTS=${{ secrets.JPA_USE_SQL_COMMENTS }}" >> dockerfile.temp
             echo "ENV DOCKER_COMPOSE_ENABLED=${{ secrets.DOCKER_COMPOSE_ENABLED }}" >> dockerfile.temp
+            echo "ENV JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> dockerfile.temp
+            echo "ENV ACCESS_TOKEN_EXPIRATION=${{ secrets.ACCESS_TOKEN_EXPIRATION }}" >> dockerfile.temp
+            echo "ENV REFRESH_TOKEN_EXPIRATION=${{ secrets.REFRESH_TOKEN_EXPIRATION }}" >> dockerfile.temp
             
             mv dockerfile.temp dockerfile
         working-directory: ./
