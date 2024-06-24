@@ -37,6 +37,8 @@ spring:
       stop:
         command: down
         timeout: 1m
+springdoc:
+  use-fqn: true
 server:
   port: ${SERVER_PORT:8080}
 logging:
