@@ -43,7 +43,7 @@ public class LoggerAspect {
     public void logMethodException(
             JoinPoint joinPoint, MethodInfo methodInfo, Throwable exception) {
         LOGGER.error(
-                "'{}' 클래스의 '{}' 메소드 실행 중 예외 발생: {}. 예외 메시지: {}",
+                "'{}' 클래스의 '{}' 메소드 실행 중 예외 발생: {} 예외 메시지: {}",
                 joinPoint.getTarget().getClass().getName(),
                 joinPoint.getSignature().getName(),
                 methodInfo.description(),
