@@ -53,7 +53,9 @@ public class SecurityConfig extends AbstractHttpConfigurer<SecurityConfig, HttpS
                                                 "/v3/api-docs/**",
                                                 "/plan/**",
                                                 "/prototype/**",
-                                                "/wireframe/**")
+                                                "/wireframe/**",
+                                                "/actuator/**",
+                                                "/api/v1/**")
                                         .permitAll()
                                         .anyRequest()
                                         .authenticated())

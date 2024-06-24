@@ -4,6 +4,7 @@ import hana.common.annotation.MethodInfo;
 import hana.common.annotation.TypeInfo;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.servers.Server;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +20,12 @@ import org.springframework.context.annotation.Configuration;
                         license =
                                 @io.swagger.v3.oas.annotations.info.License(
                                         name = "Apache 2.0",
-                                        url = "http://www.apache.org/licenses/LICENSE-2.0.html")))
+                                        url = "http://www.apache.org/licenses/LICENSE-2.0.html")),
+        servers = {
+            @Server(url = "https://theyounghana.kro.kr", description = "HTTPS 스테이징 서버"),
+            @Server(url = "http://theyounghana.kro.kr:8080", description = "HTTP 스테이징 서버"),
+            @Server(url = "http://localhost:8080", description = "로컬 서버")
+        })
 public class SwaggerConfig {
     @MethodInfo(
             name = "groupedOpenApi",
