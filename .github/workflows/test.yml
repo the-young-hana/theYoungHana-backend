@@ -1,9 +1,9 @@
 name: PR 테스트
 
 on:
-  pull_request:
+  push:
     branches:
-      - master
+      - main
 
 jobs:
   test:
