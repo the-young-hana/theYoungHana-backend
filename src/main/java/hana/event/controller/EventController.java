@@ -4,6 +4,7 @@ import hana.common.annotation.MethodInfo;
 import hana.common.annotation.TypeInfo;
 import hana.common.exception.BaseExceptionResponse;
 import hana.event.dto.*;
+import hana.event.service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Event", description = "이벤트")
 @RequestMapping("api/v1")
 public class EventController {
+    private final EventService eventService;
+
     @MethodInfo(name = "readEvents", description = "이벤트 목록을 조회합니다.")
     @GetMapping("/events")
     @Operation(
@@ -361,5 +364,9 @@ public class EventController {
             })
     public ResponseEntity<EventJoinResDto> joinEvent(@PathVariable("eventIdx") Long eventIdx) {
         return null;
+    }
+
+    public EventController(EventService eventService) {
+        this.eventService = eventService;
     }
 }

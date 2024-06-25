@@ -29,7 +29,7 @@ spring:
   cache:
     type:
     redis:
-      cache-null-values: true # 캐시에 null 값도 저장
+      cache-null-values: true
   docker:
     compose:
       enabled: ${DOCKER_COMPOSE_ENABLED:false}

@@ -1,10 +1,11 @@
-package hana.student.controller;
+package hana.member.controller;
 
 import hana.common.annotation.MethodInfo;
 import hana.common.annotation.TypeInfo;
 import hana.common.exception.BaseExceptionResponse;
-import hana.student.dto.StudentQrReadResDto;
-import hana.student.dto.StudentReadResDto;
+import hana.member.dto.StudentQrReadResDto;
+import hana.member.dto.StudentReadResDto;
+import hana.member.service.StudentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Student", description = "학생")
 @RequestMapping("api/v1")
 public class StudentController {
+    private final StudentService studentService;
+
     @MethodInfo(name = "readStudent", description = "학생증을 조회합니다.")
     @GetMapping("/students")
     @Operation(
@@ -112,5 +115,9 @@ public class StudentController {
             })
     public ResponseEntity<StudentQrReadResDto> readStudentQr() {
         return null;
+    }
+
+    public StudentController(StudentService studentService) {
+        this.studentService = studentService;
     }
 }

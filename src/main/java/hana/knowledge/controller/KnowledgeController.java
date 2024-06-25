@@ -5,6 +5,7 @@ import hana.common.annotation.TypeInfo;
 import hana.common.exception.BaseExceptionResponse;
 import hana.knowledge.dto.KnowledgeReadResDto;
 import hana.knowledge.dto.KnowledgesReadResDto;
+import hana.knowledge.service.KnowledgeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Knowledge", description = "금융상식")
 @RequestMapping("api/v1")
 public class KnowledgeController {
+    private final KnowledgeService knowledgeService;
+
     @MethodInfo(name = "readKnowledges", description = "금융상식 목록을 조회합니다.")
     @GetMapping("/knowledges")
     @Operation(
@@ -115,5 +118,9 @@ public class KnowledgeController {
             })
     public ResponseEntity<KnowledgeReadResDto> readKnowledge(@PathVariable Long knowledgeIdx) {
         return null;
+    }
+
+    public KnowledgeController(KnowledgeService knowledgeService) {
+        this.knowledgeService = knowledgeService;
     }
 }
