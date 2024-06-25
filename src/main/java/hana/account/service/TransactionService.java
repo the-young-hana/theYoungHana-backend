@@ -1,4 +1,4 @@
-package hana.transaction.service;
+package hana.account.service;
 
 import hana.common.annotation.TypeInfo;
 import org.springframework.stereotype.Service;

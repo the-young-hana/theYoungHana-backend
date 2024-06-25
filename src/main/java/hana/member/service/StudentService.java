@@ -1,4 +1,4 @@
-package hana.student.service;
+package hana.member.service;
 
 import hana.common.annotation.TypeInfo;
 import org.springframework.stereotype.Service;

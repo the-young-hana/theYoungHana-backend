@@ -1,11 +1,11 @@
-package hana.student.controller;
+package hana.member.controller;
 
 import hana.common.annotation.MethodInfo;
 import hana.common.annotation.TypeInfo;
 import hana.common.exception.BaseExceptionResponse;
-import hana.student.dto.StudentQrReadResDto;
-import hana.student.dto.StudentReadResDto;
-import hana.student.service.StudentService;
+import hana.member.dto.StudentQrReadResDto;
+import hana.member.dto.StudentReadResDto;
+import hana.member.service.StudentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

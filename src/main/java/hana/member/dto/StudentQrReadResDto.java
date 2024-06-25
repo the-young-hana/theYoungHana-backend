@@ -1,4 +1,4 @@
-package hana.student.dto;
+package hana.member.dto;
 
 import hana.common.dto.BaseResponse;
 import lombok.Builder;

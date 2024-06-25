@@ -1,4 +1,4 @@
-package hana.transaction.dto;
+package hana.account.dto;
 
 import hana.common.dto.BaseResponse;
 import java.time.LocalDateTime;

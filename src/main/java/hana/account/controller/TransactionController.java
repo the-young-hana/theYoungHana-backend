@@ -1,10 +1,10 @@
-package hana.transaction.controller;
+package hana.account.controller;
 
+import hana.account.dto.TransactionsReadResDto;
+import hana.account.service.TransactionService;
 import hana.common.annotation.MethodInfo;
 import hana.common.annotation.TypeInfo;
 import hana.common.exception.BaseExceptionResponse;
-import hana.transaction.dto.TransactionsReadResDto;
-import hana.transaction.service.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
