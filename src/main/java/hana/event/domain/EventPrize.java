@@ -22,8 +22,11 @@ public class EventPrize extends BaseEntity {
     @JoinColumn(name = "event_idx", nullable = false)
     private Event event;
 
-    @Column(name = "event_prize_name", nullable = false)
+    @Column(name = "event_prize_rank", nullable = false)
     private long eventPrizeRank;
+
+    @Column(name = "event_prize_name", nullable = false)
+    private String eventPrizeName;
 
     @Column(name = "event_prize_limit", nullable = false)
     private long eventPrizeLimit;

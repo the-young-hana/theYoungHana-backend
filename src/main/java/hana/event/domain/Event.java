@@ -1,5 +1,6 @@
 package hana.event.domain;
 
+import hana.college.domain.Dept;
 import hana.common.annotation.TypeInfo;
 import hana.common.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -40,7 +41,7 @@ public class Event extends BaseEntity {
     @Column(name = "event_fee_end_datetime", nullable = false)
     private LocalDateTime eventFeeEndDatetime;
 
-    @Column(name = "event_image", nullable = false, columnDefinition = "JSON")
+    @Column(name = "event_image_list", nullable = false, columnDefinition = "JSON")
     private String eventImageList;
 
     @Column(name = "event_limit", nullable = false)
@@ -49,4 +50,8 @@ public class Event extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 5)
     private EventEnumType eventType;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dept_idx")
+    private Dept dept;
 }
