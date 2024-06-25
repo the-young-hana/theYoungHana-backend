@@ -4,6 +4,7 @@ import hana.common.annotation.MethodInfo;
 import hana.common.annotation.TypeInfo;
 import hana.common.exception.BaseExceptionResponse;
 import hana.story.dto.*;
+import hana.story.service.StoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Story", description = "스토리")
 @RequestMapping("api/v1")
 public class StoryController {
+    private final StoryService storyService;
+
     @MethodInfo(name = "readStories", description = "스토리 목록을 조회합니다.")
     @GetMapping("/stories")
     @Operation(
@@ -537,5 +540,9 @@ public class StoryController {
     public ResponseEntity<StoryDeleteCommentResDto> deleteStoryComment(
             @PathVariable("storyIdx") Long storyIdx, @PathVariable("commentIdx") Long commentIdx) {
         return null;
+    }
+
+    public StoryController(StoryService storyService) {
+        this.storyService = storyService;
     }
 }

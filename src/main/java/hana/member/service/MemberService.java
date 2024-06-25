@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 @TypeInfo(name = "MemberService", description = "회원 서비스")
 @Service
 public class MemberService {
-    private final JwtUtils jwtUtils;
     private final MemberRepository memberRepository;
+    private final JwtUtils jwtUtils;
 
     @MethodInfo(name = "login", description = "회원 로그인을 실행합니다.")
     public MemberLoginResDto login(MemberLoginReqDto memberLoginReqDto) {

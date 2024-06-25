@@ -4,6 +4,7 @@ import hana.common.annotation.MethodInfo;
 import hana.common.annotation.TypeInfo;
 import hana.common.exception.BaseExceptionResponse;
 import hana.transaction.dto.TransactionsReadResDto;
+import hana.transaction.service.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -12,11 +13,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@TypeInfo(name = "TransactionController", description = "거래 컨트롤러")
+@TypeInfo(name = "TransactionController", description = "거래내역 컨트롤러")
 @RestController
 @Tag(name = "Transaction", description = "거래")
 @RequestMapping("api/v1")
 public class TransactionController {
+    private final TransactionService transactionService;
+
     @MethodInfo(name = "readTransactions", description = "거래 목록을 조회합니다.")
     @GetMapping("/transactions/{deptIdx}")
     @Operation(
@@ -69,5 +72,9 @@ public class TransactionController {
             @RequestParam("sort") String sort,
             @RequestParam("page") Long page) {
         return null;
+    }
+
+    public TransactionController(TransactionService transactionService) {
+        this.transactionService = transactionService;
     }
 }
