@@ -1,6 +1,5 @@
 package hana.member.domain;
 
-
 import hana.college.domain.College;
 import hana.common.annotation.TypeInfo;
 import hana.common.entity.BaseEntity;
@@ -14,27 +13,29 @@ import lombok.NoArgsConstructor;
 @Table(name = "student_cards")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class StudentCard extends BaseEntity{
+public class StudentCard extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="student_card_idx", nullable = false)
+    @Column(name = "student_card_idx", nullable = false)
     private Long studentCardIdx;
 
-    @Column(name="student_card_name", nullable = false)
+    @Column(name = "student_card_name", nullable = false)
     private String studentCardName;
 
-    @Column(name="student_card_is_vertical", nullable = false, columnDefinition = "TINYINT(1) default 0")
+    @Column(
+            name = "student_card_is_vertical",
+            nullable = false,
+            columnDefinition = "TINYINT(1) default 0")
     private boolean studentCardIsVertical;
 
-    @Column(name="student_card_front_image", nullable = false)
+    @Column(name = "student_card_front_image", nullable = false)
     private String studentCardFrontImage;
 
-    @Column(name="student_card_back_image", nullable = false)
+    @Column(name = "student_card_back_image", nullable = false)
     private String studentCardBackImage;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "college_idx", nullable = false)
     private College college;
-
 }
