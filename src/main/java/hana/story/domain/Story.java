@@ -1,5 +1,6 @@
 package hana.story.domain;
 
+import hana.college.domain.Dept;
 import hana.common.annotation.TypeInfo;
 import hana.common.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -26,4 +27,8 @@ public class Story extends BaseEntity {
 
     @Column(name = "story_image_list", nullable = false, columnDefinition = "JSON")
     private String storyImageList;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dept_idx")
+    private Dept dept;
 }

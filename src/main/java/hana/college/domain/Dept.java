@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 
 @TypeInfo(name = "Dept", description = "학과 엔티티")
 @Entity
-@Table(name = "depts")
+@Table(name = "departments")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Dept extends BaseEntity {

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class BaseEntity extends BaseTimeEntity {
-    @Column(name = "deleted_yn", nullable = false)
+    @Column(name = "deleted_yn", nullable = false , columnDefinition = "TINYINT(1) default 0")
     private boolean deletedYn;
 
     @ManyToOne(fetch = FetchType.LAZY)
