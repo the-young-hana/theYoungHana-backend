@@ -2,7 +2,6 @@ package hana.account.domain;
 
 import hana.common.annotation.TypeInfo;
 import hana.common.entity.BaseEntity;
-import hana.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -24,10 +23,6 @@ public class Transaction extends BaseEntity {
     @JoinColumn(name = "account_idx", nullable = false)
     private Account account;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_idx", nullable = false)
-    private Member member;
-
     @Column(name = "transaction_id", nullable = false)
     private String transactionId;
 
@@ -47,14 +42,12 @@ public class Transaction extends BaseEntity {
     @Builder
     public Transaction(
             Account account,
-            Member member,
             String transactionId,
             String transactionName,
             Long transactionAmount,
             Long transactionBalance,
             TransactionTypeEnumType transactionTypeEnumType) {
         this.account = account;
-        this.member = member;
         this.transactionId = transactionId;
         this.transactionName = transactionName;
         this.transactionAmount = transactionAmount;
