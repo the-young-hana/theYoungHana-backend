@@ -118,7 +118,8 @@ public class KnowledgeController {
                                                                 BaseExceptionResponse.class)))
             })
     public ResponseEntity<KnowledgeReadResDto> readKnowledge(@PathVariable Long knowledgeIdx) {
-        return null;
+        KnowledgeReadResDto response = knowledgeService.getKnowledgeById(knowledgeIdx);
+        return ResponseEntity.ok(response);
     }
 
     public KnowledgeController(KnowledgeService knowledgeService) {
