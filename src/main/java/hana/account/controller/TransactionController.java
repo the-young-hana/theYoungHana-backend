@@ -70,7 +70,7 @@ public class TransactionController {
             @RequestParam("end") String end,
             @RequestParam("type") String type,
             @RequestParam("sort") String sort,
-            @RequestParam("page") Long page) {
+            @RequestParam("page") Integer page) {
         return null;
     }
 

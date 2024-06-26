@@ -1,4 +1,4 @@
-package hana.common.dto;
+package hana.common.vo;
 
 import lombok.Builder;
 import lombok.Getter;

@@ -2,8 +2,8 @@ package hana.member.controller;
 
 import hana.common.annotation.MethodInfo;
 import hana.common.annotation.TypeInfo;
-import hana.common.dto.JwtToken;
 import hana.common.exception.BaseExceptionResponse;
+import hana.common.vo.JwtToken;
 import hana.member.domain.Student;
 import hana.member.dto.MemberLoginReqDto;
 import hana.member.dto.MemberLoginResDto;

@@ -1,15 +1,21 @@
-package hana.common.dto;
+package hana.common.vo;
 
 import hana.member.domain.Member;
+import hana.member.domain.Student;
 import java.util.Collection;
 import lombok.Builder;
 import org.springframework.security.core.GrantedAuthority;
 
 public class UserDetails implements org.springframework.security.core.userdetails.UserDetails {
     private final Member member;
+    private final Student student;
 
     public Member getMember() {
         return member;
+    }
+
+    public Student getStudent() {
+        return student;
     }
 
     @Override
@@ -28,7 +34,8 @@ public class UserDetails implements org.springframework.security.core.userdetail
     }
 
     @Builder
-    public UserDetails(Member member) {
+    public UserDetails(Member member, Student student) {
         this.member = member;
+        this.student = student;
     }
 }

@@ -1,8 +1,10 @@
 package hana.event.controller;
 
+import hana.common.annotation.AuthenticatedMember;
 import hana.common.annotation.MethodInfo;
 import hana.common.annotation.TypeInfo;
 import hana.common.exception.BaseExceptionResponse;
+import hana.common.utils.JwtUtils;
 import hana.event.dto.*;
 import hana.event.service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,9 +22,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/v1")
 public class EventController {
     private final EventService eventService;
+    private final JwtUtils jwtUtils;
 
     @MethodInfo(name = "readEvents", description = "이벤트 목록을 조회합니다.")
     @GetMapping("/events")
+    @AuthenticatedMember
     @Operation(
             summary = "이벤트 목록 조회",
             description = "이벤트 목록을 조회합니다.",
@@ -65,12 +69,33 @@ public class EventController {
     public ResponseEntity<EventsReadResDto> readEvents(
             @RequestParam("value") String value,
             @RequestParam("isEnd") Boolean isEnd,
-            @RequestParam("page") Long page) {
-        return null;
+            @RequestParam("page") Integer page) {
+        return ResponseEntity.ok(
+                EventsReadResDto.builder()
+                        .data(
+                                eventService.searchEvents(value, isEnd, page).stream()
+                                        .map(
+                                                event ->
+                                                        EventsReadResDto.Data.builder()
+                                                                .eventIdx(event.getEventIdx())
+                                                                .eventTitle(event.getEventTitle())
+                                                                .eventSummary(event.getEventTitle())
+                                                                .eventType(
+                                                                        event.getEventType()
+                                                                                .getDescription())
+                                                                .eventStart(
+                                                                        event
+                                                                                .getEventStartDatetime())
+                                                                .eventEnd(
+                                                                        event.getEventEndDatetime())
+                                                                .build())
+                                        .toList())
+                        .build());
     }
 
     @MethodInfo(name = "readEvent", description = "이벤트를 상세 조회합니다.")
     @GetMapping("/events/{eventIdx}")
+    @AuthenticatedMember
     @Operation(
             summary = "이벤트 상세 조회",
             description = "이벤트를 상세 조회합니다.",
@@ -115,6 +140,7 @@ public class EventController {
 
     @MethodInfo(name = "createEvent", description = "이벤트를 추가합니다.")
     @PostMapping("/events")
+    @AuthenticatedMember
     @Operation(
             summary = "이벤트 추가",
             description = "이벤트를 추가합니다.",
@@ -172,6 +198,7 @@ public class EventController {
 
     @MethodInfo(name = "updateEvent", description = "이벤트를 수정합니다.")
     @PutMapping("/events/{eventIdx}")
+    @AuthenticatedMember
     @Operation(
             summary = "이벤트 수정",
             description = "이벤트를 수정합니다.",
@@ -229,6 +256,7 @@ public class EventController {
 
     @MethodInfo(name = "deleteEvent", description = "이벤트를 삭제합니다.")
     @DeleteMapping("/events/{eventIdx}")
+    @AuthenticatedMember
     @Operation(
             summary = "이벤트 삭제",
             description = "이벤트를 삭제합니다.",
@@ -275,6 +303,7 @@ public class EventController {
 
     @MethodInfo(name = "readEventWinners", description = "이벤트 당첨자 목록을 조회합니다.")
     @GetMapping("/events/{eventIdx}/winners")
+    @AuthenticatedMember
     @Operation(
             summary = "이벤트 당첨자 목록 조회",
             description = "이벤트 당첨자 목록을 조회합니다.",
@@ -324,6 +353,7 @@ public class EventController {
 
     @MethodInfo(name = "joinEvent", description = "이벤트에 참여합니다.")
     @PostMapping("/events/{eventIdx}/join")
+    @AuthenticatedMember
     @Operation(
             summary = "이벤트 참여",
             description = "이벤트에 참여합니다.",
@@ -366,7 +396,8 @@ public class EventController {
         return null;
     }
 
-    public EventController(EventService eventService) {
+    public EventController(EventService eventService, JwtUtils jwtUtils) {
         this.eventService = eventService;
+        this.jwtUtils = jwtUtils;
     }
 }

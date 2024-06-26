@@ -1,8 +1,12 @@
 package hana.common.config;
 
-import hana.common.dto.JwtToken;
+import hana.common.exception.TokenExpiredException;
+import hana.common.exception.TokenHasUnknownMemberException;
+import hana.common.vo.JwtToken;
 import hana.member.domain.Member;
 import hana.member.domain.MemberRepository;
+import hana.member.domain.Student;
+import hana.member.domain.StudentRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -20,18 +24,7 @@ public class JwtTokenProvider {
     private final int accessTokenExpiration;
     private final int refreshTokenExpiration;
     private final MemberRepository memberRepository;
-
-    public JwtTokenProvider(
-            @Value("${jwt.secret}") String secretKey,
-            @Value("${jwt.access-token-expiration}") int accessTokenExpiration,
-            @Value("${jwt.refresh-token-expiration}") int refreshTokenExpiration,
-            MemberRepository memberRepository) {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        this.key = Keys.hmacShaKeyFor(keyBytes);
-        this.accessTokenExpiration = accessTokenExpiration;
-        this.refreshTokenExpiration = refreshTokenExpiration;
-        this.memberRepository = memberRepository;
-    }
+    private final StudentRepository studentRepository;
 
     public JwtToken generateToken(Member member) {
 
@@ -75,14 +68,30 @@ public class JwtTokenProvider {
         Claims claims =
                 Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
         if (claims.get("memberIdx") == null) {
-            throw new RuntimeException("유저 정보가 없는 토큰입니다.");
+            throw new TokenHasUnknownMemberException();
         }
         Member member =
                 memberRepository.findByMemberIdx(Long.valueOf(claims.get("memberIdx").toString()));
         if (member != null) {
             return member;
         }
-        throw new RuntimeException("해당 아이디의 유저가 존재하지 않습니다.");
+        throw new TokenHasUnknownMemberException();
+    }
+
+    public Student getStudent(String token) {
+        this.validateToken(token);
+        Claims claims =
+                Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        if (claims.get("memberIdx") == null) {
+            throw new TokenHasUnknownMemberException();
+        }
+        Student student =
+                studentRepository.findByMember_MemberIdx(
+                        Long.valueOf(claims.get("memberIdx").toString()));
+        if (student != null) {
+            return student;
+        }
+        throw new TokenHasUnknownMemberException();
     }
 
     public boolean validateToken(String accessToken) {
@@ -94,7 +103,21 @@ public class JwtTokenProvider {
                     .getExpiration()
                     .after(new Date());
         } catch (ExpiredJwtException expiredJwtException) {
-            throw new RuntimeException("만료된 토큰입니다.");
+            throw new TokenExpiredException();
         }
+    }
+
+    public JwtTokenProvider(
+            @Value("${jwt.secret}") String secretKey,
+            @Value("${jwt.access-token-expiration}") int accessTokenExpiration,
+            @Value("${jwt.refresh-token-expiration}") int refreshTokenExpiration,
+            MemberRepository memberRepository,
+            StudentRepository studentRepository) {
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        this.key = Keys.hmacShaKeyFor(keyBytes);
+        this.accessTokenExpiration = accessTokenExpiration;
+        this.refreshTokenExpiration = refreshTokenExpiration;
+        this.memberRepository = memberRepository;
+        this.studentRepository = studentRepository;
     }
 }
