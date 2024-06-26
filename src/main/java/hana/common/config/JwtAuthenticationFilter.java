@@ -1,7 +1,8 @@
 package hana.common.config;
 
-import hana.common.dto.UserDetails;
+import hana.common.vo.UserDetails;
 import hana.member.domain.Member;
+import hana.member.domain.Student;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
@@ -19,33 +20,36 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+    public void doFilter(
+            ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {
-        String token = resolveToken((HttpServletRequest) request);
+        String token = resolveToken((HttpServletRequest) servletRequest);
 
         if (token != null) {
             try {
                 Member member = jwtTokenProvider.getMember(token);
-                UserDetails userDetails = new UserDetails(member);
+                Student student = jwtTokenProvider.getStudent(token);
+                UserDetails userDetails = new UserDetails(member, student);
                 Authentication authentication =
                         new UsernamePasswordAuthenticationToken(
                                 userDetails, "", userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-            } catch (RuntimeException e) {
-                HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+            } catch (RuntimeException runtimeException) {
+                HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
                 httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 httpServletResponse.setContentType("application/json");
                 httpServletResponse.setCharacterEncoding("UTF-8");
-                String jsonResponse = String.format("{\"error\": \"%s\"}", e.getMessage());
+                String jsonResponse =
+                        String.format("{\"error\": \"%s\"}", runtimeException.getMessage());
                 httpServletResponse.getWriter().write(jsonResponse);
                 return;
             }
         }
-        chain.doFilter(request, response);
+        filterChain.doFilter(servletRequest, servletResponse);
     }
 
-    private String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
+    private String resolveToken(HttpServletRequest httpServletRequest) {
+        String bearerToken = httpServletRequest.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
