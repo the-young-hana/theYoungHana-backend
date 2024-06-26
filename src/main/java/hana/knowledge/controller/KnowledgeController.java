@@ -69,7 +69,8 @@ public class KnowledgeController {
                                                                 BaseExceptionResponse.class)))
             })
     public ResponseEntity<KnowledgesReadResDto> readKnowledges() {
-        return null;
+        KnowledgesReadResDto response = knowledgeService.getKnowledges();
+        return ResponseEntity.ok(response);
     }
 
     @MethodInfo(name = "readKnowledge", description = "금융상식을 상세 조회합니다.")
