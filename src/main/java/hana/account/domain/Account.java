@@ -8,12 +8,14 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
 
 @TypeInfo(name = "Account", description = "계좌 엔티티")
 @Entity
 @Table(name = "accounts")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DynamicUpdate
 public class Account extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,5 +52,15 @@ public class Account extends BaseEntity {
         this.accountBalance = accountBalance;
         this.accountName = accountName;
         this.accountPw = accountPw;
+    }
+
+    // 입금
+    public void deposit(Long amount) {
+        this.accountBalance += amount;
+    }
+
+    // 출금
+    public void withdraw(Long amount) {
+        this.accountBalance -= amount;
     }
 }
