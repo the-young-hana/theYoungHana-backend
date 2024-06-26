@@ -3,7 +3,6 @@ package hana.reward.controller;
 import hana.common.annotation.MethodInfo;
 import hana.common.annotation.TypeInfo;
 import hana.common.exception.BaseExceptionResponse;
-import hana.reward.domain.Quiz;
 import hana.reward.dto.*;
 import hana.reward.service.RewardService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -269,7 +268,8 @@ public class RewardController {
     public ResponseEntity<RewardAnswerQuizResDto> answerQuiz(
             @Valid @RequestBody RewardAnswerQuizReqDto rewardAnswerQuizReqDto) {
         Long studentIdx = 3L;
-        RewardAnswerQuizResDto isCollect = rewardService.isCollect(studentIdx, rewardAnswerQuizReqDto);
+        RewardAnswerQuizResDto isCollect =
+                rewardService.isCollect(studentIdx, rewardAnswerQuizReqDto);
         return ResponseEntity.ok(isCollect);
     }
 

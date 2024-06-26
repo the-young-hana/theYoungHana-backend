@@ -6,7 +6,4 @@ import org.springframework.stereotype.Repository;
 
 @TypeInfo(name = "QuizRepository", description = "퀴즈 레포지토리")
 @Repository
-public interface QuizRepository extends JpaRepository<Quiz, Long> {
-
-
-}
+public interface QuizRepository extends JpaRepository<Quiz, Long> {}

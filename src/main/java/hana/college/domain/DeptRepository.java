@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 public interface DeptRepository extends JpaRepository<Dept, Long> {
     @Modifying
     @Transactional
-    @Query(value = "UPDATE departments SET dept_point = dept_point + 5 WHERE dept_idx = :deptIdx", nativeQuery = true)
+    @Query(
+            value = "UPDATE departments SET dept_point = dept_point + 5 WHERE dept_idx = :deptIdx",
+            nativeQuery = true)
     int updatePointByDeptIdx(@Param("deptIdx") Long deptIdx);
 }
