@@ -11,12 +11,15 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
 @TypeInfo(name = "SecurityConfig", description = "시큐리티 설정 클래스")
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends AbstractHttpConfigurer<SecurityConfig, HttpSecurity> {
+    private final JwtTokenProvider jwtTokenProvider;
+
     @MethodInfo(name = "filterChain", description = "스프링 시큐리티 필터 체인을 설정합니다.")
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -59,9 +62,16 @@ public class SecurityConfig extends AbstractHttpConfigurer<SecurityConfig, HttpS
                                         .permitAll()
                                         .anyRequest()
                                         .authenticated())
+                .addFilterBefore(
+                        new JwtAuthenticationFilter(jwtTokenProvider),
+                        UsernamePasswordAuthenticationFilter.class)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable);
 
         return httpSecurity.build();
+    }
+
+    public SecurityConfig(JwtTokenProvider jwtTokenProvider) {
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 }
