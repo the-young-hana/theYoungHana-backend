@@ -1,5 +1,6 @@
 package hana.member.domain;
 
+import hana.college.domain.Dept;
 import hana.common.annotation.TypeInfo;
 import hana.common.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -21,6 +22,10 @@ public class Student extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_idx", nullable = false)
     private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dept_idx", nullable = false)
+    private Dept dept;
 
     @Column(name = "student_name", nullable = false, length = 255)
     private String studentName;

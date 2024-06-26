@@ -5,13 +5,11 @@ import lombok.Getter;
 
 @Getter
 public class JwtToken {
-    private String grantType;
-    private String accessToken;
-    private String refreshToken;
+    private final String accessToken;
+    private final String refreshToken;
 
     @Builder
-    public JwtToken(String grantType, String accessToken, String refreshToken) {
-        this.grantType = grantType;
+    public JwtToken(String accessToken, String refreshToken) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }
