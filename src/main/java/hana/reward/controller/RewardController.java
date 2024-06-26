@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.Builder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -273,6 +274,7 @@ public class RewardController {
         return ResponseEntity.ok(isCollect);
     }
 
+    @Builder
     public RewardController(RewardService rewardService) {
         this.rewardService = rewardService;
     }
