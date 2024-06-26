@@ -1,6 +1,7 @@
 package hana.college.domain;
 
 import hana.common.annotation.TypeInfo;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -17,4 +18,6 @@ public interface DeptRepository extends JpaRepository<Dept, Long> {
             value = "UPDATE departments SET dept_point = dept_point + 5 WHERE dept_idx = :deptIdx",
             nativeQuery = true)
     int updatePointByDeptIdx(@Param("deptIdx") Long deptIdx);
+
+    Optional<Dept> findByDeptAccountNumber(String deptAccountNumber);
 }

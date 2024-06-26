@@ -32,9 +32,17 @@ public class TransactionService {
         Account myAccount = accountService.findByAccountIdx(dto.getMyAccountIdx());
         accountService.withdraw(dto.getMyAccountIdx(), dto.getAmount());
 
-        Account receiveAccount = accountService.findByAccountNumber(dto.getReceiveAccount());
-        accountService.deposit(dto.getReceiveAccount(), dto.getAmount());
+        Account receiveAccount;
+        if (dto.getReceiveAccount()
+                .startsWith("125934691")) { // 125910692는 일반 하나은행 계좌, 125934691은 가상 계좌로 가정
+            Long accountIdx =
+                    deptService.findAccountIdxByDeptAccountNumber(dto.getReceiveAccount());
+            receiveAccount = accountService.findByAccountIdx(accountIdx);
+        } else {
+            receiveAccount = accountService.findByAccountNumber(dto.getReceiveAccount());
+        }
 
+        accountService.deposit(receiveAccount.getAccountNumber(), dto.getAmount());
         // 거래 내역 생성(출금)
         transactionRepository.save(
                 Transaction.builder()
