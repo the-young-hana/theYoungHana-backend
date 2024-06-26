@@ -22,7 +22,7 @@ public class Quiz extends BaseEntity {
     private String quizContent;
 
     @Column(name = "quiz_answer", nullable = false)
-    private int quizAnswer;
+    private Boolean quizAnswer;
 
     @Column(name = "quiz_explanation", nullable = false)
     private String quizExplanation;
