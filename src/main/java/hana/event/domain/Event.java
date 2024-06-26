@@ -23,6 +23,9 @@ public class Event extends BaseEntity {
     @Column(name = "event_title", nullable = false, length = 50)
     private String eventTitle;
 
+    @Column(name = "event_content", nullable = false, columnDefinition = "LONGTEXT")
+    private String eventContent;
+
     @Column(name = "event_start_datetime", nullable = false)
     private LocalDateTime eventStartDatetime;
 

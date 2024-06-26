@@ -24,6 +24,9 @@ public class Knowledge extends BaseEntity {
     @Column(name = "knowledge_content", nullable = false, columnDefinition = "LONGTEXT")
     private String knowledgeContent;
 
+    @Column(name = "knowledge_summary", nullable = false, columnDefinition = "LONGTEXT")
+    private String knowledgeSummary;
+
     @Column(name = "knowledge_image", nullable = false)
     private String knowledgeImage;
 
