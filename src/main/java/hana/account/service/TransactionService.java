@@ -4,10 +4,15 @@ import hana.account.domain.Account;
 import hana.account.domain.Transaction;
 import hana.account.domain.TransactionRepository;
 import hana.account.domain.TransactionTypeEnumType;
+import hana.account.dto.DeptAccountTransactionResDto;
+import hana.account.dto.TransactionsReadResDto;
 import hana.account.dto.TransactionsRemitCreateReqDto;
 import hana.account.dto.TransactionsRemitCreateResDto;
+import hana.college.domain.Dept;
+import hana.college.service.DeptService;
 import hana.common.annotation.TypeInfo;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,6 +22,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class TransactionService {
     private final AccountService accountService;
+    private final DeptService deptService;
     private final TransactionRepository transactionRepository;
 
     @Transactional
@@ -61,9 +67,33 @@ public class TransactionService {
                 .build();
     }
 
+    public TransactionsReadResDto getTransactions(
+            Long deptIdx, String startDate, String endDate, String type, String sort, Long page) {
+
+        Dept dept = deptService.findByDeptIdx(deptIdx);
+        Account deptAccount = dept.getAccount();
+
+        List<DeptAccountTransactionResDto> transactions =
+                transactionRepository.getTransactions(
+                        deptAccount.getAccountIdx(), startDate, endDate, type, sort, page);
+
+        return TransactionsReadResDto.builder()
+                .data(
+                        TransactionsReadResDto.Data.builder()
+                                .deptName(dept.getDeptName())
+                                .deptAccountNumber(dept.getDeptAccountNumber())
+                                .deptAccountBalance(deptAccount.getAccountBalance())
+                                .deptAccountTransactions(transactions)
+                                .build())
+                .build();
+    }
+
     public TransactionService(
-            TransactionRepository transactionRepository, AccountService accountService) {
+            TransactionRepository transactionRepository,
+            AccountService accountService,
+            DeptService deptService) {
         this.transactionRepository = transactionRepository;
         this.accountService = accountService;
+        this.deptService = deptService;
     }
 }

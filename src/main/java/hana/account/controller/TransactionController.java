@@ -73,7 +73,9 @@ public class TransactionController {
             @RequestParam("type") String type,
             @RequestParam("sort") String sort,
             @RequestParam("page") Long page) {
-        return null;
+        TransactionsReadResDto returnDto =
+                transactionService.getTransactions(deptIdx, start, end, type, sort, page);
+        return ResponseEntity.ok(returnDto);
     }
 
     @MethodInfo(name = "remit", description = "송금")
