@@ -14,6 +14,14 @@ public class DeptService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 학과입니다."));
     }
 
+    public Long findAccountIdxByDeptAccountNumber(String deptAccountNumber) {
+        return deptRepository
+                .findByDeptAccountNumber(deptAccountNumber)
+                .orElseThrow()
+                .getAccount()
+                .getAccountIdx();
+    }
+
     public DeptService(DeptRepository deptRepository) {
         this.deptRepository = deptRepository;
     }
