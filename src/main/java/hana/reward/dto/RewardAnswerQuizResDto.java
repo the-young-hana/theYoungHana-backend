@@ -18,11 +18,13 @@ public class RewardAnswerQuizResDto extends BaseResponse {
     public static class Data {
         private final Boolean isCorrect;
         private final String explanation;
+        private final int point;
 
         @Builder
-        public Data(Boolean isCorrect, String explanation) {
+        public Data(Boolean isCorrect, String explanation, int point) {
             this.isCorrect = isCorrect;
             this.explanation = explanation;
+            this.point = point;
         }
     }
 }

@@ -4,6 +4,7 @@ import hana.common.annotation.MethodInfo;
 import hana.common.annotation.TypeInfo;
 import hana.common.exception.BaseExceptionResponse;
 import hana.reward.dto.*;
+import hana.reward.service.RewardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Reward", description = "리워드")
 @RequestMapping("api/v1")
 public class RewardController {
+    private final RewardService rewardService;
+
     @MethodInfo(name = "readReward", description = "내 리워드를 조회합니다.")
     @GetMapping("/rewards")
     @Operation(
@@ -204,7 +207,8 @@ public class RewardController {
                                                                 BaseExceptionResponse.class)))
             })
     public ResponseEntity<RewardQuestionQuizResDto> questionQuiz() {
-        return null;
+        RewardQuestionQuizResDto getRandomQuiz = rewardService.getRandomQuiz();
+        return ResponseEntity.ok(getRandomQuiz);
     }
 
     @MethodInfo(name = "answerQuiz", description = "퀴즈를 풉니다.")
@@ -263,6 +267,13 @@ public class RewardController {
             })
     public ResponseEntity<RewardAnswerQuizResDto> answerQuiz(
             @Valid @RequestBody RewardAnswerQuizReqDto rewardAnswerQuizReqDto) {
-        return null;
+        Long studentIdx = 3L;
+        RewardAnswerQuizResDto isCollect =
+                rewardService.isCollect(studentIdx, rewardAnswerQuizReqDto);
+        return ResponseEntity.ok(isCollect);
+    }
+
+    public RewardController(RewardService rewardService) {
+        this.rewardService = rewardService;
     }
 }

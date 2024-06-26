@@ -40,6 +40,7 @@ apply from: "$rootDir/sonarqube.gradle"
 dependencies {
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter', version: springBootVersion
 	testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: springBootVersion
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testRuntimeOnly group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.10.2'
 	compileOnly group: 'org.projectlombok', name: 'lombok', version: lombokVersion
 	annotationProcessor group: 'org.projectlombok', name: 'lombok', version: lombokVersion

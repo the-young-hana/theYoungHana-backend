@@ -3,9 +3,12 @@ package hana.member.controller;
 import hana.common.annotation.MethodInfo;
 import hana.common.annotation.TypeInfo;
 import hana.common.exception.BaseExceptionResponse;
+import hana.common.vo.JwtToken;
+import hana.member.domain.Student;
 import hana.member.dto.MemberLoginReqDto;
 import hana.member.dto.MemberLoginResDto;
 import hana.member.service.MemberService;
+import hana.member.service.StudentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/v1")
 public class MemberController {
     private final MemberService memberService;
+    private final StudentService studentService;
 
     @MethodInfo(name = "login", description = "회원 간편 로그인을 실행합니다.")
     @PostMapping("/member/login")
@@ -76,10 +80,24 @@ public class MemberController {
             })
     public ResponseEntity<MemberLoginResDto> login(
             @Valid @RequestBody MemberLoginReqDto memberLoginReqDto) {
-        return ResponseEntity.ok().body(memberService.login(memberLoginReqDto));
+        JwtToken jwtToken = memberService.login(memberLoginReqDto.getPassword());
+        Student student =
+                studentService.findStudentByMemberIdx(
+                        memberService.findByMemberPw(memberLoginReqDto.getPassword()));
+
+        return ResponseEntity.ok(
+                MemberLoginResDto.builder()
+                        .data(
+                                MemberLoginResDto.Data.builder()
+                                        .accessToken(jwtToken.getAccessToken())
+                                        .refreshToken(jwtToken.getRefreshToken())
+                                        .deptIdx(student.getDept().getDeptIdx())
+                                        .build())
+                        .build());
     }
 
-    public MemberController(MemberService memberService) {
+    public MemberController(MemberService memberService, StudentService studentService) {
         this.memberService = memberService;
+        this.studentService = studentService;
     }
 }

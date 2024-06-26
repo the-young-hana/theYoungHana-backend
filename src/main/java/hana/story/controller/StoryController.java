@@ -63,7 +63,7 @@ public class StoryController {
                                                         implementation =
                                                                 BaseExceptionResponse.class)))
             })
-    public ResponseEntity<StoriesReadResDto> readStories(@RequestParam("page") Long page) {
+    public ResponseEntity<StoriesReadResDto> readStories(@RequestParam("page") Integer page) {
         return null;
     }
 

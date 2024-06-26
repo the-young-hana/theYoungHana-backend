@@ -2,12 +2,11 @@ package hana.member.service;
 
 import hana.common.annotation.MethodInfo;
 import hana.common.annotation.TypeInfo;
-import hana.common.dto.JwtToken;
-import hana.common.utils.JwtUtils;
+import hana.common.config.JwtTokenProvider;
+import hana.common.vo.JwtToken;
 import hana.member.domain.Member;
 import hana.member.domain.MemberRepository;
-import hana.member.dto.MemberLoginReqDto;
-import hana.member.dto.MemberLoginResDto;
+import hana.member.exception.UnlistedMemberException;
 import lombok.Builder;
 import org.springframework.stereotype.Service;
 
@@ -15,30 +14,32 @@ import org.springframework.stereotype.Service;
 @Service
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final JwtUtils jwtUtils;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @MethodInfo(name = "login", description = "회원 로그인을 실행합니다.")
-    public MemberLoginResDto login(MemberLoginReqDto memberLoginReqDto) {
-        Member member = memberRepository.findByMemberPw(memberLoginReqDto.getPassword());
+    public JwtToken login(String password) {
+        Member member = memberRepository.findByMemberPw(password);
 
         if (member == null) {
-            throw new IllegalArgumentException("회원 정보가 없습니다.");
+            throw new UnlistedMemberException();
         }
 
-        JwtToken jwtToken = jwtUtils.generateToken(member);
+        return jwtTokenProvider.generateToken(member);
+    }
 
-        return MemberLoginResDto.builder()
-                .data(
-                        MemberLoginResDto.Data.builder()
-                                .accessToken(jwtToken.getAccessToken())
-                                .refreshToken(jwtToken.getRefreshToken())
-                                .build())
-                .build();
+    @MethodInfo(name = "findByMemberIdx", description = "회원 번호로 회원 정보를 조회합니다.")
+    public Member findByMemberIdx(Long memberIdx) {
+        return memberRepository.findByMemberIdx(memberIdx);
+    }
+
+    @MethodInfo(name = "findByMemberPw", description = "회원 비밀번호로 회원 정보를 조회합니다.")
+    public Member findByMemberPw(String memberPw) {
+        return memberRepository.findByMemberPw(memberPw);
     }
 
     @Builder
-    public MemberService(JwtUtils jwtUtils, MemberRepository memberRepository) {
-        this.jwtUtils = jwtUtils;
+    public MemberService(JwtTokenProvider jwtTokenProvider, MemberRepository memberRepository) {
+        this.jwtTokenProvider = jwtTokenProvider;
         this.memberRepository = memberRepository;
     }
 }
