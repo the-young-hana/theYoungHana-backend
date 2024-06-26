@@ -5,11 +5,10 @@ import hana.knowledge.domain.Knowledge;
 import hana.knowledge.domain.KnowledgeRepository;
 import hana.knowledge.dto.KnowledgeReadResDto;
 import hana.knowledge.dto.KnowledgesReadResDto;
+import hana.knowledge.exception.UnlistedKnowledgeException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import hana.knowledge.exception.UnlistedKnowledgeException;
 import org.springframework.stereotype.Service;
 
 @TypeInfo(name = "KnowledgeService", description = "금융상식 서비스")
@@ -34,21 +33,22 @@ public class KnowledgeService {
     }
 
     public KnowledgeReadResDto getKnowledgeById(Long knowledgeIdx) {
-        Knowledge knowledge = knowledgeRepository.findById(knowledgeIdx)
-                .orElseThrow(UnlistedKnowledgeException::new);
+        Knowledge knowledge =
+                knowledgeRepository
+                        .findById(knowledgeIdx)
+                        .orElseThrow(UnlistedKnowledgeException::new);
 
-        KnowledgeReadResDto.Data data = KnowledgeReadResDto.Data.builder()
-                .knowledgeTitle(knowledge.getKnowledgeTitle())
-                .knowledgeContent(knowledge.getKnowledgeContent())
-                .knowledgeImage(knowledge.getKnowledgeImage())
-                .knowledgeCategory(knowledge.getKnowledgeCategory())
-                .createdAt(knowledge.getCreatedAt())
-                .updatedAt(knowledge.getUpdatedAt())
-                .build();
+        KnowledgeReadResDto.Data data =
+                KnowledgeReadResDto.Data.builder()
+                        .knowledgeTitle(knowledge.getKnowledgeTitle())
+                        .knowledgeContent(knowledge.getKnowledgeContent())
+                        .knowledgeImage(knowledge.getKnowledgeImage())
+                        .knowledgeCategory(knowledge.getKnowledgeCategory())
+                        .createdAt(knowledge.getCreatedAt())
+                        .updatedAt(knowledge.getUpdatedAt())
+                        .build();
 
-        return KnowledgeReadResDto.builder()
-                .data(data)
-                .build();
+        return KnowledgeReadResDto.builder().data(data).build();
     }
 
     public KnowledgeService(KnowledgeRepository knowledgeRepository) {
