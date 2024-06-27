@@ -1,8 +1,6 @@
 package hana.common.config;
 
 import hana.common.vo.UserDetails;
-import hana.member.domain.Member;
-import hana.member.domain.Student;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
@@ -27,9 +25,10 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
         if (token != null) {
             try {
-                Member member = jwtTokenProvider.getMember(token);
-                Student student = jwtTokenProvider.getStudent(token);
-                UserDetails userDetails = new UserDetails(member, student);
+                UserDetails userDetails =
+                        new UserDetails(
+                                jwtTokenProvider.getMember(token),
+                                jwtTokenProvider.getStudent(token));
                 Authentication authentication =
                         new UsernamePasswordAuthenticationToken(
                                 userDetails, "", userDetails.getAuthorities());
