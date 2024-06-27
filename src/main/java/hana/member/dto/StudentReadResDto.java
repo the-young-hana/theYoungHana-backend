@@ -21,7 +21,8 @@ public class StudentReadResDto extends BaseResponse {
         private final String studentId;
         private final String studentCollege;
         private final String studentDept;
-        private final String studentCardImage;
+        private final String studentCardFrontImage;
+        private final String studentCardBackImage;
         private final Boolean isVertical;
 
         @Builder
@@ -31,14 +32,16 @@ public class StudentReadResDto extends BaseResponse {
                 String studentId,
                 String studentCollege,
                 String studentDept,
-                String studentCardImage,
+                String studentCardFrontImage,
+                String studentCardBackImage,
                 Boolean isVertical) {
             this.studentIdx = studentIdx;
             this.studentName = studentName;
             this.studentId = studentId;
             this.studentCollege = studentCollege;
             this.studentDept = studentDept;
-            this.studentCardImage = studentCardImage;
+            this.studentCardFrontImage = studentCardFrontImage;
+            this.studentCardBackImage = studentCardBackImage;
             this.isVertical = isVertical;
         }
     }
