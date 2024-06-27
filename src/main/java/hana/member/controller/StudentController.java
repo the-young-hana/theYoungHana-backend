@@ -19,13 +19,12 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.io.ByteArrayOutputStream;
+import java.util.Base64;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.io.ByteArrayOutputStream;
-import java.util.Base64;
 
 @TypeInfo(name = "StudentController", description = "학생 컨트롤러")
 @RestController
@@ -132,16 +131,20 @@ public class StudentController {
     public ResponseEntity<StudentQrReadResDto> readStudentQr() {
         try {
             String qrContent = RandomStringGenerator.generateRandomString(10);
-            BitMatrix bitMatrix = new MultiFormatWriter().encode(qrContent, BarcodeFormat.QR_CODE, 200, 200);
+            BitMatrix bitMatrix =
+                    new MultiFormatWriter().encode(qrContent, BarcodeFormat.QR_CODE, 200, 200);
             ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
             MatrixToImageWriter.writeToStream(bitMatrix, "PNG", pngOutputStream);
-            String base64QrImage = Base64.getEncoder().encodeToString(pngOutputStream.toByteArray());
+            String base64QrImage =
+                    Base64.getEncoder().encodeToString(pngOutputStream.toByteArray());
 
-            StudentQrReadResDto response = StudentQrReadResDto.builder()
-                    .data(StudentQrReadResDto.Data.builder()
-                            .qrImage("data:image/png;base64," + base64QrImage)
-                            .build())
-                    .build();
+            StudentQrReadResDto response =
+                    StudentQrReadResDto.builder()
+                            .data(
+                                    StudentQrReadResDto.Data.builder()
+                                            .qrImage("data:image/png;base64," + base64QrImage)
+                                            .build())
+                            .build();
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(null); // 서버 오류
