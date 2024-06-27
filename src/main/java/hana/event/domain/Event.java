@@ -6,6 +6,7 @@ import hana.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -57,4 +58,32 @@ public class Event extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dept_idx")
     private Dept dept;
+
+    @Builder
+    public Event(
+            String eventTitle,
+            String eventContent,
+            LocalDateTime eventStartDatetime,
+            LocalDateTime eventEndDatetime,
+            LocalDateTime eventDatetime,
+            Long eventFee,
+            LocalDateTime eventFeeStartDatetime,
+            LocalDateTime eventFeeEndDatetime,
+            String eventImageList,
+            long eventLimit,
+            EventEnumType eventType,
+            Dept dept) {
+        this.eventTitle = eventTitle;
+        this.eventContent = eventContent;
+        this.eventStartDatetime = eventStartDatetime;
+        this.eventEndDatetime = eventEndDatetime;
+        this.eventDatetime = eventDatetime;
+        this.eventFee = eventFee;
+        this.eventFeeStartDatetime = eventFeeStartDatetime;
+        this.eventFeeEndDatetime = eventFeeEndDatetime;
+        this.eventImageList = eventImageList;
+        this.eventLimit = eventLimit;
+        this.eventType = eventType;
+        this.dept = dept;
+    }
 }

@@ -1,18 +1,25 @@
 package hana.event.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import hana.common.annotation.AuthenticatedMember;
 import hana.common.annotation.MethodInfo;
 import hana.common.annotation.TypeInfo;
 import hana.common.exception.BaseExceptionResponse;
+import hana.common.utils.ImageUtils;
+import hana.common.utils.JsonUtils;
 import hana.common.utils.JwtUtils;
+import hana.event.domain.Event;
 import hana.event.dto.*;
+import hana.event.exception.UnavailableEventException;
 import hana.event.service.EventService;
+import hana.member.domain.Member;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.time.LocalDateTime;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +30,8 @@ import org.springframework.web.bind.annotation.*;
 public class EventController {
     private final EventService eventService;
     private final JwtUtils jwtUtils;
+    private final ImageUtils imageUtils;
+    private final JsonUtils jsonUtils;
 
     @MethodInfo(name = "readEvents", description = "이벤트 목록을 조회합니다.")
     @GetMapping("/events")
@@ -79,7 +88,18 @@ public class EventController {
                                                         EventsReadResDto.Data.builder()
                                                                 .eventIdx(event.getEventIdx())
                                                                 .eventTitle(event.getEventTitle())
-                                                                .eventSummary(event.getEventTitle())
+                                                                .eventSummary(
+                                                                        event.getEventContent()
+                                                                                                .length()
+                                                                                        > 30
+                                                                                ? event.getEventContent()
+                                                                                        .substring(
+                                                                                                0,
+                                                                                                30)
+                                                                                        .concat(
+                                                                                                "...")
+                                                                                : event
+                                                                                        .getEventContent())
                                                                 .eventType(
                                                                         event.getEventType()
                                                                                 .getDescription())
@@ -134,8 +154,45 @@ public class EventController {
                                                         implementation =
                                                                 BaseExceptionResponse.class)))
             })
-    public ResponseEntity<EventReadResDto> readEvent(@PathVariable("eventIdx") Long eventIdx) {
-        return null;
+    public ResponseEntity<EventReadResDto> readEvent(@PathVariable("eventIdx") Long eventIdx)
+            throws JsonProcessingException {
+        Member member = jwtUtils.getMember();
+        Event event = eventService.readEvent(eventIdx);
+
+        if (event == null) {
+            throw new UnavailableEventException();
+        }
+
+        return ResponseEntity.ok(
+                EventReadResDto.builder()
+                        .data(
+                                EventReadResDto.Data.builder()
+                                        .eventTitle(event.getEventTitle())
+                                        .eventFee(event.getEventFee())
+                                        .eventContent(event.getEventContent())
+                                        .eventImageList(
+                                                jsonUtils.convertJsonToList(
+                                                        event.getEventImageList()))
+                                        .eventStart(event.getEventStartDatetime())
+                                        .eventEnd(event.getEventEndDatetime())
+                                        .isEnd(
+                                                LocalDateTime.now()
+                                                                .isBefore(
+                                                                        event
+                                                                                .getEventStartDatetime())
+                                                        ? 0
+                                                        : LocalDateTime.now()
+                                                                        .isAfter(
+                                                                                event
+                                                                                        .getEventEndDatetime())
+                                                                ? 1
+                                                                : 2)
+                                        .isMine(
+                                                event.getCreatedBy()
+                                                        .getMemberIdx()
+                                                        .equals(member.getMemberIdx()))
+                                        .build())
+                        .build());
     }
 
     @MethodInfo(name = "createEvent", description = "이벤트를 추가합니다.")
@@ -396,8 +453,14 @@ public class EventController {
         return null;
     }
 
-    public EventController(EventService eventService, JwtUtils jwtUtils) {
+    public EventController(
+            EventService eventService,
+            JwtUtils jwtUtils,
+            ImageUtils imageUtils,
+            JsonUtils jsonUtils) {
         this.eventService = eventService;
         this.jwtUtils = jwtUtils;
+        this.imageUtils = imageUtils;
+        this.jsonUtils = jsonUtils;
     }
 }

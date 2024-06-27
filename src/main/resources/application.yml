@@ -30,6 +30,11 @@ spring:
     type:
     redis:
       cache-null-values: true
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 50MB
   docker:
     compose:
       enabled: ${DOCKER_COMPOSE_ENABLED:false}
