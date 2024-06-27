@@ -22,7 +22,7 @@ public class TransactionRepositoryImpl implements TransactionRepositoryCustom {
     }
 
     @Override
-    public List<DeptAccountTransactionResDto> getTransactions(
+    public List<DeptAccountTransactionResDto> getTransactionsByDate(
             Long accountIdx,
             String startDate,
             String endDate,
@@ -68,6 +68,28 @@ public class TransactionRepositoryImpl implements TransactionRepositoryCustom {
                 .orderBy(orderSpecifier)
                 .offset((page - 1) * PAGE_SIZE)
                 .limit(PAGE_SIZE)
+                .fetch();
+    }
+
+    @Override
+    public List<DeptAccountTransactionResDto> getTransactionsByStory(Long storyIdx) {
+
+        return queryFactory
+                .select(
+                        Projections.constructor(
+                                DeptAccountTransactionResDto.class,
+                                transaction.transactionIdx,
+                                transaction.transactionId,
+                                transaction.transactionName,
+                                transaction.transactionAmount,
+                                transaction.transactionBalance,
+                                transaction.transactionTypeEnumType,
+                                transactionDetail.transactionDetailIdx.isNotNull(),
+                                transaction.createdAt))
+                .from(transaction)
+                .leftJoin(transactionDetail)
+                .on(transaction.transactionIdx.eq(transactionDetail.transaction.transactionIdx))
+                .where(transactionDetail.story.storyIdx.eq(storyIdx))
                 .fetch();
     }
 }

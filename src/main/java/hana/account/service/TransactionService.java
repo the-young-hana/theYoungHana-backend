@@ -75,6 +75,7 @@ public class TransactionService {
                 .build();
     }
 
+    @Transactional
     public TransactionsReadResDto getTransactions(
             Long deptIdx, String startDate, String endDate, String type, String sort, Long page) {
 
@@ -82,7 +83,7 @@ public class TransactionService {
         Account deptAccount = dept.getAccount();
 
         List<DeptAccountTransactionResDto> transactions =
-                transactionRepository.getTransactions(
+                transactionRepository.getTransactionsByDate(
                         deptAccount.getAccountIdx(), startDate, endDate, type, sort, page);
 
         return TransactionsReadResDto.builder()
@@ -94,6 +95,11 @@ public class TransactionService {
                                 .deptAccountTransactions(transactions)
                                 .build())
                 .build();
+    }
+
+    @Transactional
+    public List<DeptAccountTransactionResDto> getTransactionsByStory(Long storyIdx) {
+        return transactionRepository.getTransactionsByStory(storyIdx);
     }
 
     public TransactionService(
