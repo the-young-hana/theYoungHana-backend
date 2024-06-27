@@ -2,6 +2,7 @@ package hana.story.service;
 
 import hana.story.domain.StoryComment;
 import hana.story.domain.StoryCommentRepository;
+import hana.story.dto.StoryRepresentativeCommentResDto;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +14,16 @@ public class StoryCommentService {
         return storyCommentRepository.countByStory_StoryIdx(storyIdx);
     }
 
-    public String getStoryComment(Long storyIdx) {
+    public StoryRepresentativeCommentResDto getStoryComment(Long storyIdx) {
         Optional<StoryComment> storyComment =
                 storyCommentRepository.findFirstByStory_StoryIdx(storyIdx);
         if (storyComment.isPresent()) {
-            return storyComment.get().getStoryCommentContent();
+            StoryComment sc = storyComment.get();
+            return StoryRepresentativeCommentResDto.builder()
+                    .commentIdx(sc.getStoryCommentIdx())
+                    .commentContent(sc.getStoryCommentContent())
+                    .createdAt(sc.getCreatedAt())
+                    .build();
         }
         return null;
     }

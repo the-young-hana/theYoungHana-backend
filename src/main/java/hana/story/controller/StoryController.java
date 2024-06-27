@@ -110,7 +110,8 @@ public class StoryController {
                                                                 BaseExceptionResponse.class)))
             })
     public ResponseEntity<StoryReadResDto> readStory(@PathVariable("storyIdx") Long storyIdx) {
-        return null;
+
+        return ResponseEntity.ok(storyService.getStory(storyIdx));
     }
 
     @MethodInfo(name = "createStory", description = "스토리를 추가합니다.")
