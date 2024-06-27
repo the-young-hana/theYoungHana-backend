@@ -14,7 +14,8 @@ public class StoryCommentService {
     }
 
     public String getStoryComment(Long storyIdx) {
-        Optional<StoryComment> storyComment = storyCommentRepository.findFirstByStory_StoryIdx(storyIdx);
+        Optional<StoryComment> storyComment =
+                storyCommentRepository.findFirstByStory_StoryIdx(storyIdx);
         if (storyComment.isPresent()) {
             return storyComment.get().getStoryCommentContent();
         }

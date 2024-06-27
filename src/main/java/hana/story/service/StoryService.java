@@ -6,7 +6,6 @@ import hana.common.annotation.TypeInfo;
 import hana.story.domain.Story;
 import hana.story.domain.StoryRepository;
 import hana.story.dto.StoriesReadResDto;
-
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -25,7 +24,10 @@ public class StoryService {
     public StoriesReadResDto getStories(Integer page, Long deptIdx) {
 
         // deptIdx로 스토리 조회
-        Page<Story> stories = storyRepository.findByDept_DeptIdx(deptIdx, PageRequest.of(page, 10 , Sort.by(Sort.Direction.DESC, "createdAt")));
+        Page<Story> stories =
+                storyRepository.findByDept_DeptIdx(
+                        deptIdx,
+                        PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "createdAt")));
 
         // 모두 합쳐서 거래내역 생성.
         List<StoriesReadResDto.Data> datas = new ArrayList<>();
