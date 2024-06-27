@@ -11,8 +11,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.util.List;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @TypeInfo(name = "StoryController", description = "스토리 컨트롤러")
 @RestController
@@ -110,25 +113,27 @@ public class StoryController {
                                                                 BaseExceptionResponse.class)))
             })
     public ResponseEntity<StoryReadResDto> readStory(@PathVariable("storyIdx") Long storyIdx) {
-        return null;
+
+        return ResponseEntity.ok(storyService.getStory(storyIdx));
     }
 
-    @MethodInfo(name = "createStory", description = "스토리를 추가합니다.")
-    @PostMapping("/stories")
+    @PostMapping(
+            value = "/stories",
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     @Operation(
             summary = "스토리 추가",
             description = "스토리를 추가합니다.",
             method = "POST",
-            requestBody =
-                    @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                            description = "스토리 추가 요청",
-                            required = true,
-                            content =
-                                    @Content(
-                                            schema =
-                                                    @Schema(
-                                                            implementation =
-                                                                    StoryCreateReqDto.class))),
+            //            requestBody =
+            //            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            //                    description = "스토리 추가 요청",
+            //                    required = true,
+            //                    content =
+            //                    @Content(
+            //                            schema =
+            //                            @Schema(
+            //                                    implementation =
+            //                                            StoryCreateReqDto.class))),
             responses = {
                 @ApiResponse(
                         responseCode = "200",
@@ -166,8 +171,9 @@ public class StoryController {
                                                                 BaseExceptionResponse.class)))
             })
     public ResponseEntity<StoryCreateResDto> createStory(
-            @Valid @RequestBody StoryCreateReqDto storyCreateReqDto) {
-        return null;
+            @RequestPart(value = "StoryCreateReqDto") StoryCreateReqDto storyCreateReqDto,
+            @RequestPart(value = "imgs", required = false) List<MultipartFile> imgs) {
+        return ResponseEntity.ok(storyService.createStory(storyCreateReqDto, imgs));
     }
 
     @MethodInfo(name = "updateStory", description = "스토리를 수정합니다.")

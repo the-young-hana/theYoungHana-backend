@@ -22,7 +22,6 @@ public class StoriesReadResDto extends BaseResponse {
         private final String storyTitle;
         private final Long storyLikeNum;
         private final Long storyCommentNum;
-        private final String storyComment;
         private final List<DeptAccountTransactionResDto> transactionList;
 
         @Builder
@@ -31,14 +30,12 @@ public class StoriesReadResDto extends BaseResponse {
                 String storyTitle,
                 Long storyLikeNum,
                 Long storyCommentNum,
-                String storyComment,
                 List<DeptAccountTransactionResDto> transactionList) {
             super();
             this.storyIdx = storyIdx;
             this.storyTitle = storyTitle;
             this.storyLikeNum = storyLikeNum;
             this.storyCommentNum = storyCommentNum;
-            this.storyComment = storyComment;
             this.transactionList = transactionList;
         }
     }
