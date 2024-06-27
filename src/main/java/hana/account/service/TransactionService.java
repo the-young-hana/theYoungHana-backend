@@ -4,10 +4,7 @@ import hana.account.domain.Account;
 import hana.account.domain.Transaction;
 import hana.account.domain.TransactionRepository;
 import hana.account.domain.TransactionTypeEnumType;
-import hana.account.dto.DeptAccountTransactionResDto;
-import hana.account.dto.TransactionsReadResDto;
-import hana.account.dto.TransactionsRemitCreateReqDto;
-import hana.account.dto.TransactionsRemitCreateResDto;
+import hana.account.dto.*;
 import hana.college.domain.Dept;
 import hana.college.service.DeptService;
 import hana.common.annotation.TypeInfo;
@@ -82,7 +79,7 @@ public class TransactionService {
         Dept dept = deptService.findByDeptIdx(deptIdx);
         Account deptAccount = dept.getAccount();
 
-        List<DeptAccountTransactionResDto> transactions =
+        List<TransactionsByDateResDto> transactions =
                 transactionRepository.getTransactionsByDate(
                         deptAccount.getAccountIdx(), startDate, endDate, type, sort, page);
 
