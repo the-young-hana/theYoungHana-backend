@@ -1,7 +1,7 @@
 package hana.story.dto;
 
+import hana.account.dto.DeptAccountTransactionResDto;
 import hana.common.dto.BaseResponse;
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,7 +22,8 @@ public class StoriesReadResDto extends BaseResponse {
         private final String storyTitle;
         private final Long storyLikeNum;
         private final Long storyCommentNum;
-        private final List<Transaction> transactionList;
+        private final String storyComment;
+        private final List<DeptAccountTransactionResDto> transactionList;
 
         @Builder
         public Data(
@@ -30,45 +31,15 @@ public class StoriesReadResDto extends BaseResponse {
                 String storyTitle,
                 Long storyLikeNum,
                 Long storyCommentNum,
-                List<Transaction> transactionList) {
+                String storyComment,
+                List<DeptAccountTransactionResDto> transactionList) {
             super();
             this.storyIdx = storyIdx;
             this.storyTitle = storyTitle;
             this.storyLikeNum = storyLikeNum;
             this.storyCommentNum = storyCommentNum;
+            this.storyComment = storyComment;
             this.transactionList = transactionList;
-        }
-
-        @Getter
-        public static class Transaction {
-            private final Long transactionIdx;
-            private final String transactionId;
-            private final String transactionName;
-            private final Long transactionAmount;
-            private final Long transactionBalance;
-            private final String transactionType;
-            private final Boolean transactionIsUsed;
-            private final LocalDateTime transactionDate;
-
-            @Builder
-            public Transaction(
-                    Long transactionIdx,
-                    String transactionId,
-                    String transactionName,
-                    Long transactionAmount,
-                    Long transactionBalance,
-                    String transactionType,
-                    Boolean transactionIsUsed,
-                    LocalDateTime transactionDate) {
-                this.transactionIdx = transactionIdx;
-                this.transactionId = transactionId;
-                this.transactionName = transactionName;
-                this.transactionAmount = transactionAmount;
-                this.transactionBalance = transactionBalance;
-                this.transactionType = transactionType;
-                this.transactionIsUsed = transactionIsUsed;
-                this.transactionDate = transactionDate;
-            }
         }
     }
 }

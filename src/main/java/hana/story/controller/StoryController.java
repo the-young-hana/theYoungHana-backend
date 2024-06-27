@@ -22,7 +22,7 @@ public class StoryController {
     private final StoryService storyService;
 
     @MethodInfo(name = "readStories", description = "스토리 목록을 조회합니다.")
-    @GetMapping("/stories")
+    @GetMapping("/stories/{deptIdx}")
     @Operation(
             summary = "스토리 목록 조회",
             description = "스토리 목록을 조회합니다.",
@@ -63,12 +63,14 @@ public class StoryController {
                                                         implementation =
                                                                 BaseExceptionResponse.class)))
             })
-    public ResponseEntity<StoriesReadResDto> readStories(@RequestParam("page") Integer page) {
-        return null;
+    public ResponseEntity<StoriesReadResDto> readStories(
+            @RequestParam("page") Integer page, @PathVariable("deptIdx") Long deptIdx) {
+
+        return ResponseEntity.ok(storyService.getStories(page, deptIdx));
     }
 
     @MethodInfo(name = "readStory", description = "스토리를 상세 조회합니다.")
-    @GetMapping("/stories/{storyIdx}")
+    @GetMapping("/stories/{storyIdx}/detail")
     @Operation(
             summary = "스토리 상세 조회",
             description = "스토리를 상세 조회합니다.",
