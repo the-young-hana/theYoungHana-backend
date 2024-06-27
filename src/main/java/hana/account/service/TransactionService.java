@@ -99,6 +99,12 @@ public class TransactionService {
         return transactionRepository.getTransactionsByStory(storyIdx);
     }
 
+    public Transaction findByTransactionIdx(Long transactionIdx) {
+        return transactionRepository
+                .findById(transactionIdx)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 거래 정보입니다."));
+    }
+
     public TransactionService(
             TransactionRepository transactionRepository,
             AccountService accountService,

@@ -5,6 +5,7 @@ import hana.common.annotation.TypeInfo;
 import hana.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,10 +26,21 @@ public class Story extends BaseEntity {
     @Column(name = "story_content", nullable = false)
     private String storyContent;
 
-    @Column(name = "story_image_list", nullable = false, columnDefinition = "JSON")
+    @Column(name = "story_image_list")
     private String storyImageList;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dept_idx")
     private Dept dept;
+
+    @Builder
+    public Story(String storyTitle, String storyContent, Dept dept) {
+        this.storyTitle = storyTitle;
+        this.storyContent = storyContent;
+        this.dept = dept;
+    }
+
+    public void postImages(String storyImageList) {
+        this.storyImageList = storyImageList;
+    }
 }
