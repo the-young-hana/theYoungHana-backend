@@ -49,4 +49,8 @@ public class Story extends BaseEntity {
         this.storyTitle = storyUpdateReqDto.getStoryTitle();
         this.storyContent = storyUpdateReqDto.getStoryContent();
     }
+
+    public void delete() {
+        this.deletedYn = true;
+    }
 }

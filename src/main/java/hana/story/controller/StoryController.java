@@ -281,7 +281,7 @@ public class StoryController {
                                                                 BaseExceptionResponse.class)))
             })
     public ResponseEntity<StoryDeleteResDto> deleteStory(@PathVariable("storyIdx") Long storyIdx) {
-        return null;
+        return ResponseEntity.ok(storyService.deleteStory(storyIdx));
     }
 
     @MethodInfo(name = "createStoryLike", description = "스토리 좋아요를 추가합니다.")

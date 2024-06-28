@@ -152,6 +152,18 @@ public class StoryService {
                 .build();
     }
 
+    @Transactional
+    public StoryDeleteResDto deleteStory(Long storyIdx) {
+        // 스토리 삭제
+        Story story = findByStoryIdx(storyIdx);
+        story.delete();
+        // 거래내역 삭제
+        transactionDetailService.deleteTransactionDetailsByStory(storyIdx);
+        return StoryDeleteResDto.builder()
+                .data(StoryDeleteResDto.Data.builder().storyIdx(storyIdx).build())
+                .build();
+    }
+
     public Story findByStoryIdx(Long storyIdx) {
         return storyRepository
                 .findById(storyIdx)
