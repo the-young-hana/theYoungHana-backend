@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 @TypeInfo(name = "StoryRepository", description = "스토리 레포지토리")
 @Repository
 public interface StoryRepository extends JpaRepository<Story, Long> {
-    Page<Story> findByDept_DeptIdx(Long deptIdx, Pageable pageable);
+    Page<Story> findByDept_DeptIdxAndDeletedYn(Long deptIdx, Pageable pageable, boolean deletedYn);
 }
