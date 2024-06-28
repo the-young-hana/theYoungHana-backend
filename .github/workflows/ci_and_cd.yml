@@ -21,9 +21,10 @@ jobs:
 
       - name: 구글 Credential 파일 추가
         run: |
-            touch theyounghana-ff6c3-firebase-adminsdk-xsbw0-b4fd60e217.json
-            echo "${{ secrets.FCM_GOOGLE_APPLICATION_CREDENTIALS_FILE }}" >> theyounghana-ff6c3-firebase-adminsdk-xsbw0-b4fd60e217.json
-        working-directory: src/main/resources
+          cd ./src/main/resources 
+          touch ./theyounghana-ff6c3-firebase-adminsdk-xsbw0-b4fd60e217.json
+          echo "${{ secrets.FCM_GOOGLE_APPLICATION_CREDENTIALS_FILE }}" >> ./theyounghana-ff6c3-firebase-adminsdk-xsbw0-b4fd60e217.json
+          ls
 
       - name: gradlew 실행 권한 부여
         run: chmod +x ./gradlew
