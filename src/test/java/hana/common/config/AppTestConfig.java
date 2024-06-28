@@ -20,5 +20,7 @@ public class AppTestConfig implements BeforeAllCallback {
         System.setProperty("cloud.aws.credentials.secretKey", "");
         System.setProperty("cloud.aws.region.static", "");
         System.setProperty("cloud.aws.s3.bucket", "");
+        System.setProperty("fcm.google_application_credentials", "");
+        System.setProperty("fcm.url", "");
     }
 }
