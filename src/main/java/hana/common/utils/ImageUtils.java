@@ -1,10 +1,13 @@
 package hana.common.utils;
 
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.DeleteObjectsRequest;
+import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import hana.common.annotation.MethodInfo;
 import hana.common.annotation.TypeInfo;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -44,13 +47,36 @@ public class ImageUtils {
                     createImage(
                             directory,
                             multipartFile,
-                            multipartFiles.indexOf(multipartFile) + ".png"));
+                            Instant.now().toEpochMilli()
+                                    + "-"
+                                    + multipartFiles.indexOf(multipartFile)
+                                    + ".png"));
         }
         return urls;
     }
 
     @MethodInfo(name = "deleteImagesByDirectory", description = "디렉토리 내 모든 이미지를 삭제합니다.")
     public void deleteImagesByDirectory(String directory) {
-        amazonS3Client.deleteObject(bucket, directory);
+
+        ObjectListing objectListing = amazonS3Client.listObjects(bucket, directory);
+        List<DeleteObjectsRequest.KeyVersion> keys = new ArrayList<>();
+
+        while (true) {
+            objectListing
+                    .getObjectSummaries()
+                    .forEach(s -> keys.add(new DeleteObjectsRequest.KeyVersion(s.getKey())));
+
+            if (objectListing.isTruncated()) {
+                objectListing = amazonS3Client.listNextBatchOfObjects(objectListing);
+            } else {
+                break;
+            }
+        }
+
+        if (!keys.isEmpty()) {
+            DeleteObjectsRequest deleteObjectsRequest =
+                    new DeleteObjectsRequest(bucket).withKeys(keys);
+            amazonS3Client.deleteObjects(deleteObjectsRequest);
+        }
     }
 }
