@@ -16,5 +16,9 @@ public class AppTestConfig implements BeforeAllCallback {
                 "jwt.secret", "db308c664441568174c38810f78933ca3900393b46a4284f386f46d2a1b82bbb");
         System.setProperty("jwt.access-token-expiration", "300000");
         System.setProperty("jwt.refresh-token-expiration", "86400000");
+        System.setProperty("cloud.aws.credentials.accessKey", "");
+        System.setProperty("cloud.aws.credentials.secretKey", "");
+        System.setProperty("cloud.aws.region.static", "");
+        System.setProperty("cloud.aws.s3.bucket", "");
     }
 }

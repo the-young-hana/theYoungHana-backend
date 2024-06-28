@@ -24,7 +24,7 @@ public class EventReadResDto extends BaseResponse {
         private final List<String> eventImageList;
         private final LocalDateTime eventStart;
         private final LocalDateTime eventEnd;
-        private final Boolean isEnd;
+        private final Integer isEnd;
         private final Boolean isMine;
 
         @Builder
@@ -35,7 +35,7 @@ public class EventReadResDto extends BaseResponse {
                 List<String> eventImageList,
                 LocalDateTime eventStart,
                 LocalDateTime eventEnd,
-                Boolean isEnd,
+                Integer isEnd,
                 Boolean isMine) {
             this.eventTitle = eventTitle;
             this.eventFee = eventFee;

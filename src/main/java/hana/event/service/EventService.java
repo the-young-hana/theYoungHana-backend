@@ -14,6 +14,16 @@ import org.springframework.stereotype.Service;
 public class EventService {
     private final EventRepository eventRepository;
 
+    @MethodInfo(name = "countEvent", description = "이벤트 개수를 조회합니다.")
+    public Long countEvent() {
+        return eventRepository.count();
+    }
+
+    @MethodInfo(name = "readEvent", description = "이벤트를 상세 조회합니다.")
+    public Event readEvent(Long eventIdx) {
+        return eventRepository.findByEventIdx(eventIdx);
+    }
+
     @MethodInfo(name = "searchEvents", description = "이벤트 목록을 검색합니다.")
     public List<Event> searchEvents(String value, Boolean isEnd, Integer page) {
         Pageable pageable = PageRequest.of(page, 15);

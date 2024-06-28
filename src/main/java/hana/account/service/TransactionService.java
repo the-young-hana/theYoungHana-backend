@@ -4,10 +4,7 @@ import hana.account.domain.Account;
 import hana.account.domain.Transaction;
 import hana.account.domain.TransactionRepository;
 import hana.account.domain.TransactionTypeEnumType;
-import hana.account.dto.DeptAccountTransactionResDto;
-import hana.account.dto.TransactionsReadResDto;
-import hana.account.dto.TransactionsRemitCreateReqDto;
-import hana.account.dto.TransactionsRemitCreateResDto;
+import hana.account.dto.*;
 import hana.college.domain.Dept;
 import hana.college.service.DeptService;
 import hana.common.annotation.TypeInfo;
@@ -75,14 +72,15 @@ public class TransactionService {
                 .build();
     }
 
+    @Transactional
     public TransactionsReadResDto getTransactions(
             Long deptIdx, String startDate, String endDate, String type, String sort, Long page) {
 
         Dept dept = deptService.findByDeptIdx(deptIdx);
         Account deptAccount = dept.getAccount();
 
-        List<DeptAccountTransactionResDto> transactions =
-                transactionRepository.getTransactions(
+        List<TransactionsByDateResDto> transactions =
+                transactionRepository.getTransactionsByDate(
                         deptAccount.getAccountIdx(), startDate, endDate, type, sort, page);
 
         return TransactionsReadResDto.builder()
@@ -94,6 +92,17 @@ public class TransactionService {
                                 .deptAccountTransactions(transactions)
                                 .build())
                 .build();
+    }
+
+    @Transactional
+    public List<DeptAccountTransactionResDto> getTransactionsByStory(Long storyIdx) {
+        return transactionRepository.getTransactionsByStory(storyIdx);
+    }
+
+    public Transaction findByTransactionIdx(Long transactionIdx) {
+        return transactionRepository
+                .findById(transactionIdx)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 거래 정보입니다."));
     }
 
     public TransactionService(
