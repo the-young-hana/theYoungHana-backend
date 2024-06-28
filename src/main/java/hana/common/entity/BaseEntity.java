@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class BaseEntity extends BaseTimeEntity {
     @Column(name = "deleted_yn", nullable = false, columnDefinition = "TINYINT(1) default 0")
-    private boolean deletedYn;
+    protected boolean deletedYn;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by")

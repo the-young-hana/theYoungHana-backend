@@ -177,21 +177,24 @@ public class StoryController {
     }
 
     @MethodInfo(name = "updateStory", description = "스토리를 수정합니다.")
-    @PutMapping("/stories/{storyIdx}")
+    @PutMapping(
+            value = "/stories/{storyIdx}",
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     @Operation(
             summary = "스토리 수정",
             description = "스토리를 수정합니다.",
             method = "PUT",
-            requestBody =
-                    @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                            description = "스토리 수정 요청",
-                            required = true,
-                            content =
-                                    @Content(
-                                            schema =
-                                                    @Schema(
-                                                            implementation =
-                                                                    StoryUpdateReqDto.class))),
+            //            requestBody =
+            //                    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            //                            description = "스토리 수정 요청",
+            //                            required = true,
+            //                            content =
+            //                                    @Content(
+            //                                            schema =
+            //                                                    @Schema(
+            //                                                            implementation =
+            //
+            // StoryUpdateReqDto.class))),
             responses = {
                 @ApiResponse(
                         responseCode = "200",
@@ -230,8 +233,9 @@ public class StoryController {
             })
     public ResponseEntity<StoryUpdateResDto> updateStory(
             @PathVariable("storyIdx") Long storyIdx,
-            @Valid @RequestBody StoryUpdateReqDto storyUpdateReqDto) {
-        return null;
+            @RequestPart(value = "StoryUpdateReqDto") StoryUpdateReqDto storyUpdateReqDto,
+            @RequestPart(value = "imgs", required = false) List<MultipartFile> imgs) {
+        return ResponseEntity.ok(storyService.updateStory(storyIdx, storyUpdateReqDto, imgs));
     }
 
     @MethodInfo(name = "deleteStory", description = "스토리를 삭제합니다.")
@@ -277,7 +281,7 @@ public class StoryController {
                                                                 BaseExceptionResponse.class)))
             })
     public ResponseEntity<StoryDeleteResDto> deleteStory(@PathVariable("storyIdx") Long storyIdx) {
-        return null;
+        return ResponseEntity.ok(storyService.deleteStory(storyIdx));
     }
 
     @MethodInfo(name = "createStoryLike", description = "스토리 좋아요를 추가합니다.")
