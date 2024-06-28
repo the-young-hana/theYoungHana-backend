@@ -3,6 +3,7 @@ package hana.story.domain;
 import hana.college.domain.Dept;
 import hana.common.annotation.TypeInfo;
 import hana.common.entity.BaseEntity;
+import hana.story.dto.StoryUpdateReqDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -42,5 +43,10 @@ public class Story extends BaseEntity {
 
     public void postImages(String storyImageList) {
         this.storyImageList = storyImageList;
+    }
+
+    public void update(StoryUpdateReqDto storyUpdateReqDto) {
+        this.storyTitle = storyUpdateReqDto.getStoryTitle();
+        this.storyContent = storyUpdateReqDto.getStoryContent();
     }
 }

@@ -7,10 +7,7 @@ import hana.common.annotation.TypeInfo;
 import hana.common.utils.ImageUtils;
 import hana.story.domain.Story;
 import hana.story.domain.StoryRepository;
-import hana.story.dto.StoriesReadResDto;
-import hana.story.dto.StoryCreateReqDto;
-import hana.story.dto.StoryCreateResDto;
-import hana.story.dto.StoryReadResDto;
+import hana.story.dto.*;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -122,6 +119,35 @@ public class StoryService {
                                 .storyTitle(savedStory.getStoryTitle())
                                 .storyContent(savedStory.getStoryContent())
                                 .storyImageList(savedStory.getStoryImageList())
+                                .build())
+                .build();
+    }
+
+    @Transactional
+    public StoryUpdateResDto updateStory(
+            Long storyIdx, StoryUpdateReqDto reqDto, List<MultipartFile> imgs) {
+        Story story = findByStoryIdx(storyIdx);
+        story.update(reqDto);
+
+        String directory = "story/" + storyIdx;
+        imageUtils.deleteImagesByDirectory(directory);
+        String url =
+                (imgs == null || imgs.isEmpty())
+                        ? null
+                        : imageUtils.createImages(directory, imgs).toString();
+        story.postImages(url);
+
+        // 거래 삭제 및 저장
+        transactionDetailService.deleteTransactionDetailsByStory(storyIdx);
+        transactionDetailService.saveTransactionDetails(reqDto.getTransactionList(), story);
+
+        return StoryUpdateResDto.builder()
+                .data(
+                        StoryUpdateResDto.Data.builder()
+                                .storyIdx(story.getStoryIdx())
+                                .storyTitle(story.getStoryTitle())
+                                .storyContent(story.getStoryContent())
+                                .storyImageList(story.getStoryImageList())
                                 .build())
                 .build();
     }

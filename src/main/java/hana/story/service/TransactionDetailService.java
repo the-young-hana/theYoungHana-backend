@@ -24,6 +24,10 @@ public class TransactionDetailService {
         }
     }
 
+    public void deleteTransactionDetailsByStory(Long storyIdx) {
+        transactionDetailRepository.deleteByStory_StoryIdx(storyIdx);
+    }
+
     public TransactionDetailService(
             TransactionDetailRepository transactionDetailRepository,
             TransactionService transactionService) {

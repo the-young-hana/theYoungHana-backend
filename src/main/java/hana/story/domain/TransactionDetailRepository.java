@@ -11,4 +11,6 @@ import org.springframework.stereotype.Repository;
 public interface TransactionDetailRepository extends JpaRepository<TransactionDetail, Long> {
 
     Optional<TransactionDetail> findByTransaction(Transaction transaction);
+
+    void deleteByStory_StoryIdx(Long storyIdx);
 }
