@@ -2,17 +2,13 @@ package hana.college.domain;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.querydsl.core.types.dsl.*;
-
-import com.querydsl.core.types.PathMetadata;
-import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.dsl.PathInits;
+import javax.annotation.processing.Generated;
 
-
-/**
- * QDept is a Querydsl query type for Dept
- */
+/** QDept is a Querydsl query type for Dept */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QDept extends EntityPathBase<Dept> {
 
@@ -28,13 +24,13 @@ public class QDept extends EntityPathBase<Dept> {
 
     public final QCollege college;
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt;
 
     // inherited
     public final hana.member.domain.QMember createdBy;
 
-    //inherited
+    // inherited
     public final BooleanPath deletedYn;
 
     public final StringPath deptAccountNumber = createString("deptAccountNumber");
@@ -45,7 +41,7 @@ public class QDept extends EntityPathBase<Dept> {
 
     public final NumberPath<Long> deptPoint = createNumber("deptPoint", Long.class);
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt;
 
     // inherited
@@ -70,14 +66,19 @@ public class QDept extends EntityPathBase<Dept> {
     public QDept(Class<? extends Dept> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this._super = new hana.common.entity.QBaseEntity(type, metadata, inits);
-        this.account = inits.isInitialized("account") ? new hana.account.domain.QAccount(forProperty("account"), inits.get("account")) : null;
-        this.college = inits.isInitialized("college") ? new QCollege(forProperty("college"), inits.get("college")) : null;
+        this.account =
+                inits.isInitialized("account")
+                        ? new hana.account.domain.QAccount(
+                                forProperty("account"), inits.get("account"))
+                        : null;
+        this.college =
+                inits.isInitialized("college")
+                        ? new QCollege(forProperty("college"), inits.get("college"))
+                        : null;
         this.createdAt = _super.createdAt;
         this.createdBy = _super.createdBy;
         this.deletedYn = _super.deletedYn;
         this.updatedAt = _super.updatedAt;
         this.updatedBy = _super.updatedBy;
     }
-
 }
-

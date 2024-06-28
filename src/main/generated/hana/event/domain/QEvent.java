@@ -2,17 +2,13 @@ package hana.event.domain;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.querydsl.core.types.dsl.*;
-
-import com.querydsl.core.types.PathMetadata;
-import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.dsl.PathInits;
+import javax.annotation.processing.Generated;
 
-
-/**
- * QEvent is a Querydsl query type for Event
- */
+/** QEvent is a Querydsl query type for Event */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QEvent extends EntityPathBase<Event> {
 
@@ -24,28 +20,32 @@ public class QEvent extends EntityPathBase<Event> {
 
     public final hana.common.entity.QBaseEntity _super;
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt;
 
     // inherited
     public final hana.member.domain.QMember createdBy;
 
-    //inherited
+    // inherited
     public final BooleanPath deletedYn;
 
     public final hana.college.domain.QDept dept;
 
     public final StringPath eventContent = createString("eventContent");
 
-    public final DateTimePath<java.time.LocalDateTime> eventDatetime = createDateTime("eventDatetime", java.time.LocalDateTime.class);
+    public final DateTimePath<java.time.LocalDateTime> eventDatetime =
+            createDateTime("eventDatetime", java.time.LocalDateTime.class);
 
-    public final DateTimePath<java.time.LocalDateTime> eventEndDatetime = createDateTime("eventEndDatetime", java.time.LocalDateTime.class);
+    public final DateTimePath<java.time.LocalDateTime> eventEndDatetime =
+            createDateTime("eventEndDatetime", java.time.LocalDateTime.class);
 
     public final NumberPath<Long> eventFee = createNumber("eventFee", Long.class);
 
-    public final DateTimePath<java.time.LocalDateTime> eventFeeEndDatetime = createDateTime("eventFeeEndDatetime", java.time.LocalDateTime.class);
+    public final DateTimePath<java.time.LocalDateTime> eventFeeEndDatetime =
+            createDateTime("eventFeeEndDatetime", java.time.LocalDateTime.class);
 
-    public final DateTimePath<java.time.LocalDateTime> eventFeeStartDatetime = createDateTime("eventFeeStartDatetime", java.time.LocalDateTime.class);
+    public final DateTimePath<java.time.LocalDateTime> eventFeeStartDatetime =
+            createDateTime("eventFeeStartDatetime", java.time.LocalDateTime.class);
 
     public final NumberPath<Long> eventIdx = createNumber("eventIdx", Long.class);
 
@@ -53,13 +53,14 @@ public class QEvent extends EntityPathBase<Event> {
 
     public final NumberPath<Long> eventLimit = createNumber("eventLimit", Long.class);
 
-    public final DateTimePath<java.time.LocalDateTime> eventStartDatetime = createDateTime("eventStartDatetime", java.time.LocalDateTime.class);
+    public final DateTimePath<java.time.LocalDateTime> eventStartDatetime =
+            createDateTime("eventStartDatetime", java.time.LocalDateTime.class);
 
     public final StringPath eventTitle = createString("eventTitle");
 
     public final EnumPath<EventEnumType> eventType = createEnum("eventType", EventEnumType.class);
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt;
 
     // inherited
@@ -87,10 +88,11 @@ public class QEvent extends EntityPathBase<Event> {
         this.createdAt = _super.createdAt;
         this.createdBy = _super.createdBy;
         this.deletedYn = _super.deletedYn;
-        this.dept = inits.isInitialized("dept") ? new hana.college.domain.QDept(forProperty("dept"), inits.get("dept")) : null;
+        this.dept =
+                inits.isInitialized("dept")
+                        ? new hana.college.domain.QDept(forProperty("dept"), inits.get("dept"))
+                        : null;
         this.updatedAt = _super.updatedAt;
         this.updatedBy = _super.updatedBy;
     }
-
 }
-

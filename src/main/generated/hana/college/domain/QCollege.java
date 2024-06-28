@@ -2,17 +2,13 @@ package hana.college.domain;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.querydsl.core.types.dsl.*;
-
-import com.querydsl.core.types.PathMetadata;
-import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.dsl.PathInits;
+import javax.annotation.processing.Generated;
 
-
-/**
- * QCollege is a Querydsl query type for College
- */
+/** QCollege is a Querydsl query type for College */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QCollege extends EntityPathBase<College> {
 
@@ -30,16 +26,16 @@ public class QCollege extends EntityPathBase<College> {
 
     public final StringPath collegeName = createString("collegeName");
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt;
 
     // inherited
     public final hana.member.domain.QMember createdBy;
 
-    //inherited
+    // inherited
     public final BooleanPath deletedYn;
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt;
 
     // inherited
@@ -70,6 +66,4 @@ public class QCollege extends EntityPathBase<College> {
         this.updatedAt = _super.updatedAt;
         this.updatedBy = _super.updatedBy;
     }
-
 }
-

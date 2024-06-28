@@ -2,17 +2,13 @@ package hana.account.domain;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.querydsl.core.types.dsl.*;
-
-import com.querydsl.core.types.PathMetadata;
-import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.dsl.PathInits;
+import javax.annotation.processing.Generated;
 
-
-/**
- * QAccount is a Querydsl query type for Account
- */
+/** QAccount is a Querydsl query type for Account */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QAccount extends EntityPathBase<Account> {
 
@@ -34,18 +30,18 @@ public class QAccount extends EntityPathBase<Account> {
 
     public final StringPath accountPw = createString("accountPw");
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt;
 
     // inherited
     public final hana.member.domain.QMember createdBy;
 
-    //inherited
+    // inherited
     public final BooleanPath deletedYn;
 
     public final hana.member.domain.QMember member;
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt;
 
     // inherited
@@ -73,10 +69,11 @@ public class QAccount extends EntityPathBase<Account> {
         this.createdAt = _super.createdAt;
         this.createdBy = _super.createdBy;
         this.deletedYn = _super.deletedYn;
-        this.member = inits.isInitialized("member") ? new hana.member.domain.QMember(forProperty("member"), inits.get("member")) : null;
+        this.member =
+                inits.isInitialized("member")
+                        ? new hana.member.domain.QMember(forProperty("member"), inits.get("member"))
+                        : null;
         this.updatedAt = _super.updatedAt;
         this.updatedBy = _super.updatedBy;
     }
-
 }
-

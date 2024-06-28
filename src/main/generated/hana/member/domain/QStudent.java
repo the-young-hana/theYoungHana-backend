@@ -2,17 +2,13 @@ package hana.member.domain;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.querydsl.core.types.dsl.*;
-
-import com.querydsl.core.types.PathMetadata;
-import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.dsl.PathInits;
+import javax.annotation.processing.Generated;
 
-
-/**
- * QStudent is a Querydsl query type for Student
- */
+/** QStudent is a Querydsl query type for Student */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QStudent extends EntityPathBase<Student> {
 
@@ -24,13 +20,13 @@ public class QStudent extends EntityPathBase<Student> {
 
     public final hana.common.entity.QBaseEntity _super;
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt;
 
     // inherited
     public final QMember createdBy;
 
-    //inherited
+    // inherited
     public final BooleanPath deletedYn;
 
     public final hana.college.domain.QDept dept;
@@ -49,9 +45,10 @@ public class QStudent extends EntityPathBase<Student> {
 
     public final NumberPath<Integer> studentPoint = createNumber("studentPoint", Integer.class);
 
-    public final EnumPath<StudentStatusEnumType> studentStatus = createEnum("studentStatus", StudentStatusEnumType.class);
+    public final EnumPath<StudentStatusEnumType> studentStatus =
+            createEnum("studentStatus", StudentStatusEnumType.class);
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt;
 
     // inherited
@@ -79,11 +76,15 @@ public class QStudent extends EntityPathBase<Student> {
         this.createdAt = _super.createdAt;
         this.createdBy = _super.createdBy;
         this.deletedYn = _super.deletedYn;
-        this.dept = inits.isInitialized("dept") ? new hana.college.domain.QDept(forProperty("dept"), inits.get("dept")) : null;
-        this.member = inits.isInitialized("member") ? new QMember(forProperty("member"), inits.get("member")) : null;
+        this.dept =
+                inits.isInitialized("dept")
+                        ? new hana.college.domain.QDept(forProperty("dept"), inits.get("dept"))
+                        : null;
+        this.member =
+                inits.isInitialized("member")
+                        ? new QMember(forProperty("member"), inits.get("member"))
+                        : null;
         this.updatedAt = _super.updatedAt;
         this.updatedBy = _super.updatedBy;
     }
-
 }
-

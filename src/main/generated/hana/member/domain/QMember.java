@@ -2,17 +2,13 @@ package hana.member.domain;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.querydsl.core.types.dsl.*;
-
-import com.querydsl.core.types.PathMetadata;
-import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.dsl.PathInits;
+import javax.annotation.processing.Generated;
 
-
-/**
- * QMember is a Querydsl query type for Member
- */
+/** QMember is a Querydsl query type for Member */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QMember extends EntityPathBase<Member> {
 
@@ -24,13 +20,13 @@ public class QMember extends EntityPathBase<Member> {
 
     public final hana.common.entity.QBaseEntity _super;
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt;
 
     // inherited
     public final QMember createdBy;
 
-    //inherited
+    // inherited
     public final BooleanPath deletedYn;
 
     public final StringPath memberFcmToken = createString("memberFcmToken");
@@ -43,7 +39,7 @@ public class QMember extends EntityPathBase<Member> {
 
     public final StringPath memberPw = createString("memberPw");
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt;
 
     // inherited
@@ -74,6 +70,4 @@ public class QMember extends EntityPathBase<Member> {
         this.updatedAt = _super.updatedAt;
         this.updatedBy = _super.updatedBy;
     }
-
 }
-

@@ -2,17 +2,13 @@ package hana.common.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.querydsl.core.types.dsl.*;
-
-import com.querydsl.core.types.PathMetadata;
-import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.dsl.PathInits;
+import javax.annotation.processing.Generated;
 
-
-/**
- * QBaseEntity is a Querydsl query type for BaseEntity
- */
+/** QBaseEntity is a Querydsl query type for BaseEntity */
 @Generated("com.querydsl.codegen.DefaultSupertypeSerializer")
 public class QBaseEntity extends EntityPathBase<BaseEntity> {
 
@@ -24,14 +20,14 @@ public class QBaseEntity extends EntityPathBase<BaseEntity> {
 
     public final QBaseTimeEntity _super = new QBaseTimeEntity(this);
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
     public final hana.member.domain.QMember createdBy;
 
     public final BooleanPath deletedYn = createBoolean("deletedYn");
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
     public final hana.member.domain.QMember updatedBy;
@@ -54,9 +50,15 @@ public class QBaseEntity extends EntityPathBase<BaseEntity> {
 
     public QBaseEntity(Class<? extends BaseEntity> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.createdBy = inits.isInitialized("createdBy") ? new hana.member.domain.QMember(forProperty("createdBy"), inits.get("createdBy")) : null;
-        this.updatedBy = inits.isInitialized("updatedBy") ? new hana.member.domain.QMember(forProperty("updatedBy"), inits.get("updatedBy")) : null;
+        this.createdBy =
+                inits.isInitialized("createdBy")
+                        ? new hana.member.domain.QMember(
+                                forProperty("createdBy"), inits.get("createdBy"))
+                        : null;
+        this.updatedBy =
+                inits.isInitialized("updatedBy")
+                        ? new hana.member.domain.QMember(
+                                forProperty("updatedBy"), inits.get("updatedBy"))
+                        : null;
     }
-
 }
-

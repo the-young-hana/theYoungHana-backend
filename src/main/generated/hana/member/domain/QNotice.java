@@ -2,17 +2,13 @@ package hana.member.domain;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.querydsl.core.types.dsl.*;
-
-import com.querydsl.core.types.PathMetadata;
-import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.dsl.PathInits;
+import javax.annotation.processing.Generated;
 
-
-/**
- * QNotice is a Querydsl query type for Notice
- */
+/** QNotice is a Querydsl query type for Notice */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QNotice extends EntityPathBase<Notice> {
 
@@ -24,13 +20,13 @@ public class QNotice extends EntityPathBase<Notice> {
 
     public final hana.common.entity.QBaseEntity _super;
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt;
 
     // inherited
     public final QMember createdBy;
 
-    //inherited
+    // inherited
     public final BooleanPath deletedYn;
 
     public final hana.event.domain.QEvent event;
@@ -45,7 +41,7 @@ public class QNotice extends EntityPathBase<Notice> {
 
     public final StringPath noticeTitle = createString("noticeTitle");
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt;
 
     // inherited
@@ -73,11 +69,15 @@ public class QNotice extends EntityPathBase<Notice> {
         this.createdAt = _super.createdAt;
         this.createdBy = _super.createdBy;
         this.deletedYn = _super.deletedYn;
-        this.event = inits.isInitialized("event") ? new hana.event.domain.QEvent(forProperty("event"), inits.get("event")) : null;
-        this.member = inits.isInitialized("member") ? new QMember(forProperty("member"), inits.get("member")) : null;
+        this.event =
+                inits.isInitialized("event")
+                        ? new hana.event.domain.QEvent(forProperty("event"), inits.get("event"))
+                        : null;
+        this.member =
+                inits.isInitialized("member")
+                        ? new QMember(forProperty("member"), inits.get("member"))
+                        : null;
         this.updatedAt = _super.updatedAt;
         this.updatedBy = _super.updatedBy;
     }
-
 }
-

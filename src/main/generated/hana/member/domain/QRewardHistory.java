@@ -2,17 +2,13 @@ package hana.member.domain;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.querydsl.core.types.dsl.*;
-
-import com.querydsl.core.types.PathMetadata;
-import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.dsl.PathInits;
+import javax.annotation.processing.Generated;
 
-
-/**
- * QRewardHistory is a Querydsl query type for RewardHistory
- */
+/** QRewardHistory is a Querydsl query type for RewardHistory */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QRewardHistory extends EntityPathBase<RewardHistory> {
 
@@ -24,22 +20,24 @@ public class QRewardHistory extends EntityPathBase<RewardHistory> {
 
     public final hana.common.entity.QBaseEntity _super;
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt;
 
     // inherited
     public final QMember createdBy;
 
-    //inherited
+    // inherited
     public final BooleanPath deletedYn;
 
-    public final EnumPath<RewardCategoryEnumType> rewardCategory = createEnum("rewardCategory", RewardCategoryEnumType.class);
+    public final EnumPath<RewardCategoryEnumType> rewardCategory =
+            createEnum("rewardCategory", RewardCategoryEnumType.class);
 
-    public final NumberPath<Long> rewardHistoriesIdx = createNumber("rewardHistoriesIdx", Long.class);
+    public final NumberPath<Long> rewardHistoriesIdx =
+            createNumber("rewardHistoriesIdx", Long.class);
 
     public final QStudent student;
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt;
 
     // inherited
@@ -61,16 +59,18 @@ public class QRewardHistory extends EntityPathBase<RewardHistory> {
         this(RewardHistory.class, metadata, inits);
     }
 
-    public QRewardHistory(Class<? extends RewardHistory> type, PathMetadata metadata, PathInits inits) {
+    public QRewardHistory(
+            Class<? extends RewardHistory> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this._super = new hana.common.entity.QBaseEntity(type, metadata, inits);
         this.createdAt = _super.createdAt;
         this.createdBy = _super.createdBy;
         this.deletedYn = _super.deletedYn;
-        this.student = inits.isInitialized("student") ? new QStudent(forProperty("student"), inits.get("student")) : null;
+        this.student =
+                inits.isInitialized("student")
+                        ? new QStudent(forProperty("student"), inits.get("student"))
+                        : null;
         this.updatedAt = _super.updatedAt;
         this.updatedBy = _super.updatedBy;
     }
-
 }
-

@@ -2,17 +2,13 @@ package hana.member.domain;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.querydsl.core.types.dsl.*;
-
-import com.querydsl.core.types.PathMetadata;
-import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.dsl.PathInits;
+import javax.annotation.processing.Generated;
 
-
-/**
- * QStudentCard is a Querydsl query type for StudentCard
- */
+/** QStudentCard is a Querydsl query type for StudentCard */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QStudentCard extends EntityPathBase<StudentCard> {
 
@@ -26,13 +22,13 @@ public class QStudentCard extends EntityPathBase<StudentCard> {
 
     public final hana.college.domain.QCollege college;
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt;
 
     // inherited
     public final QMember createdBy;
 
-    //inherited
+    // inherited
     public final BooleanPath deletedYn;
 
     public final StringPath studentCardBackImage = createString("studentCardBackImage");
@@ -45,7 +41,7 @@ public class QStudentCard extends EntityPathBase<StudentCard> {
 
     public final StringPath studentCardName = createString("studentCardName");
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt;
 
     // inherited
@@ -70,13 +66,15 @@ public class QStudentCard extends EntityPathBase<StudentCard> {
     public QStudentCard(Class<? extends StudentCard> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this._super = new hana.common.entity.QBaseEntity(type, metadata, inits);
-        this.college = inits.isInitialized("college") ? new hana.college.domain.QCollege(forProperty("college"), inits.get("college")) : null;
+        this.college =
+                inits.isInitialized("college")
+                        ? new hana.college.domain.QCollege(
+                                forProperty("college"), inits.get("college"))
+                        : null;
         this.createdAt = _super.createdAt;
         this.createdBy = _super.createdBy;
         this.deletedYn = _super.deletedYn;
         this.updatedAt = _super.updatedAt;
         this.updatedBy = _super.updatedBy;
     }
-
 }
-

@@ -2,17 +2,13 @@ package hana.knowledge.domain;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.querydsl.core.types.dsl.*;
-
-import com.querydsl.core.types.PathMetadata;
-import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.dsl.PathInits;
+import javax.annotation.processing.Generated;
 
-
-/**
- * QKnowledge is a Querydsl query type for Knowledge
- */
+/** QKnowledge is a Querydsl query type for Knowledge */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QKnowledge extends EntityPathBase<Knowledge> {
 
@@ -24,13 +20,13 @@ public class QKnowledge extends EntityPathBase<Knowledge> {
 
     public final hana.common.entity.QBaseEntity _super;
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt;
 
     // inherited
     public final hana.member.domain.QMember createdBy;
 
-    //inherited
+    // inherited
     public final BooleanPath deletedYn;
 
     public final StringPath knowledgeCategory = createString("knowledgeCategory");
@@ -45,7 +41,7 @@ public class QKnowledge extends EntityPathBase<Knowledge> {
 
     public final StringPath knowledgeTitle = createString("knowledgeTitle");
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt;
 
     // inherited
@@ -76,6 +72,4 @@ public class QKnowledge extends EntityPathBase<Knowledge> {
         this.updatedAt = _super.updatedAt;
         this.updatedBy = _super.updatedBy;
     }
-
 }
-

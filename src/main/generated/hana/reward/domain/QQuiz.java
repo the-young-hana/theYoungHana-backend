@@ -2,17 +2,13 @@ package hana.reward.domain;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.querydsl.core.types.dsl.*;
-
-import com.querydsl.core.types.PathMetadata;
-import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.dsl.PathInits;
+import javax.annotation.processing.Generated;
 
-
-/**
- * QQuiz is a Querydsl query type for Quiz
- */
+/** QQuiz is a Querydsl query type for Quiz */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QQuiz extends EntityPathBase<Quiz> {
 
@@ -24,13 +20,13 @@ public class QQuiz extends EntityPathBase<Quiz> {
 
     public final hana.common.entity.QBaseEntity _super;
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt;
 
     // inherited
     public final hana.member.domain.QMember createdBy;
 
-    //inherited
+    // inherited
     public final BooleanPath deletedYn;
 
     public final BooleanPath quizAnswer = createBoolean("quizAnswer");
@@ -41,7 +37,7 @@ public class QQuiz extends EntityPathBase<Quiz> {
 
     public final NumberPath<Long> quizIdx = createNumber("quizIdx", Long.class);
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt;
 
     // inherited
@@ -72,6 +68,4 @@ public class QQuiz extends EntityPathBase<Quiz> {
         this.updatedAt = _super.updatedAt;
         this.updatedBy = _super.updatedBy;
     }
-
 }
-

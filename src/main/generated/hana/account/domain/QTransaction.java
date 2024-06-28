@@ -2,17 +2,13 @@ package hana.account.domain;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.querydsl.core.types.dsl.*;
-
-import com.querydsl.core.types.PathMetadata;
-import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.dsl.PathInits;
+import javax.annotation.processing.Generated;
 
-
-/**
- * QTransaction is a Querydsl query type for Transaction
- */
+/** QTransaction is a Querydsl query type for Transaction */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QTransaction extends EntityPathBase<Transaction> {
 
@@ -26,18 +22,19 @@ public class QTransaction extends EntityPathBase<Transaction> {
 
     public final QAccount account;
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt;
 
     // inherited
     public final hana.member.domain.QMember createdBy;
 
-    //inherited
+    // inherited
     public final BooleanPath deletedYn;
 
     public final NumberPath<Long> transactionAmount = createNumber("transactionAmount", Long.class);
 
-    public final NumberPath<Long> transactionBalance = createNumber("transactionBalance", Long.class);
+    public final NumberPath<Long> transactionBalance =
+            createNumber("transactionBalance", Long.class);
 
     public final StringPath transactionId = createString("transactionId");
 
@@ -45,9 +42,10 @@ public class QTransaction extends EntityPathBase<Transaction> {
 
     public final StringPath transactionName = createString("transactionName");
 
-    public final EnumPath<TransactionTypeEnumType> transactionTypeEnumType = createEnum("transactionTypeEnumType", TransactionTypeEnumType.class);
+    public final EnumPath<TransactionTypeEnumType> transactionTypeEnumType =
+            createEnum("transactionTypeEnumType", TransactionTypeEnumType.class);
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt;
 
     // inherited
@@ -72,13 +70,14 @@ public class QTransaction extends EntityPathBase<Transaction> {
     public QTransaction(Class<? extends Transaction> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this._super = new hana.common.entity.QBaseEntity(type, metadata, inits);
-        this.account = inits.isInitialized("account") ? new QAccount(forProperty("account"), inits.get("account")) : null;
+        this.account =
+                inits.isInitialized("account")
+                        ? new QAccount(forProperty("account"), inits.get("account"))
+                        : null;
         this.createdAt = _super.createdAt;
         this.createdBy = _super.createdBy;
         this.deletedYn = _super.deletedYn;
         this.updatedAt = _super.updatedAt;
         this.updatedBy = _super.updatedBy;
     }
-
 }
-

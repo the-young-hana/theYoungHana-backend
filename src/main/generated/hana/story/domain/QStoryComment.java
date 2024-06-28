@@ -2,17 +2,13 @@ package hana.story.domain;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.querydsl.core.types.dsl.*;
-
-import com.querydsl.core.types.PathMetadata;
-import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.dsl.PathInits;
+import javax.annotation.processing.Generated;
 
-
-/**
- * QStoryComment is a Querydsl query type for StoryComment
- */
+/** QStoryComment is a Querydsl query type for StoryComment */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QStoryComment extends EntityPathBase<StoryComment> {
 
@@ -24,13 +20,13 @@ public class QStoryComment extends EntityPathBase<StoryComment> {
 
     public final hana.common.entity.QBaseEntity _super;
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt;
 
     // inherited
     public final hana.member.domain.QMember createdBy;
 
-    //inherited
+    // inherited
     public final BooleanPath deletedYn;
 
     public final QStory story;
@@ -41,7 +37,7 @@ public class QStoryComment extends EntityPathBase<StoryComment> {
 
     public final QStoryComment storyCommentParent;
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt;
 
     // inherited
@@ -63,17 +59,23 @@ public class QStoryComment extends EntityPathBase<StoryComment> {
         this(StoryComment.class, metadata, inits);
     }
 
-    public QStoryComment(Class<? extends StoryComment> type, PathMetadata metadata, PathInits inits) {
+    public QStoryComment(
+            Class<? extends StoryComment> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this._super = new hana.common.entity.QBaseEntity(type, metadata, inits);
         this.createdAt = _super.createdAt;
         this.createdBy = _super.createdBy;
         this.deletedYn = _super.deletedYn;
-        this.story = inits.isInitialized("story") ? new QStory(forProperty("story"), inits.get("story")) : null;
-        this.storyCommentParent = inits.isInitialized("storyCommentParent") ? new QStoryComment(forProperty("storyCommentParent"), inits.get("storyCommentParent")) : null;
+        this.story =
+                inits.isInitialized("story")
+                        ? new QStory(forProperty("story"), inits.get("story"))
+                        : null;
+        this.storyCommentParent =
+                inits.isInitialized("storyCommentParent")
+                        ? new QStoryComment(
+                                forProperty("storyCommentParent"), inits.get("storyCommentParent"))
+                        : null;
         this.updatedAt = _super.updatedAt;
         this.updatedBy = _super.updatedBy;
     }
-
 }
-

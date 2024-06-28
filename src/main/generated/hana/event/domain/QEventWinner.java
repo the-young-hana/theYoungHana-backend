@@ -2,17 +2,13 @@ package hana.event.domain;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.querydsl.core.types.dsl.*;
-
-import com.querydsl.core.types.PathMetadata;
-import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.dsl.PathInits;
+import javax.annotation.processing.Generated;
 
-
-/**
- * QEventWinner is a Querydsl query type for EventWinner
- */
+/** QEventWinner is a Querydsl query type for EventWinner */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QEventWinner extends EntityPathBase<EventWinner> {
 
@@ -24,13 +20,13 @@ public class QEventWinner extends EntityPathBase<EventWinner> {
 
     public final hana.common.entity.QBaseEntity _super;
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt;
 
     // inherited
     public final hana.member.domain.QMember createdBy;
 
-    //inherited
+    // inherited
     public final BooleanPath deletedYn;
 
     public final QEventPrize eventPrize;
@@ -39,7 +35,7 @@ public class QEventWinner extends EntityPathBase<EventWinner> {
 
     public final hana.member.domain.QStudent student;
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt;
 
     // inherited
@@ -67,11 +63,16 @@ public class QEventWinner extends EntityPathBase<EventWinner> {
         this.createdAt = _super.createdAt;
         this.createdBy = _super.createdBy;
         this.deletedYn = _super.deletedYn;
-        this.eventPrize = inits.isInitialized("eventPrize") ? new QEventPrize(forProperty("eventPrize"), inits.get("eventPrize")) : null;
-        this.student = inits.isInitialized("student") ? new hana.member.domain.QStudent(forProperty("student"), inits.get("student")) : null;
+        this.eventPrize =
+                inits.isInitialized("eventPrize")
+                        ? new QEventPrize(forProperty("eventPrize"), inits.get("eventPrize"))
+                        : null;
+        this.student =
+                inits.isInitialized("student")
+                        ? new hana.member.domain.QStudent(
+                                forProperty("student"), inits.get("student"))
+                        : null;
         this.updatedAt = _super.updatedAt;
         this.updatedBy = _super.updatedBy;
     }
-
 }
-

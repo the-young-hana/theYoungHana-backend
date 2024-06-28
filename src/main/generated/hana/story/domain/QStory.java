@@ -2,17 +2,13 @@ package hana.story.domain;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.querydsl.core.types.dsl.*;
-
-import com.querydsl.core.types.PathMetadata;
-import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.dsl.PathInits;
+import javax.annotation.processing.Generated;
 
-
-/**
- * QStory is a Querydsl query type for Story
- */
+/** QStory is a Querydsl query type for Story */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QStory extends EntityPathBase<Story> {
 
@@ -24,13 +20,13 @@ public class QStory extends EntityPathBase<Story> {
 
     public final hana.common.entity.QBaseEntity _super;
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt;
 
     // inherited
     public final hana.member.domain.QMember createdBy;
 
-    //inherited
+    // inherited
     public final BooleanPath deletedYn;
 
     public final hana.college.domain.QDept dept;
@@ -43,7 +39,7 @@ public class QStory extends EntityPathBase<Story> {
 
     public final StringPath storyTitle = createString("storyTitle");
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt;
 
     // inherited
@@ -71,10 +67,11 @@ public class QStory extends EntityPathBase<Story> {
         this.createdAt = _super.createdAt;
         this.createdBy = _super.createdBy;
         this.deletedYn = _super.deletedYn;
-        this.dept = inits.isInitialized("dept") ? new hana.college.domain.QDept(forProperty("dept"), inits.get("dept")) : null;
+        this.dept =
+                inits.isInitialized("dept")
+                        ? new hana.college.domain.QDept(forProperty("dept"), inits.get("dept"))
+                        : null;
         this.updatedAt = _super.updatedAt;
         this.updatedBy = _super.updatedBy;
     }
-
 }
-

@@ -2,17 +2,13 @@ package hana.event.domain;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.querydsl.core.types.dsl.*;
-
-import com.querydsl.core.types.PathMetadata;
-import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.dsl.PathInits;
+import javax.annotation.processing.Generated;
 
-
-/**
- * QEventPrize is a Querydsl query type for EventPrize
- */
+/** QEventPrize is a Querydsl query type for EventPrize */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QEventPrize extends EntityPathBase<EventPrize> {
 
@@ -24,13 +20,13 @@ public class QEventPrize extends EntityPathBase<EventPrize> {
 
     public final hana.common.entity.QBaseEntity _super;
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt;
 
     // inherited
     public final hana.member.domain.QMember createdBy;
 
-    //inherited
+    // inherited
     public final BooleanPath deletedYn;
 
     public final QEvent event;
@@ -43,7 +39,7 @@ public class QEventPrize extends EntityPathBase<EventPrize> {
 
     public final NumberPath<Long> eventPrizeRank = createNumber("eventPrizeRank", Long.class);
 
-    //inherited
+    // inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt;
 
     // inherited
@@ -71,10 +67,11 @@ public class QEventPrize extends EntityPathBase<EventPrize> {
         this.createdAt = _super.createdAt;
         this.createdBy = _super.createdBy;
         this.deletedYn = _super.deletedYn;
-        this.event = inits.isInitialized("event") ? new QEvent(forProperty("event"), inits.get("event")) : null;
+        this.event =
+                inits.isInitialized("event")
+                        ? new QEvent(forProperty("event"), inits.get("event"))
+                        : null;
         this.updatedAt = _super.updatedAt;
         this.updatedBy = _super.updatedBy;
     }
-
 }
-
