@@ -69,3 +69,7 @@ cloud:
     credentials:
       accessKey: ${S3_ACCESS_KEY:}
       secretKey: ${S3_SECRET_KEY:}
+
+fcm:
+  google_application_credentials: ${FCM_GOOGLE_APPLICATION_CREDENTIALS}
+  url: ${FCM_URL}
