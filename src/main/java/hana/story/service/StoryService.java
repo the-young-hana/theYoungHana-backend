@@ -72,29 +72,25 @@ public class StoryService {
                 storyRepository
                         .findById(storyIdx)
                         .orElseThrow(() -> new RuntimeException("스토리를 찾을 수 없습니다."));
-        Matcher matcher = Pattern.compile("\"([^\"]+)\"").matcher(story.getStoryImageList());
+        Matcher matcher =
+                Pattern.compile("https?://[^,\\s]+.png").matcher(story.getStoryImageList());
 
         List<String> imageList = new ArrayList<>();
 
         while (matcher.find()) {
-            imageList.add(matcher.group(1));
+            imageList.add(matcher.group());
         }
-        List<DeptAccountTransactionResDto> transactionList =
-                transactionService.getTransactionsByStory(storyIdx);
-        return StoryReadResDto.builder()
-                .data(
-                        StoryReadResDto.Data.builder()
-                                .storyIdx(story.getStoryIdx())
-                                .storyTitle(story.getStoryTitle())
-                                .storyContent(story.getStoryContent())
-                                .storyLikeNum(storyLikeService.getStoryLikeNum(storyIdx))
-                                .storyCommentNum(storyCommentService.getStoryCommentNum(storyIdx))
-                                .storyComment(storyCommentService.getStoryComment(storyIdx))
-                                .storyImageList(imageList)
-                                .transactionList(transactionList)
-                                .createdAt(story.getCreatedAt())
-                                .build())
-                .build();
+
+        return makeStoryResDto(
+                storyIdx,
+                story.getStoryTitle(),
+                storyLikeService.getStoryLikeNum(storyIdx),
+                storyCommentService.getStoryCommentNum(storyIdx),
+                story.getStoryContent(),
+                imageList,
+                storyCommentService.getStoryComment(storyIdx),
+                transactionService.getTransactionsByStory(storyIdx),
+                story.getCreatedAt());
     }
 
     @Transactional
@@ -138,9 +134,10 @@ public class StoryService {
         String directory = "story/" + storyIdx;
         imageUtils.deleteImagesByDirectory(directory);
 
-        List<String> imgURLs =
+        List<String> imgURLList =
                 (imgs == null || imgs.isEmpty()) ? null : imageUtils.createImages(directory, imgs);
-        if (imgURLs != null) story.postImages(imgURLs.toString());
+        String imgURLs = imgURLList == null ? null : imgURLList.toString();
+        story.postImages(imgURLs);
 
         // 거래 삭제 및 저장
         transactionDetailService.deleteTransactionDetailsByStory(storyIdx);
@@ -152,7 +149,7 @@ public class StoryService {
                 storyLikeService.getStoryLikeNum(storyIdx),
                 storyCommentService.getStoryCommentNum(storyIdx),
                 reqDto.getStoryContent(),
-                imgURLs,
+                imgURLList,
                 storyCommentService.getStoryComment(storyIdx),
                 transactionService.getTransactionsByStory(storyIdx),
                 story.getCreatedAt());
