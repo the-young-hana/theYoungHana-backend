@@ -33,6 +33,7 @@ public class StudentService {
                         .studentName(student.getStudentName())
                         .studentId(student.getStudentId())
                         .studentCollege(student.getDept().getCollege().getCollegeName())
+                        .studentCollegeImage(student.getDept().getCollege().getCollegeImage())
                         .studentDept(student.getDept().getDeptName())
                         .studentCardFrontImage(student.getStudentCard().getStudentCardFrontImage())
                         .studentCardBackImage(student.getStudentCard().getStudentCardBackImage())
