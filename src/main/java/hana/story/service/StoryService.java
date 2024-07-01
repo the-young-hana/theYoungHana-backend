@@ -4,6 +4,7 @@ import hana.account.dto.DeptAccountTransactionResDto;
 import hana.account.service.TransactionService;
 import hana.college.service.DeptService;
 import hana.common.annotation.TypeInfo;
+import hana.common.exception.AccessDeniedCustomException;
 import hana.common.utils.ImageUtils;
 import hana.common.utils.JwtUtils;
 import hana.member.domain.Student;
@@ -73,10 +74,8 @@ public class StoryService {
 
     @Transactional
     public StoryReadResDto getStory(Long storyIdx) {
-        Story story =
-                storyRepository
-                        .findById(storyIdx)
-                        .orElseThrow(() -> new RuntimeException("스토리를 찾을 수 없습니다."));
+        Story story = findByStoryIdx(storyIdx);
+
         Matcher matcher =
                 Pattern.compile("https?://[^,\\s]+.png").matcher(story.getStoryImageList());
 
@@ -95,6 +94,8 @@ public class StoryService {
 
     @Transactional
     public StoryReadResDto createStory(StoryCreateReqDto reqDto, List<MultipartFile> imgs) {
+
+        checkIsAdmin();
 
         Story story =
                 Story.builder()
@@ -123,6 +124,7 @@ public class StoryService {
     @Transactional
     public StoryReadResDto updateStory(
             Long storyIdx, StoryUpdateReqDto reqDto, List<MultipartFile> imgs) {
+        checkIsAdmin();
         Story story = findByStoryIdx(storyIdx);
         story.update(reqDto);
 
@@ -147,6 +149,7 @@ public class StoryService {
 
     @Transactional
     public StoryDeleteResDto deleteStory(Long storyIdx) {
+        checkIsAdmin();
         // 스토리 삭제
         Story story = findByStoryIdx(storyIdx);
         story.delete();
@@ -168,7 +171,7 @@ public class StoryService {
     public Story findByStoryIdx(Long storyIdx) {
         return storyRepository
                 .findById(storyIdx)
-                .orElseThrow(() -> new RuntimeException("스토리를 찾을 수 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("스토리를 찾을 수 없습니다."));
     }
 
     private StoryReadResDto makeStoryResDto(
@@ -196,6 +199,10 @@ public class StoryService {
                                 .createdAt(story.getCreatedAt())
                                 .build())
                 .build();
+    }
+
+    private void checkIsAdmin() {
+        if (!jwtUtils.getStudent().isStudentIsAdmin()) throw new AccessDeniedCustomException();
     }
 
     public StoryService(

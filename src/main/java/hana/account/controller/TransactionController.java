@@ -6,6 +6,7 @@ import hana.account.dto.TransactionsRemitCreateResDto;
 import hana.account.service.TransactionService;
 import hana.common.annotation.MethodInfo;
 import hana.common.annotation.TypeInfo;
+import hana.common.exception.AccessDeniedCustomException;
 import hana.common.exception.BaseExceptionResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -123,7 +124,8 @@ public class TransactionController {
                                         schema =
                                                 @Schema(
                                                         implementation =
-                                                                BaseExceptionResponse.class))),
+                                                                AccessDeniedCustomException
+                                                                        .class))),
                 @ApiResponse(
                         responseCode = "500",
                         description = "서버 오류",
@@ -134,10 +136,8 @@ public class TransactionController {
                                                         implementation =
                                                                 BaseExceptionResponse.class)))
             })
-    public ResponseEntity<TransactionsRemitCreateResDto> remit(
-            @RequestBody TransactionsRemitCreateReqDto dto) {
+    public ResponseEntity<?> remit(@RequestBody TransactionsRemitCreateReqDto dto) {
         TransactionsRemitCreateResDto returnDto = transactionService.remit(dto);
-
         return ResponseEntity.ok(returnDto);
     }
 

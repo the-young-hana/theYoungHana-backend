@@ -8,6 +8,8 @@ import hana.account.dto.*;
 import hana.college.domain.Dept;
 import hana.college.service.DeptService;
 import hana.common.annotation.TypeInfo;
+import hana.common.exception.AccessDeniedCustomException;
+import hana.common.utils.JwtUtils;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
@@ -21,12 +23,19 @@ public class TransactionService {
     private final AccountService accountService;
     private final DeptService deptService;
     private final TransactionRepository transactionRepository;
+    private final JwtUtils jwtUtils;
 
     @Transactional
     public TransactionsRemitCreateResDto remit(TransactionsRemitCreateReqDto dto) {
 
         // 내 계좌 출금, 거래 내역 생성(출금)
         Account myAccount = accountService.findByAccountIdx(dto.getMyAccountIdx());
+
+        // 내 계좌인지 확인
+        if (!myAccount.getMember().equals(jwtUtils.getMember())) {
+            throw new AccessDeniedCustomException();
+        }
+
         accountService.withdraw(dto.getMyAccountIdx(), dto.getAmount());
 
         Account receiveAccount;
@@ -47,7 +56,7 @@ public class TransactionService {
                         .transactionId(UUID.randomUUID().toString())
                         .transactionAmount(dto.getAmount())
                         .transactionBalance(myAccount.getAccountBalance())
-                        .transactionName(receiveAccount.getMember().getMemberName())
+                        .transactionName(myAccount.getMember().getMemberName())
                         .transactionTypeEnumType(TransactionTypeEnumType.출금)
                         .build());
 
@@ -58,7 +67,7 @@ public class TransactionService {
                         .transactionId(UUID.randomUUID().toString())
                         .transactionAmount(dto.getAmount())
                         .transactionBalance(receiveAccount.getAccountBalance())
-                        .transactionName(myAccount.getMember().getMemberName())
+                        .transactionName(receiveAccount.getMember().getMemberName())
                         .transactionTypeEnumType(TransactionTypeEnumType.입금)
                         .build());
 
@@ -108,9 +117,11 @@ public class TransactionService {
     public TransactionService(
             TransactionRepository transactionRepository,
             AccountService accountService,
-            DeptService deptService) {
+            DeptService deptService,
+            JwtUtils jwtUtils) {
         this.transactionRepository = transactionRepository;
         this.accountService = accountService;
         this.deptService = deptService;
+        this.jwtUtils = jwtUtils;
     }
 }
