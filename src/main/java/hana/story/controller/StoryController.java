@@ -123,24 +123,12 @@ public class StoryController {
             summary = "스토리 추가",
             description = "스토리를 추가합니다.",
             method = "POST",
-            //            requestBody =
-            //            @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            //                    description = "스토리 추가 요청",
-            //                    required = true,
-            //                    content =
-            //                    @Content(
-            //                            schema =
-            //                            @Schema(
-            //                                    implementation =
-            //                                            StoryCreateReqDto.class))),
             responses = {
                 @ApiResponse(
                         responseCode = "200",
                         description = "스토리 추가 성공",
                         content =
-                                @Content(
-                                        schema =
-                                                @Schema(implementation = StoryCreateResDto.class))),
+                                @Content(schema = @Schema(implementation = StoryReadResDto.class))),
                 @ApiResponse(
                         responseCode = "400",
                         description = "스토리 추가 실패",
@@ -169,7 +157,7 @@ public class StoryController {
                                                         implementation =
                                                                 BaseExceptionResponse.class)))
             })
-    public ResponseEntity<StoryCreateResDto> createStory(
+    public ResponseEntity<StoryReadResDto> createStory(
             @RequestPart(value = "StoryCreateReqDto") StoryCreateReqDto storyCreateReqDto,
             @RequestPart(value = "imgs", required = false) List<MultipartFile> imgs) {
         return ResponseEntity.ok(storyService.createStory(storyCreateReqDto, imgs));
@@ -183,25 +171,12 @@ public class StoryController {
             summary = "스토리 수정",
             description = "스토리를 수정합니다.",
             method = "PUT",
-            //            requestBody =
-            //                    @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            //                            description = "스토리 수정 요청",
-            //                            required = true,
-            //                            content =
-            //                                    @Content(
-            //                                            schema =
-            //                                                    @Schema(
-            //                                                            implementation =
-            //
-            // StoryUpdateReqDto.class))),
             responses = {
                 @ApiResponse(
                         responseCode = "200",
                         description = "스토리 수정 성공",
                         content =
-                                @Content(
-                                        schema =
-                                                @Schema(implementation = StoryUpdateResDto.class))),
+                                @Content(schema = @Schema(implementation = StoryReadResDto.class))),
                 @ApiResponse(
                         responseCode = "400",
                         description = "스토리 수정 실패",
@@ -230,7 +205,7 @@ public class StoryController {
                                                         implementation =
                                                                 BaseExceptionResponse.class)))
             })
-    public ResponseEntity<StoryUpdateResDto> updateStory(
+    public ResponseEntity<StoryReadResDto> updateStory(
             @PathVariable("storyIdx") Long storyIdx,
             @RequestPart(value = "StoryUpdateReqDto") StoryUpdateReqDto storyUpdateReqDto,
             @RequestPart(value = "imgs", required = false) List<MultipartFile> imgs) {

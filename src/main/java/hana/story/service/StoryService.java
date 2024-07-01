@@ -9,6 +9,7 @@ import hana.story.domain.Story;
 import hana.story.domain.StoryRepository;
 import hana.story.dto.*;
 import jakarta.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -37,7 +38,7 @@ public class StoryService {
         Page<Story> stories =
                 storyRepository.findByDept_DeptIdxAndDeletedYn(
                         deptIdx,
-                        PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "createdAt")),
+                        PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "createdAt")),
                         false);
 
         // 모두 합쳐서 거래내역 생성.
@@ -47,6 +48,7 @@ public class StoryService {
             long storyIdx = s.getStoryIdx();
             long storyCommentNum = storyCommentService.getStoryCommentNum(storyIdx);
             long storyLikeNum = storyLikeService.getStoryLikeNum(storyIdx);
+            LocalDateTime createdAt = s.getCreatedAt();
             List<DeptAccountTransactionResDto> transactionList =
                     transactionService.getTransactionsByStory(storyIdx);
 
@@ -57,6 +59,7 @@ public class StoryService {
                             .storyLikeNum(storyLikeNum)
                             .storyTitle(s.getStoryTitle())
                             .transactionList(transactionList)
+                            .createdAt(createdAt)
                             .build());
         }
 
@@ -69,32 +72,29 @@ public class StoryService {
                 storyRepository
                         .findById(storyIdx)
                         .orElseThrow(() -> new RuntimeException("스토리를 찾을 수 없습니다."));
-        Matcher matcher = Pattern.compile("\"([^\"]+)\"").matcher(story.getStoryImageList());
+        Matcher matcher =
+                Pattern.compile("https?://[^,\\s]+.png").matcher(story.getStoryImageList());
 
         List<String> imageList = new ArrayList<>();
 
         while (matcher.find()) {
-            imageList.add(matcher.group(1));
+            imageList.add(matcher.group());
         }
-        List<DeptAccountTransactionResDto> transactionList =
-                transactionService.getTransactionsByStory(storyIdx);
-        return StoryReadResDto.builder()
-                .data(
-                        StoryReadResDto.Data.builder()
-                                .storyIdx(story.getStoryIdx())
-                                .storyTitle(story.getStoryTitle())
-                                .storyContent(story.getStoryContent())
-                                .storyLikeNum(storyLikeService.getStoryLikeNum(storyIdx))
-                                .storyCommentNum(storyCommentService.getStoryCommentNum(storyIdx))
-                                .storyComment(storyCommentService.getStoryComment(storyIdx))
-                                .storyImageList(imageList)
-                                .transactionList(transactionList)
-                                .build())
-                .build();
+
+        return makeStoryResDto(
+                storyIdx,
+                story.getStoryTitle(),
+                storyLikeService.getStoryLikeNum(storyIdx),
+                storyCommentService.getStoryCommentNum(storyIdx),
+                story.getStoryContent(),
+                imageList,
+                storyCommentService.getStoryComment(storyIdx),
+                transactionService.getTransactionsByStory(storyIdx),
+                story.getCreatedAt());
     }
 
     @Transactional
-    public StoryCreateResDto createStory(StoryCreateReqDto reqDto, List<MultipartFile> imgs) {
+    public StoryReadResDto createStory(StoryCreateReqDto reqDto, List<MultipartFile> imgs) {
 
         Story story =
                 Story.builder()
@@ -103,54 +103,56 @@ public class StoryService {
                         .dept(deptService.findByDeptIdx(reqDto.getDeptIdx()))
                         .build();
         Story savedStory = storyRepository.save(story);
-
+        List<String> imgURLs = null;
         if (imgs != null) {
             String directory = "story/" + savedStory.getStoryIdx();
-            List<String> imgURLs = imageUtils.createImages(directory, imgs);
+            imgURLs = imageUtils.createImages(directory, imgs);
             savedStory.postImages(imgURLs.toString());
         }
 
         // 거래 저장
         transactionDetailService.saveTransactionDetails(reqDto.getTransactionList(), savedStory);
 
-        return StoryCreateResDto.builder()
-                .data(
-                        StoryCreateResDto.Data.builder()
-                                .storyIdx(savedStory.getStoryIdx())
-                                .storyTitle(savedStory.getStoryTitle())
-                                .storyContent(savedStory.getStoryContent())
-                                .storyImageList(savedStory.getStoryImageList())
-                                .build())
-                .build();
+        return makeStoryResDto(
+                savedStory.getStoryIdx(),
+                reqDto.getStoryTitle(),
+                0L,
+                0L,
+                reqDto.getStoryContent(),
+                imgURLs,
+                storyCommentService.getStoryComment(savedStory.getStoryIdx()),
+                transactionService.getTransactionsByStory(savedStory.getStoryIdx()),
+                story.getCreatedAt());
     }
 
     @Transactional
-    public StoryUpdateResDto updateStory(
+    public StoryReadResDto updateStory(
             Long storyIdx, StoryUpdateReqDto reqDto, List<MultipartFile> imgs) {
         Story story = findByStoryIdx(storyIdx);
         story.update(reqDto);
 
         String directory = "story/" + storyIdx;
         imageUtils.deleteImagesByDirectory(directory);
-        String url =
-                (imgs == null || imgs.isEmpty())
-                        ? null
-                        : imageUtils.createImages(directory, imgs).toString();
-        story.postImages(url);
+
+        List<String> imgURLList =
+                (imgs == null || imgs.isEmpty()) ? null : imageUtils.createImages(directory, imgs);
+        String imgURLs = imgURLList == null ? null : imgURLList.toString();
+        story.postImages(imgURLs);
 
         // 거래 삭제 및 저장
         transactionDetailService.deleteTransactionDetailsByStory(storyIdx);
         transactionDetailService.saveTransactionDetails(reqDto.getTransactionList(), story);
 
-        return StoryUpdateResDto.builder()
-                .data(
-                        StoryUpdateResDto.Data.builder()
-                                .storyIdx(story.getStoryIdx())
-                                .storyTitle(story.getStoryTitle())
-                                .storyContent(story.getStoryContent())
-                                .storyImageList(story.getStoryImageList())
-                                .build())
-                .build();
+        return makeStoryResDto(
+                storyIdx,
+                reqDto.getStoryTitle(),
+                storyLikeService.getStoryLikeNum(storyIdx),
+                storyCommentService.getStoryCommentNum(storyIdx),
+                reqDto.getStoryContent(),
+                imgURLList,
+                storyCommentService.getStoryComment(storyIdx),
+                transactionService.getTransactionsByStory(storyIdx),
+                story.getCreatedAt());
     }
 
     @Transactional
@@ -169,6 +171,32 @@ public class StoryService {
         return storyRepository
                 .findById(storyIdx)
                 .orElseThrow(() -> new RuntimeException("스토리를 찾을 수 없습니다."));
+    }
+
+    private StoryReadResDto makeStoryResDto(
+            Long storyIdx,
+            String storyTitle,
+            Long storyLikeNum,
+            Long storyCommentNum,
+            String storyContent,
+            List<String> storyImageList,
+            StoryRepresentativeCommentResDto storyComment,
+            List<DeptAccountTransactionResDto> transactionList,
+            LocalDateTime createdAt) {
+        return StoryReadResDto.builder()
+                .data(
+                        StoryReadResDto.Data.builder()
+                                .storyIdx(storyIdx)
+                                .storyTitle(storyTitle)
+                                .storyContent(storyContent)
+                                .storyLikeNum(storyLikeNum)
+                                .storyCommentNum(storyCommentNum)
+                                .storyComment(storyComment)
+                                .storyImageList(storyImageList)
+                                .transactionList(transactionList)
+                                .createdAt(createdAt)
+                                .build())
+                .build();
     }
 
     public StoryService(
