@@ -38,7 +38,7 @@ public class StoryService {
         Page<Story> stories =
                 storyRepository.findByDept_DeptIdxAndDeletedYn(
                         deptIdx,
-                        PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "createdAt")),
+                        PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "createdAt")),
                         false);
 
         // 모두 합쳐서 거래내역 생성.
