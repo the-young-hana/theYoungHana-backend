@@ -20,6 +20,7 @@ public class StudentReadResDto extends BaseResponse {
         private final String studentName;
         private final String studentId;
         private final String studentCollege;
+        private final String studentCollegeImage;
         private final String studentDept;
         private final String studentCardFrontImage;
         private final String studentCardBackImage;
@@ -31,6 +32,7 @@ public class StudentReadResDto extends BaseResponse {
                 String studentName,
                 String studentId,
                 String studentCollege,
+                String studentCollegeImage,
                 String studentDept,
                 String studentCardFrontImage,
                 String studentCardBackImage,
@@ -39,6 +41,7 @@ public class StudentReadResDto extends BaseResponse {
             this.studentName = studentName;
             this.studentId = studentId;
             this.studentCollege = studentCollege;
+            this.studentCollegeImage = studentCollegeImage;
             this.studentDept = studentDept;
             this.studentCardFrontImage = studentCardFrontImage;
             this.studentCardBackImage = studentCardBackImage;
