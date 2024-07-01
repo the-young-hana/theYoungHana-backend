@@ -7,6 +7,7 @@ import java.util.Collections;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -28,23 +29,24 @@ public class SecurityConfig extends AbstractHttpConfigurer<SecurityConfig, HttpS
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .httpBasic(AbstractHttpConfigurer::disable)
-                .cors(
-                        corsCustomize ->
-                                corsCustomize.configurationSource(
-                                        request -> {
-                                            CorsConfiguration config = new CorsConfiguration();
-                                            config.setAllowCredentials(true);
-                                            config.setAllowedOriginPatterns(
-                                                    Collections.singletonList("*"));
-                                            config.addAllowedMethod(HttpMethod.OPTIONS);
-                                            config.addAllowedMethod(HttpMethod.GET);
-                                            config.addAllowedMethod(HttpMethod.POST);
-                                            config.addAllowedMethod(HttpMethod.PUT);
-                                            config.addAllowedMethod(HttpMethod.DELETE);
-                                            config.addAllowedHeader("Content-Type");
-                                            config.setMaxAge(3600L);
-                                            return config;
-                                        }))
+                .cors(Customizer.withDefaults())
+//                .cors(
+//                        corsCustomize ->
+//                                corsCustomize.configurationSource(
+//                                        request -> {
+//                                            CorsConfiguration config = new CorsConfiguration();
+//                                            config.setAllowCredentials(true);
+//                                            config.setAllowedOriginPatterns(
+//                                                    Collections.singletonList("*"));
+//                                            config.addAllowedMethod(HttpMethod.OPTIONS);
+//                                            config.addAllowedMethod(HttpMethod.GET);
+//                                            config.addAllowedMethod(HttpMethod.POST);
+//                                            config.addAllowedMethod(HttpMethod.PUT);
+//                                            config.addAllowedMethod(HttpMethod.DELETE);
+//                                            config.addAllowedHeader("Content-Type");
+//                                            config.setMaxAge(3600L);
+//                                            return config;
+//                                        }))
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(
                         (sessionManagement) ->
@@ -85,6 +87,7 @@ public class SecurityConfig extends AbstractHttpConfigurer<SecurityConfig, HttpS
                         "http://theyounghana.o-r.kr",
                         "https://theyounghana.o-r.kr")); // 허용할 출처
         config.setAllowCredentials(true); // 쿠키 인증 요청 허용
+        config.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
