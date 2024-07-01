@@ -5,7 +5,9 @@ import hana.account.service.TransactionService;
 import hana.college.service.DeptService;
 import hana.common.annotation.TypeInfo;
 import hana.common.utils.ImageUtils;
+import hana.member.domain.Student;
 import hana.story.domain.Story;
+import hana.story.domain.StoryLikeRepository;
 import hana.story.domain.StoryRepository;
 import hana.story.dto.*;
 import jakarta.transaction.Transactional;
@@ -24,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class StoryService {
     private final StoryRepository storyRepository;
+    private final StoryLikeRepository storyLikeRepository;
     private final StoryCommentService storyCommentService;
     private final StoryLikeService storyLikeService;
     private final TransactionService transactionService;
@@ -167,6 +170,14 @@ public class StoryService {
                 .build();
     }
 
+    @Transactional
+    public StoryReadResDto toggleStoryLike(Long storyIdx, Student student) {
+        Story story = findByStoryIdx(storyIdx);
+        storyLikeService.toggleLike(story, student);
+
+        return getStory(storyIdx);
+    }
+
     public Story findByStoryIdx(Long storyIdx) {
         return storyRepository
                 .findById(storyIdx)
@@ -201,6 +212,7 @@ public class StoryService {
 
     public StoryService(
             StoryRepository storyRepository,
+            StoryLikeRepository storyLikeRepository,
             StoryLikeService storyLikeService,
             StoryCommentService storyCommentService,
             TransactionService transactionService,
@@ -208,6 +220,7 @@ public class StoryService {
             DeptService deptService,
             ImageUtils imageUtils) {
         this.storyRepository = storyRepository;
+        this.storyLikeRepository = storyLikeRepository;
         this.storyCommentService = storyCommentService;
         this.storyLikeService = storyLikeService;
         this.transactionService = transactionService;

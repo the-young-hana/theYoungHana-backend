@@ -1,6 +1,7 @@
 package hana.story.domain;
 
 import hana.common.annotation.TypeInfo;
+import hana.member.domain.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,4 +10,8 @@ import org.springframework.stereotype.Repository;
 public interface StoryLikeRepository extends JpaRepository<StoryLike, Long> {
 
     Long countByStory_StoryIdx(Long storyIdx);
+
+    void deleteByStoryAndStudent(Story story, Student student);
+
+    Boolean existsByStoryAndStudent(Story story, Student student);
 }

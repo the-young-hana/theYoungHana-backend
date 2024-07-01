@@ -5,6 +5,7 @@ import hana.common.entity.BaseTimeEntity;
 import hana.member.domain.Student;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -27,4 +28,10 @@ public class StoryLike extends BaseTimeEntity {
     @ManyToOne
     @JoinColumn(name = "student_idx")
     private Student student;
+
+    @Builder
+    public StoryLike(Story story, Student student) {
+        this.story = story;
+        this.student = student;
+    }
 }
