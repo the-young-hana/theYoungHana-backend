@@ -5,6 +5,8 @@ import hana.account.service.TransactionService;
 import hana.college.service.DeptService;
 import hana.common.annotation.TypeInfo;
 import hana.common.utils.ImageUtils;
+import hana.common.utils.JwtUtils;
+import hana.member.domain.Student;
 import hana.story.domain.Story;
 import hana.story.domain.StoryRepository;
 import hana.story.dto.*;
@@ -30,6 +32,7 @@ public class StoryService {
     private final TransactionDetailService transactionDetailService;
     private final DeptService deptService;
     private final ImageUtils imageUtils;
+    private final JwtUtils jwtUtils;
 
     @Transactional
     public StoriesReadResDto getStories(Integer page, Long deptIdx) {
@@ -48,6 +51,7 @@ public class StoryService {
             long storyIdx = s.getStoryIdx();
             long storyCommentNum = storyCommentService.getStoryCommentNum(storyIdx);
             long storyLikeNum = storyLikeService.getStoryLikeNum(storyIdx);
+            boolean isLiked = storyLikeService.checkLike(s, jwtUtils.getStudent());
             LocalDateTime createdAt = s.getCreatedAt();
             List<DeptAccountTransactionResDto> transactionList =
                     transactionService.getTransactionsByStory(storyIdx);
@@ -58,6 +62,7 @@ public class StoryService {
                             .storyIdx(storyIdx)
                             .storyLikeNum(storyLikeNum)
                             .storyTitle(s.getStoryTitle())
+                            .isLiked(isLiked)
                             .transactionList(transactionList)
                             .createdAt(createdAt)
                             .build());
@@ -82,15 +87,10 @@ public class StoryService {
         }
 
         return makeStoryResDto(
-                storyIdx,
-                story.getStoryTitle(),
-                storyLikeService.getStoryLikeNum(storyIdx),
-                storyCommentService.getStoryCommentNum(storyIdx),
-                story.getStoryContent(),
+                story,
                 imageList,
                 storyCommentService.getStoryComment(storyIdx),
-                transactionService.getTransactionsByStory(storyIdx),
-                story.getCreatedAt());
+                transactionService.getTransactionsByStory(storyIdx));
     }
 
     @Transactional
@@ -114,15 +114,10 @@ public class StoryService {
         transactionDetailService.saveTransactionDetails(reqDto.getTransactionList(), savedStory);
 
         return makeStoryResDto(
-                savedStory.getStoryIdx(),
-                reqDto.getStoryTitle(),
-                0L,
-                0L,
-                reqDto.getStoryContent(),
+                story,
                 imgURLs,
                 storyCommentService.getStoryComment(savedStory.getStoryIdx()),
-                transactionService.getTransactionsByStory(savedStory.getStoryIdx()),
-                story.getCreatedAt());
+                transactionService.getTransactionsByStory(savedStory.getStoryIdx()));
     }
 
     @Transactional
@@ -144,15 +139,10 @@ public class StoryService {
         transactionDetailService.saveTransactionDetails(reqDto.getTransactionList(), story);
 
         return makeStoryResDto(
-                storyIdx,
-                reqDto.getStoryTitle(),
-                storyLikeService.getStoryLikeNum(storyIdx),
-                storyCommentService.getStoryCommentNum(storyIdx),
-                reqDto.getStoryContent(),
+                story,
                 imgURLList,
                 storyCommentService.getStoryComment(storyIdx),
-                transactionService.getTransactionsByStory(storyIdx),
-                story.getCreatedAt());
+                transactionService.getTransactionsByStory(storyIdx));
     }
 
     @Transactional
@@ -167,6 +157,14 @@ public class StoryService {
                 .build();
     }
 
+    @Transactional
+    public StoryReadResDto toggleStoryLike(Long storyIdx, Student student) {
+        Story story = findByStoryIdx(storyIdx);
+        storyLikeService.toggleLike(story, student);
+
+        return getStory(storyIdx);
+    }
+
     public Story findByStoryIdx(Long storyIdx) {
         return storyRepository
                 .findById(storyIdx)
@@ -174,33 +172,35 @@ public class StoryService {
     }
 
     private StoryReadResDto makeStoryResDto(
-            Long storyIdx,
-            String storyTitle,
-            Long storyLikeNum,
-            Long storyCommentNum,
-            String storyContent,
+            Story story,
             List<String> storyImageList,
             StoryRepresentativeCommentResDto storyComment,
-            List<DeptAccountTransactionResDto> transactionList,
-            LocalDateTime createdAt) {
+            List<DeptAccountTransactionResDto> transactionList) {
+        Long storyIdx = story.getStoryIdx();
+        boolean isLiked = storyLikeService.checkLike(story, jwtUtils.getStudent());
+        Long storyLikeNum = storyLikeService.getStoryLikeNum(storyIdx);
+        Long storyCommentNum = storyCommentService.getStoryCommentNum(storyIdx);
+
         return StoryReadResDto.builder()
                 .data(
                         StoryReadResDto.Data.builder()
                                 .storyIdx(storyIdx)
-                                .storyTitle(storyTitle)
-                                .storyContent(storyContent)
+                                .storyTitle(story.getStoryTitle())
+                                .storyContent(story.getStoryContent())
+                                .isLiked(isLiked)
                                 .storyLikeNum(storyLikeNum)
                                 .storyCommentNum(storyCommentNum)
                                 .storyComment(storyComment)
                                 .storyImageList(storyImageList)
                                 .transactionList(transactionList)
-                                .createdAt(createdAt)
+                                .createdAt(story.getCreatedAt())
                                 .build())
                 .build();
     }
 
     public StoryService(
             StoryRepository storyRepository,
+            JwtUtils jwtUtils,
             StoryLikeService storyLikeService,
             StoryCommentService storyCommentService,
             TransactionService transactionService,
@@ -208,6 +208,7 @@ public class StoryService {
             DeptService deptService,
             ImageUtils imageUtils) {
         this.storyRepository = storyRepository;
+        this.jwtUtils = jwtUtils;
         this.storyCommentService = storyCommentService;
         this.storyLikeService = storyLikeService;
         this.transactionService = transactionService;

@@ -24,6 +24,7 @@ public class StoryReadResDto extends BaseResponse {
         private final Long storyLikeNum;
         private final String storyContent;
         private final Long storyCommentNum;
+        private final Boolean isLiked;
         private final StoryRepresentativeCommentResDto storyComment;
         private final List<String> storyImageList;
         private final List<DeptAccountTransactionResDto> transactionList;
@@ -36,6 +37,7 @@ public class StoryReadResDto extends BaseResponse {
                 Long storyLikeNum,
                 Long storyCommentNum,
                 String storyContent,
+                Boolean isLiked,
                 List<String> storyImageList,
                 StoryRepresentativeCommentResDto storyComment,
                 List<DeptAccountTransactionResDto> transactionList,
@@ -44,6 +46,7 @@ public class StoryReadResDto extends BaseResponse {
             this.storyTitle = storyTitle;
             this.storyContent = storyContent;
             this.storyLikeNum = storyLikeNum;
+            this.isLiked = isLiked;
             this.storyCommentNum = storyCommentNum;
             this.storyImageList = storyImageList;
             this.storyComment = storyComment;

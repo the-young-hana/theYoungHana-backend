@@ -3,6 +3,7 @@ package hana.story.controller;
 import hana.common.annotation.MethodInfo;
 import hana.common.annotation.TypeInfo;
 import hana.common.exception.BaseExceptionResponse;
+import hana.common.utils.JwtUtils;
 import hana.story.dto.*;
 import hana.story.service.StoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("api/v1")
 public class StoryController {
     private final StoryService storyService;
+    private final JwtUtils jwtUtils;
 
     @MethodInfo(name = "readStories", description = "스토리 목록을 조회합니다.")
     @GetMapping("/stories/{deptIdx}")
@@ -269,11 +271,7 @@ public class StoryController {
                         responseCode = "200",
                         description = "스토리 좋아요 추가 성공",
                         content =
-                                @Content(
-                                        schema =
-                                                @Schema(
-                                                        implementation =
-                                                                StoryCreateLikeResDto.class))),
+                                @Content(schema = @Schema(implementation = StoryReadResDto.class))),
                 @ApiResponse(
                         responseCode = "400",
                         description = "스토리 좋아요 추가 실패",
@@ -302,12 +300,13 @@ public class StoryController {
                                                         implementation =
                                                                 BaseExceptionResponse.class)))
             })
-    public ResponseEntity<StoryCreateLikeResDto> createStoryLike(
+    public ResponseEntity<StoryReadResDto> createStoryLike(
             @PathVariable("storyIdx") Long storyIdx) {
-        return null;
+        return ResponseEntity.ok(storyService.toggleStoryLike(storyIdx, jwtUtils.getStudent()));
     }
 
-    public StoryController(StoryService storyService) {
+    public StoryController(StoryService storyService, JwtUtils jwtUtils) {
         this.storyService = storyService;
+        this.jwtUtils = jwtUtils;
     }
 }
