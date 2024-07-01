@@ -98,7 +98,7 @@ public class StoryService {
     }
 
     @Transactional
-    public StoryCreateResDto createStory(StoryCreateReqDto reqDto, List<MultipartFile> imgs) {
+    public StoryReadResDto createStory(StoryCreateReqDto reqDto, List<MultipartFile> imgs) {
 
         Story story =
                 Story.builder()
@@ -107,54 +107,55 @@ public class StoryService {
                         .dept(deptService.findByDeptIdx(reqDto.getDeptIdx()))
                         .build();
         Story savedStory = storyRepository.save(story);
-
+        List<String> imgURLs = null;
         if (imgs != null) {
             String directory = "story/" + savedStory.getStoryIdx();
-            List<String> imgURLs = imageUtils.createImages(directory, imgs);
+            imgURLs = imageUtils.createImages(directory, imgs);
             savedStory.postImages(imgURLs.toString());
         }
 
         // 거래 저장
         transactionDetailService.saveTransactionDetails(reqDto.getTransactionList(), savedStory);
 
-        return StoryCreateResDto.builder()
-                .data(
-                        StoryCreateResDto.Data.builder()
-                                .storyIdx(savedStory.getStoryIdx())
-                                .storyTitle(savedStory.getStoryTitle())
-                                .storyContent(savedStory.getStoryContent())
-                                .storyImageList(savedStory.getStoryImageList())
-                                .build())
-                .build();
+        return makeStoryResDto(
+                savedStory.getStoryIdx(),
+                reqDto.getStoryTitle(),
+                0L,
+                0L,
+                reqDto.getStoryContent(),
+                imgURLs,
+                storyCommentService.getStoryComment(savedStory.getStoryIdx()),
+                transactionService.getTransactionsByStory(savedStory.getStoryIdx()),
+                story.getCreatedAt());
     }
 
     @Transactional
-    public StoryUpdateResDto updateStory(
+    public StoryReadResDto updateStory(
             Long storyIdx, StoryUpdateReqDto reqDto, List<MultipartFile> imgs) {
         Story story = findByStoryIdx(storyIdx);
         story.update(reqDto);
 
         String directory = "story/" + storyIdx;
         imageUtils.deleteImagesByDirectory(directory);
-        String url =
-                (imgs == null || imgs.isEmpty())
-                        ? null
-                        : imageUtils.createImages(directory, imgs).toString();
-        story.postImages(url);
+
+        List<String> imgURLs =
+                (imgs == null || imgs.isEmpty()) ? null : imageUtils.createImages(directory, imgs);
+        if (imgURLs != null) story.postImages(imgURLs.toString());
 
         // 거래 삭제 및 저장
         transactionDetailService.deleteTransactionDetailsByStory(storyIdx);
         transactionDetailService.saveTransactionDetails(reqDto.getTransactionList(), story);
 
-        return StoryUpdateResDto.builder()
-                .data(
-                        StoryUpdateResDto.Data.builder()
-                                .storyIdx(story.getStoryIdx())
-                                .storyTitle(story.getStoryTitle())
-                                .storyContent(story.getStoryContent())
-                                .storyImageList(story.getStoryImageList())
-                                .build())
-                .build();
+        return makeStoryResDto(
+                storyIdx,
+                reqDto.getStoryTitle(),
+                storyLikeService.getStoryLikeNum(storyIdx),
+                storyCommentService.getStoryCommentNum(storyIdx),
+                reqDto.getStoryContent(),
+                imgURLs,
+                storyCommentService.getStoryComment(storyIdx),
+                transactionService.getTransactionsByStory(storyIdx),
+                story.getCreatedAt());
     }
 
     @Transactional
@@ -173,6 +174,32 @@ public class StoryService {
         return storyRepository
                 .findById(storyIdx)
                 .orElseThrow(() -> new RuntimeException("스토리를 찾을 수 없습니다."));
+    }
+
+    private StoryReadResDto makeStoryResDto(
+            Long storyIdx,
+            String storyTitle,
+            Long storyLikeNum,
+            Long storyCommentNum,
+            String storyContent,
+            List<String> storyImageList,
+            StoryRepresentativeCommentResDto storyComment,
+            List<DeptAccountTransactionResDto> transactionList,
+            LocalDateTime createdAt) {
+        return StoryReadResDto.builder()
+                .data(
+                        StoryReadResDto.Data.builder()
+                                .storyIdx(storyIdx)
+                                .storyTitle(storyTitle)
+                                .storyContent(storyContent)
+                                .storyLikeNum(storyLikeNum)
+                                .storyCommentNum(storyCommentNum)
+                                .storyComment(storyComment)
+                                .storyImageList(storyImageList)
+                                .transactionList(transactionList)
+                                .createdAt(createdAt)
+                                .build())
+                .build();
     }
 
     public StoryService(
