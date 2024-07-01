@@ -2,6 +2,7 @@ package hana.story.dto;
 
 import hana.account.dto.DeptAccountTransactionResDto;
 import hana.common.dto.BaseResponse;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,6 +27,7 @@ public class StoryReadResDto extends BaseResponse {
         private final StoryRepresentativeCommentResDto storyComment;
         private final List<String> storyImageList;
         private final List<DeptAccountTransactionResDto> transactionList;
+        private final LocalDateTime createdAt;
 
         @Builder
         public Data(
@@ -36,7 +38,8 @@ public class StoryReadResDto extends BaseResponse {
                 String storyContent,
                 List<String> storyImageList,
                 StoryRepresentativeCommentResDto storyComment,
-                List<DeptAccountTransactionResDto> transactionList) {
+                List<DeptAccountTransactionResDto> transactionList,
+                LocalDateTime createdAt) {
             this.storyIdx = storyIdx;
             this.storyTitle = storyTitle;
             this.storyContent = storyContent;
@@ -45,6 +48,7 @@ public class StoryReadResDto extends BaseResponse {
             this.storyImageList = storyImageList;
             this.storyComment = storyComment;
             this.transactionList = transactionList;
+            this.createdAt = createdAt;
         }
     }
 }

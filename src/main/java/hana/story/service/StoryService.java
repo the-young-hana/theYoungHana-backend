@@ -9,6 +9,7 @@ import hana.story.domain.Story;
 import hana.story.domain.StoryRepository;
 import hana.story.dto.*;
 import jakarta.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -47,6 +48,7 @@ public class StoryService {
             long storyIdx = s.getStoryIdx();
             long storyCommentNum = storyCommentService.getStoryCommentNum(storyIdx);
             long storyLikeNum = storyLikeService.getStoryLikeNum(storyIdx);
+            LocalDateTime createdAt = s.getCreatedAt();
             List<DeptAccountTransactionResDto> transactionList =
                     transactionService.getTransactionsByStory(storyIdx);
 
@@ -57,6 +59,7 @@ public class StoryService {
                             .storyLikeNum(storyLikeNum)
                             .storyTitle(s.getStoryTitle())
                             .transactionList(transactionList)
+                            .createdAt(createdAt)
                             .build());
         }
 
@@ -89,6 +92,7 @@ public class StoryService {
                                 .storyComment(storyCommentService.getStoryComment(storyIdx))
                                 .storyImageList(imageList)
                                 .transactionList(transactionList)
+                                .createdAt(story.getCreatedAt())
                                 .build())
                 .build();
     }
