@@ -23,25 +23,11 @@ public class FirebaseConfig {
 
     @Bean
     public FirebaseApp firebaseApp() throws IOException {
-        //                InputStream resource =
-        //                        new
-        // ClassPathResource(GOOGLE_APPLICATION_CREDENTIALS).getInputStream();
-        InputStream resource;
-        if (GOOGLE_APPLICATION_CREDENTIALS.startsWith("{")) {
-            // 환경 변수에 JSON 문자열이 직접 저장된 경우
-            resource =
-                    new ByteArrayInputStream(
-                            GOOGLE_APPLICATION_CREDENTIALS.getBytes(StandardCharsets.UTF_8));
-            System.out.println("환경 변수 json 문자열이 직접 저장");
-        } else {
-            // JSON 파일 경로인 경우
-            resource = new ClassPathResource(GOOGLE_APPLICATION_CREDENTIALS).getInputStream();
-            System.out.println("환경 변수 json 파일 경로로 저장");
-        }
+        InputStream resource =
+                new ClassPathResource(GOOGLE_APPLICATION_CREDENTIALS).getInputStream();
+
         byte[] jsonBytes = resource.readAllBytes();
         String jsonString = new String(jsonBytes, StandardCharsets.UTF_8);
-
-        System.out.println("Firebase JSON Credentials: " + jsonString);
 
         Gson gson = new Gson();
         JsonObject jsonObject = JsonParser.parseString(jsonString).getAsJsonObject();
