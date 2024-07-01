@@ -47,7 +47,7 @@ public class TransactionService {
                         .transactionId(UUID.randomUUID().toString())
                         .transactionAmount(dto.getAmount())
                         .transactionBalance(myAccount.getAccountBalance())
-                        .transactionName(receiveAccount.getMember().getMemberName())
+                        .transactionName(myAccount.getMember().getMemberName())
                         .transactionTypeEnumType(TransactionTypeEnumType.출금)
                         .build());
 
@@ -58,7 +58,7 @@ public class TransactionService {
                         .transactionId(UUID.randomUUID().toString())
                         .transactionAmount(dto.getAmount())
                         .transactionBalance(receiveAccount.getAccountBalance())
-                        .transactionName(myAccount.getMember().getMemberName())
+                        .transactionName(receiveAccount.getMember().getMemberName())
                         .transactionTypeEnumType(TransactionTypeEnumType.입금)
                         .build());
 
