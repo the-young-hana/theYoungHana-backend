@@ -25,6 +25,7 @@ public class StoriesReadResDto extends BaseResponse {
         private final Long storyCommentNum;
         private final List<DeptAccountTransactionResDto> transactionList;
         private final LocalDateTime createdAt;
+        private final Boolean isLiked;
 
         @Builder
         public Data(
@@ -32,12 +33,14 @@ public class StoriesReadResDto extends BaseResponse {
                 String storyTitle,
                 Long storyLikeNum,
                 Long storyCommentNum,
+                Boolean isLiked,
                 List<DeptAccountTransactionResDto> transactionList,
                 LocalDateTime createdAt) {
             super();
             this.storyIdx = storyIdx;
             this.storyTitle = storyTitle;
             this.storyLikeNum = storyLikeNum;
+            this.isLiked = isLiked;
             this.storyCommentNum = storyCommentNum;
             this.transactionList = transactionList;
             this.createdAt = createdAt;
