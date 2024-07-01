@@ -2,6 +2,8 @@ package hana.common.config;
 
 import hana.common.annotation.MethodInfo;
 import hana.common.annotation.TypeInfo;
+
+import java.util.Arrays;
 import java.util.Collections;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +15,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @TypeInfo(name = "SecurityConfig", description = "시큐리티 설정 클래스")
 @Configuration
@@ -69,6 +73,23 @@ public class SecurityConfig extends AbstractHttpConfigurer<SecurityConfig, HttpS
                 .logout(AbstractHttpConfigurer::disable);
 
         return httpSecurity.build();
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedHeaders(Collections.singletonList("*")); // 허용할 HTTP header
+        config.setAllowedMethods(Collections.singletonList("*")); // 허용할 HTTP method
+        config.setAllowedOriginPatterns(Arrays.asList(
+                "http://localhost:3000",
+                "http://theyounghana.o-r.kr",
+                "https://theyounghana.o-r.kr"
+        )); // 허용할 출처
+        config.setAllowCredentials(true); // 쿠키 인증 요청 허용
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 
     public SecurityConfig(JwtTokenProvider jwtTokenProvider) {
