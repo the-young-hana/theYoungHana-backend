@@ -2,6 +2,7 @@ package hana.story.controller;
 
 import hana.common.annotation.MethodInfo;
 import hana.common.annotation.TypeInfo;
+import hana.common.exception.AccessDeniedCustomException;
 import hana.common.exception.BaseExceptionResponse;
 import hana.common.utils.JwtUtils;
 import hana.story.dto.*;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -56,7 +58,7 @@ public class StoryController {
                                         schema =
                                                 @Schema(
                                                         implementation =
-                                                                BaseExceptionResponse.class))),
+                                                                AccessDeniedException.class))),
                 @ApiResponse(
                         responseCode = "500",
                         description = "서버 오류",
@@ -102,7 +104,8 @@ public class StoryController {
                                         schema =
                                                 @Schema(
                                                         implementation =
-                                                                BaseExceptionResponse.class))),
+                                                                AccessDeniedCustomException
+                                                                        .class))),
                 @ApiResponse(
                         responseCode = "500",
                         description = "서버 오류",
@@ -139,7 +142,8 @@ public class StoryController {
                                         schema =
                                                 @Schema(
                                                         implementation =
-                                                                BaseExceptionResponse.class))),
+                                                                AccessDeniedCustomException
+                                                                        .class))),
                 @ApiResponse(
                         responseCode = "403",
                         description = "접근 권한 없음",
@@ -161,7 +165,8 @@ public class StoryController {
             })
     public ResponseEntity<StoryReadResDto> createStory(
             @RequestPart(value = "StoryCreateReqDto") StoryCreateReqDto storyCreateReqDto,
-            @RequestPart(value = "imgs", required = false) List<MultipartFile> imgs) {
+            @RequestPart(value = "imgs", required = false) List<MultipartFile> imgs)
+            throws AccessDeniedException {
         return ResponseEntity.ok(storyService.createStory(storyCreateReqDto, imgs));
     }
 
@@ -196,7 +201,8 @@ public class StoryController {
                                         schema =
                                                 @Schema(
                                                         implementation =
-                                                                BaseExceptionResponse.class))),
+                                                                AccessDeniedCustomException
+                                                                        .class))),
                 @ApiResponse(
                         responseCode = "500",
                         description = "서버 오류",
@@ -245,7 +251,8 @@ public class StoryController {
                                         schema =
                                                 @Schema(
                                                         implementation =
-                                                                BaseExceptionResponse.class))),
+                                                                AccessDeniedCustomException
+                                                                        .class))),
                 @ApiResponse(
                         responseCode = "500",
                         description = "서버 오류",
