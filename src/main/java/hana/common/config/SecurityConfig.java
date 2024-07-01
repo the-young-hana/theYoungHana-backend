@@ -88,7 +88,7 @@ public class SecurityConfig extends AbstractHttpConfigurer<SecurityConfig, HttpS
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedHeaders(Collections.singletonList("*")); // 허용할 HTTP header
         config.setAllowedMethods(Collections.singletonList("*")); // 허용할 HTTP method
-        config.setAllowedOriginPatterns(
+        config.setAllowedOrigins(
                 Arrays.asList(
                         "http://localhost:3000",
                         "http://theyounghana.o-r.kr",
