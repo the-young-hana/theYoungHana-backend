@@ -3,7 +3,7 @@ name: 스테이징 배포
 on:
   push:
     branches:
-      - main
+      - "#50"
 
 jobs:
   test:
@@ -17,7 +17,6 @@ jobs:
         run: |
           touch theyounghana-ff6c3-firebase-adminsdk-xsbw0-b4fd60e217.json
           echo ${{ secrets.FCM_GOOGLE_APPLICATION_CREDENTIALS_FILE }} | base64 -d > theyounghana-ff6c3-firebase-adminsdk-xsbw0-b4fd60e217.json
-
         working-directory: src/main/resources
 
       - name: Validate JSON file
