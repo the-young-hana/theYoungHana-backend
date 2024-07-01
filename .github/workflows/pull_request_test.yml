@@ -3,7 +3,7 @@ name: PR 테스트
 on:
   pull_request:
     branches:
-      - "#50"
+      - main
 
 jobs:
   test:
