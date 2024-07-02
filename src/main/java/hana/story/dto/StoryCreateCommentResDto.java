@@ -5,5 +5,26 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder
-public class StoryCreateCommentResDto extends BaseResponse {}
+public class StoryCreateCommentResDto extends BaseResponse {
+    private final Data data;
+
+    @Builder
+    public StoryCreateCommentResDto(Data data) {
+        super();
+        this.data = data;
+    }
+
+    @Getter
+    public static class Data {
+        private final Long commentIdx;
+        private final Long commentParentIdx;
+        private final String commentContent;
+
+        @Builder
+        public Data(Long commentIdx, Long commentParentIdx, String commentContent) {
+            this.commentIdx = commentIdx;
+            this.commentParentIdx = commentParentIdx;
+            this.commentContent = commentContent;
+        }
+    }
+}
