@@ -1,4 +1,4 @@
-package hana.common.dto.Notification;
+package hana.common.dto.notification;
 
 import lombok.Builder;
 import lombok.Getter;

@@ -1,19 +1,25 @@
-package hana.common.Service;
+package hana.common.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
-import hana.common.dto.Notification.FcmMessageResDto;
-import hana.common.dto.Notification.FcmSendReqDto;
+import hana.common.annotation.MethodInfo;
+import hana.common.annotation.TypeInfo;
+import hana.common.dto.notification.FcmMessageResDto;
+import hana.common.dto.notification.FcmSendReqDto;
 import java.io.IOException;
-import java.util.List;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
+@TypeInfo(name = "FCMService", description = "FCM 서비스")
 @Service
 @RequiredArgsConstructor
 public class FCMService {
@@ -25,35 +31,50 @@ public class FCMService {
 
     // push 메세지 처리를 수행하는 비지니스 로직
     // return 성공(1), 실패(0)
-    public int sendMessageTo(FcmSendReqDto fcmSendReqDto) throws IOException {
-        String message = makeMessage(fcmSendReqDto);
+    @MethodInfo(name = "sendMessageTo", description = "FCM 메세지를 전송합니다.")
+    public int sendMessageTo(FcmSendReqDto fcmSendReqDto) {
+        try {
+            String message = makeMessage(fcmSendReqDto);
+            URL url = new URL(FCM_URL);
+            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+            String accessToken = getAccessToken();
 
-        RestTemplate restTemplate = new RestTemplate();
+            httpURLConnection.setRequestMethod("POST");
+            httpURLConnection.setRequestProperty("Authorization", "Bearer " + accessToken);
+            httpURLConnection.setRequestProperty("Content-Type", "application/json; UTF-8");
+            httpURLConnection.setDoOutput(true);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Authorization", "Bearer " + getAccessToken());
+            // Send the message
+            try (OutputStream outputStream = httpURLConnection.getOutputStream()) {
+                byte[] input = message.getBytes(StandardCharsets.UTF_8);
+                outputStream.write(input, 0, input.length);
+            }
 
-        HttpEntity entity = new HttpEntity<>(message, headers);
+            int responseCode = httpURLConnection.getResponseCode();
 
-        ResponseEntity response =
-                restTemplate.exchange(FCM_URL, HttpMethod.POST, entity, String.class);
-
-        return response.getStatusCode() == HttpStatus.OK ? 1 : 0;
+            return responseCode == HttpURLConnection.HTTP_OK ? 1 : 0;
+        } catch (Exception exception) {
+            throw new IllegalArgumentException(
+                    "FCM 메시지를 전송하는 데에 실패하였습니다. (FCM 메시지를 지원하지 않는 기기에서의 로그인을 지원하지 않습니다.");
+        }
     }
 
+    @MethodInfo(name = "getAccessToken", description = "FCM 액세스 토큰을 발급합니다.")
     // Firebase Admin SDK의 비공개 키를 참조하여 Bearer 토큰 발급
     private String getAccessToken() throws IOException {
         GoogleCredentials googleCredentials =
                 GoogleCredentials.fromStream(
                                 new ClassPathResource(GOOGLE_APPLICATION_CREDENTIALS)
                                         .getInputStream())
-                        .createScoped(List.of("https://www.googleapis.com/auth/cloud-platform"));
-
+                        .createScoped(
+                                Arrays.asList(
+                                        "https://www.googleapis.com/auth/firebase.messaging",
+                                        "https://www.googleapis.com/auth/cloud-platform"));
         googleCredentials.refreshIfExpired();
         return googleCredentials.getAccessToken().getTokenValue();
     }
 
+    @MethodInfo(name = "makeMessage", description = "FCM 메세지를 생성합니다.")
     // FCM 전송 정보를 기반으로 메세지를 구성 object -> string
     private String makeMessage(FcmSendReqDto fcmSendReqDto) throws JsonProcessingException {
         ObjectMapper om = new ObjectMapper();
