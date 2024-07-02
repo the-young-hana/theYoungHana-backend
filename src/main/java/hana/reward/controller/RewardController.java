@@ -2,7 +2,6 @@ package hana.reward.controller;
 
 import hana.common.annotation.MethodInfo;
 import hana.common.annotation.TypeInfo;
-import hana.common.exception.AccessDeniedCustomException;
 import hana.common.exception.BaseExceptionResponse;
 import hana.common.utils.JwtUtils;
 import hana.reward.dto.*;
