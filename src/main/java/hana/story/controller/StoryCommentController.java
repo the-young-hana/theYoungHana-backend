@@ -66,8 +66,11 @@ public class StoryCommentController {
                                                                 BaseExceptionResponse.class)))
             })
     public ResponseEntity<StoryReadCommentsResDto> readStoryComments(
-            @PathVariable("storyIdx") Long storyIdx) {
-        return null;
+            @PathVariable("storyIdx") Long storyIdx,
+            @RequestParam(value = "lastCommentIdx", required = false) Long lastCommentIdx) {
+        StoryReadCommentsResDto response =
+                storyCommentService.readStoryComments(storyIdx, lastCommentIdx);
+        return ResponseEntity.ok(response);
     }
 
     @MethodInfo(name = "createStoryComment", description = "스토리 댓글을 추가합니다.")
@@ -128,7 +131,9 @@ public class StoryCommentController {
     public ResponseEntity<StoryCreateCommentResDto> createStoryComment(
             @PathVariable("storyIdx") Long storyIdx,
             @Valid @RequestBody StoryCreateCommentReqDto storyCreateCommentReqDto) {
-        return null;
+        StoryCreateCommentResDto response =
+                storyCommentService.createStoryComment(storyIdx, storyCreateCommentReqDto);
+        return ResponseEntity.ok(response);
     }
 
     @MethodInfo(name = "updateStoryComment", description = "스토리 댓글을 수정합니다.")
@@ -190,7 +195,10 @@ public class StoryCommentController {
             @PathVariable("storyIdx") Long storyIdx,
             @PathVariable("commentIdx") Long commentIdx,
             @Valid @RequestBody StoryUpdateCommentReqDto storyUpdateCommentReqDto) {
-        return null;
+        StoryUpdateCommentResDto response =
+                storyCommentService.updateStoryComment(
+                        storyIdx, commentIdx, storyUpdateCommentReqDto);
+        return ResponseEntity.ok(response);
     }
 
     @MethodInfo(name = "deleteStoryComment", description = "스토리 댓글을 삭제합니다.")
@@ -239,7 +247,9 @@ public class StoryCommentController {
             })
     public ResponseEntity<StoryDeleteCommentResDto> deleteStoryComment(
             @PathVariable("storyIdx") Long storyIdx, @PathVariable("commentIdx") Long commentIdx) {
-        return null;
+        storyCommentService.deleteStoryComment(storyIdx, commentIdx);
+        StoryDeleteCommentResDto response = StoryDeleteCommentResDto.builder().build();
+        return ResponseEntity.ok(response);
     }
 
     public StoryCommentController(StoryCommentService storyCommentService) {
