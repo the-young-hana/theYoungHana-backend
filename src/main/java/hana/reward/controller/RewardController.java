@@ -2,7 +2,9 @@ package hana.reward.controller;
 
 import hana.common.annotation.MethodInfo;
 import hana.common.annotation.TypeInfo;
+import hana.common.exception.AccessDeniedCustomException;
 import hana.common.exception.BaseExceptionResponse;
+import hana.common.utils.JwtUtils;
 import hana.reward.dto.*;
 import hana.reward.service.RewardService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/v1")
 public class RewardController {
     private final RewardService rewardService;
+    private final JwtUtils jwtUtils;
 
     @MethodInfo(name = "readReward", description = "내 리워드를 조회합니다.")
     @GetMapping("/rewards")
@@ -64,7 +67,10 @@ public class RewardController {
                                                                 BaseExceptionResponse.class)))
             })
     public ResponseEntity<RewardReadResDto> readReward() {
-        return null;
+        Long studentIdx = jwtUtils.getStudent().getStudentIdx();
+        Long deptIdx = jwtUtils.getStudent().getDept().getDeptIdx();
+        RewardReadResDto getMyContribution = rewardService.getMyContribution(studentIdx, deptIdx);
+        return ResponseEntity.ok(getMyContribution);
     }
 
     @MethodInfo(name = "readDeptRewards", description = "학과 리워드 랭킹을 조회합니다.")
@@ -111,8 +117,8 @@ public class RewardController {
                                                         implementation =
                                                                 BaseExceptionResponse.class)))
             })
-    public ResponseEntity<RewardReadDeptRankResDto> readDeptRewards() {
-        return null;
+    public ResponseEntity<RewardReadDeptRankResDto> readDeptRewards(@RequestParam int page) {
+        return ResponseEntity.ok(rewardService.getDeptRank(page));
     }
 
     @MethodInfo(name = "present", description = "선물을 엽니다.")
@@ -160,7 +166,9 @@ public class RewardController {
                                                                 BaseExceptionResponse.class)))
             })
     public ResponseEntity<RewardPresentResDto> present() {
-        return null;
+        Long studentIdx = jwtUtils.getStudent().getStudentIdx();
+        RewardPresentResDto getPoints = rewardService.getPoints(studentIdx);
+        return ResponseEntity.ok(getPoints);
     }
 
     @MethodInfo(name = "questionQuiz", description = "퀴즈를 냅니다.")
@@ -268,14 +276,15 @@ public class RewardController {
             })
     public ResponseEntity<RewardAnswerQuizResDto> answerQuiz(
             @Valid @RequestBody RewardAnswerQuizReqDto rewardAnswerQuizReqDto) {
-        Long studentIdx = 3L;
+        Long studentIdx = jwtUtils.getMember().getMemberIdx();
         RewardAnswerQuizResDto isCollect =
                 rewardService.isCollect(studentIdx, rewardAnswerQuizReqDto);
         return ResponseEntity.ok(isCollect);
     }
 
     @Builder
-    public RewardController(RewardService rewardService) {
+    public RewardController(RewardService rewardService, JwtUtils jwtUtils) {
         this.rewardService = rewardService;
+        this.jwtUtils = jwtUtils;
     }
 }

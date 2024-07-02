@@ -27,7 +27,7 @@ public class Student extends BaseEntity {
     @JoinColumn(name = "dept_idx", nullable = false)
     private Dept dept;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_card_idx", nullable = false)
     private StudentCard studentCard;
 
