@@ -12,6 +12,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     Student findByMember_MemberIdx(Long memberIdx);
 
-    @Query(value = "SELECT student_point FROM students WHERE student_idx = :studentIdx", nativeQuery = true)
+    @Query(
+            value = "SELECT student_point FROM students WHERE student_idx = :studentIdx",
+            nativeQuery = true)
     Long findStudentPointByStudentIdx(Long studentIdx);
 }
