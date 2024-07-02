@@ -8,9 +8,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MemberLoginReqDto {
     private String password;
+    private String fcmToken;
 
     @Builder
-    public MemberLoginReqDto(String password) {
+    public MemberLoginReqDto(String password, String fcmToken) {
         this.password = password;
+        this.fcmToken = fcmToken;
     }
 }

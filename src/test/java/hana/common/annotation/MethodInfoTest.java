@@ -10,6 +10,7 @@ import java.lang.reflect.Method;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 class ExampleClassWithMethod {
     @MethodInfo(name = "ExampleMethod", description = "예시 메소드를 설명합니다.")
@@ -19,6 +20,7 @@ class ExampleClassWithMethod {
 @TypeInfo(name = "MethodInfoTest", description = "MethodInfo 어노테이션 테스트")
 @SpringBootTest
 @ExtendWith({AppTestConfig.class, MySQLTestConfig.class, RedisTestConfig.class})
+@ActiveProfiles("test")
 public class MethodInfoTest {
 
     @MethodInfo(name = "testMethodInfo", description = "MethodInfo 어노테이션을 테스트합니다.")

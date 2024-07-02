@@ -5,9 +5,11 @@ import hana.common.annotation.TypeInfo;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.ActiveProfiles;
 
 @TypeInfo(name = "AppTestConfig", description = "테스트 설정을 관리합니다.")
 @Configuration
+@ActiveProfiles("test")
 public class AppTestConfig implements BeforeAllCallback {
     @MethodInfo(name = "beforeAll", description = "테스트 실행 전 MySQL 컨테이너를 실행합니다.")
     @Override

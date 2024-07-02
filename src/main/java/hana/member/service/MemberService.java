@@ -27,19 +27,14 @@ public class MemberService {
         return jwtTokenProvider.generateToken(member);
     }
 
-    @MethodInfo(name = "findByMemberIdx", description = "회원 번호로 회원 정보를 조회합니다.")
-    public Member findByMemberIdx(Long memberIdx) {
-        return memberRepository.findByMemberIdx(memberIdx);
-    }
-
     @MethodInfo(name = "findByMemberPw", description = "회원 비밀번호로 회원 정보를 조회합니다.")
     public Member findByMemberPw(String memberPw) {
         return memberRepository.findByMemberPw(memberPw);
     }
 
     @Builder
-    public MemberService(JwtTokenProvider jwtTokenProvider, MemberRepository memberRepository) {
-        this.jwtTokenProvider = jwtTokenProvider;
+    public MemberService(MemberRepository memberRepository, JwtTokenProvider jwtTokenProvider) {
         this.memberRepository = memberRepository;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 }
