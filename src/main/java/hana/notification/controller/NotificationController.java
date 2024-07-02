@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class NotificationController {
     private final FCMService fcmService;
 
-    //    @PostMapping("/notificationTest")
+    //    @PostMapping("/notices")
     //    public ResponseEntity<NotificationTestDto<Object>> pushMessage(
     //            @RequestBody @Validated FcmSendReqDto fcmSendReqDto) throws IOException {
     //        int result = fcmService.sendMessageTo(fcmSendReqDto);
