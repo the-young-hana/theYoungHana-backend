@@ -1,15 +1,15 @@
-package hana.member.domain;
+package hana.reward.domain;
 
 import lombok.Getter;
 
 @Getter
-public enum RewardCategoryEnumType {
+public enum RewardHistoryCategoryEnumType {
     선물("선물"),
     퀴즈("퀴즈");
 
     private final String description;
 
-    RewardCategoryEnumType(String description) {
+    RewardHistoryCategoryEnumType(String description) {
         this.description = description;
     }
 }

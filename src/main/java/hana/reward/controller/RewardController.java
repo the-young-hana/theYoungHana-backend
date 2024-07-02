@@ -215,7 +215,8 @@ public class RewardController {
                                                                 BaseExceptionResponse.class)))
             })
     public ResponseEntity<RewardQuestionQuizResDto> questionQuiz() {
-        RewardQuestionQuizResDto getRandomQuiz = rewardService.getRandomQuiz();
+        Long studentIdx = jwtUtils.getStudent().getStudentIdx();
+        RewardQuestionQuizResDto getRandomQuiz = rewardService.getRandomQuiz(studentIdx);
         return ResponseEntity.ok(getRandomQuiz);
     }
 
@@ -275,7 +276,7 @@ public class RewardController {
             })
     public ResponseEntity<RewardAnswerQuizResDto> answerQuiz(
             @Valid @RequestBody RewardAnswerQuizReqDto rewardAnswerQuizReqDto) {
-        Long studentIdx = jwtUtils.getMember().getMemberIdx();
+        Long studentIdx = jwtUtils.getStudent().getStudentIdx();
         RewardAnswerQuizResDto isCollect =
                 rewardService.isCollect(studentIdx, rewardAnswerQuizReqDto);
         return ResponseEntity.ok(isCollect);

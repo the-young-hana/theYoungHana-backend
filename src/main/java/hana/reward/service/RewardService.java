@@ -4,13 +4,17 @@ import hana.college.domain.DeptRepository;
 import hana.common.annotation.TypeInfo;
 import hana.member.domain.Student;
 import hana.member.domain.StudentRepository;
-import hana.reward.domain.Quiz;
-import hana.reward.domain.QuizRepository;
+import hana.reward.domain.*;
 import hana.reward.dto.*;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
+
+import hana.reward.exception.PresentException;
+import hana.reward.exception.QuizException;
 import lombok.Builder;
 import org.springframework.stereotype.Service;
 
@@ -20,12 +24,18 @@ public class RewardService {
     private final QuizRepository quizRepository;
     private final StudentRepository studentRepository;
     private final DeptRepository deptRepository;
+    private final RewardHistoryRepository rewardHistoryRepository;
 
-    public RewardQuestionQuizResDto getRandomQuiz() {
+    // 퀴즈 보여주기
+    public RewardQuestionQuizResDto getRandomQuiz(Long studentIdx) {
+        LocalDate date = LocalDate.now();
+
+        if (checkQuizHistory(studentIdx, date)) {
+            throw new PresentException();
+        }
+
         List<Quiz> getAllQuiz = quizRepository.findAll();
         Long count = quizRepository.count();
-
-        System.out.println(count);
 
         Random random = new Random();
         int randomIndex = random.nextInt(Math.toIntExact(count));
@@ -41,21 +51,37 @@ public class RewardService {
         return RewardQuestionQuizResDto.builder().data(data).build();
     }
 
+    // 퀴즈 참여
     public RewardAnswerQuizResDto isCollect(
             Long studentIdx, RewardAnswerQuizReqDto rewardAnswerQuizReqDto) {
+        LocalDate date = LocalDate.now();
+
+        if (checkQuizHistory(studentIdx, date)) {
+            throw new PresentException();
+        }
+
         Quiz findQuiz =
                 quizRepository
                         .findById(rewardAnswerQuizReqDto.getQuizIdx())
                         .orElseThrow(IllegalArgumentException::new);
 
-        if (rewardAnswerQuizReqDto.getAnswer() == findQuiz.getQuizAnswer()) {
+        Optional<Student> findStudent = studentRepository.findById(studentIdx);
+
+        if (rewardAnswerQuizReqDto.getAnswer().equals(findQuiz.getQuizAnswer())) {
             // 정답일 때
-            // 학과 포인트 증가
-            Optional<Student> findStudent = studentRepository.findById(studentIdx);
             findStudent.ifPresent(
-                    student ->
-                            deptRepository.updatePointByDeptIdx(
-                                    student.getDept().getDeptIdx(), 5L));
+                    student -> {
+                        // 학과 포인트 증가
+                        deptRepository.updatePointByDeptIdx(student.getDept().getDeptIdx(), 5L);
+
+                        // 퀴즈 참가 이력 저장
+                        RewardHistory history =
+                                RewardHistory.builder()
+                                        .rewardCategory(RewardHistoryCategoryEnumType.퀴즈)
+                                        .student(student)
+                                        .build();
+                        rewardHistoryRepository.save(history);
+                    });
 
             RewardAnswerQuizResDto.Data data =
                     RewardAnswerQuizResDto.Data.builder()
@@ -66,6 +92,15 @@ public class RewardService {
             return RewardAnswerQuizResDto.builder().data(data).build();
         } else {
             // 틀렸을 때
+            findStudent.ifPresent(
+                    student -> {
+                        RewardHistory history =
+                                RewardHistory.builder()
+                                        .rewardCategory(RewardHistoryCategoryEnumType.퀴즈)
+                                        .student(student)
+                                        .build();
+                        rewardHistoryRepository.save(history);
+                    });
             RewardAnswerQuizResDto.Data data =
                     RewardAnswerQuizResDto.Data.builder()
                             .isCorrect(false)
@@ -76,14 +111,28 @@ public class RewardService {
         }
     }
 
+    // 선물
     public RewardPresentResDto getPoints(Long studentIdx) {
+        LocalDate date = LocalDate.now();
+
         Long points = (long) (Math.random() * 10 + 10);
+
+        if (checkPresentHistory(studentIdx, date)) {
+            throw new PresentException();
+        }
 
         Optional<Student> findStudent = studentRepository.findById(studentIdx);
         findStudent.ifPresent(
-                student ->
-                        deptRepository.updatePointByDeptIdx(
-                                student.getDept().getDeptIdx(), points));
+                student -> {
+                    deptRepository.updatePointByDeptIdx(student.getDept().getDeptIdx(), points);
+
+                    RewardHistory history =
+                            RewardHistory.builder()
+                                    .rewardCategory(RewardHistoryCategoryEnumType.선물)
+                                    .student(student)
+                                    .build();
+                    rewardHistoryRepository.save(history);
+                });
 
         return RewardPresentResDto.builder()
                 .data(RewardPresentResDto.Data.builder().point(points).build())
@@ -91,13 +140,18 @@ public class RewardService {
     }
 
     public RewardReadResDto getMyContribution(Long studentIdx, Long deptIdx) {
+        LocalDate date = LocalDate.now();
+
         Long findMyDeptPoints = deptRepository.findDeptPointByDeptIdx(deptIdx);
         Long findMyPoints = studentRepository.findStudentPointByStudentIdx(studentIdx);
+
         return RewardReadResDto.builder()
                 .data(
                         RewardReadResDto.Data.builder()
                                 .deptPoint(findMyDeptPoints)
                                 .myPoint(findMyPoints)
+                                .hasParticipatedInQuiz(checkQuizHistory(studentIdx, date))
+                                .hasParticipatedInPresent(checkPresentHistory(studentIdx, date))
                                 .build())
                 .build();
     }
@@ -120,13 +174,28 @@ public class RewardService {
         return RewardReadDeptRankResDto.builder().data(data).build();
     }
 
+    // 참여 내역 조회
+    private boolean checkQuizHistory(Long studentIdx, LocalDate date) {
+        List<RewardHistory> findRewardHistories = rewardHistoryRepository.findHistoryByDate(studentIdx, date);
+        return findRewardHistories.stream()
+                .anyMatch(history -> history.getRewardCategory() == RewardHistoryCategoryEnumType.퀴즈);
+    }
+
+    private boolean checkPresentHistory(Long studentIdx, LocalDate date) {
+        List<RewardHistory> findRewardHistories = rewardHistoryRepository.findHistoryByDate(studentIdx, date);
+        return findRewardHistories.stream()
+                .anyMatch(history -> history.getRewardCategory() == RewardHistoryCategoryEnumType.선물);
+    }
+
     @Builder
     public RewardService(
             QuizRepository quizRepository,
             StudentRepository studentRepository,
-            DeptRepository deptRepository) {
+            DeptRepository deptRepository,
+            RewardHistoryRepository rewardHistoryRepository) {
         this.quizRepository = quizRepository;
         this.studentRepository = studentRepository;
         this.deptRepository = deptRepository;
+        this.rewardHistoryRepository = rewardHistoryRepository;
     }
 }
