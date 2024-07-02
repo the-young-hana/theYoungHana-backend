@@ -4,6 +4,8 @@ import hana.common.annotation.MethodInfo;
 import hana.common.annotation.TypeInfo;
 import hana.event.domain.*;
 import hana.member.domain.MemberToken;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -58,9 +60,20 @@ public class EventService {
         eventArrivalRepository.save(eventArrival);
     }
 
+    @MethodInfo(name = "readEventArrivals", description = "이벤트 신청자 목록을 조회합니다.")
+    public List<EventArrival> readEventArrivals(Long eventIdx) {
+        return eventArrivalRepository.findAllByEventIdx(eventIdx);
+    }
+
     @MethodInfo(name = "scheduleEvent", description = "이벤트를 예약합니다.")
     public ScheduledEvent scheduleEvent(ScheduledEvent scheduledEvent) {
         return scheduledEventRepository.save(scheduledEvent);
+    }
+
+    @MethodInfo(name = "readScheduledEvents", description = "현재 시간의 예약 이벤트를 조회합니다.")
+    public List<ScheduledEvent> readScheduledEvents() {
+        return scheduledEventRepository.findAllByScheduledDatetime(
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
     }
 
     @MethodInfo(name = "drawEventWinners", description = "이벤트 당첨자를 추첨합니다.")
