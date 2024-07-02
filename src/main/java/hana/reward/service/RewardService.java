@@ -6,15 +6,12 @@ import hana.member.domain.Student;
 import hana.member.domain.StudentRepository;
 import hana.reward.domain.*;
 import hana.reward.dto.*;
+import hana.reward.exception.PresentException;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
-
-import hana.reward.exception.PresentException;
-import hana.reward.exception.QuizException;
 import lombok.Builder;
 import org.springframework.stereotype.Service;
 
@@ -176,15 +173,19 @@ public class RewardService {
 
     // 참여 내역 조회
     private boolean checkQuizHistory(Long studentIdx, LocalDate date) {
-        List<RewardHistory> findRewardHistories = rewardHistoryRepository.findHistoryByDate(studentIdx, date);
+        List<RewardHistory> findRewardHistories =
+                rewardHistoryRepository.findHistoryByDate(studentIdx, date);
         return findRewardHistories.stream()
-                .anyMatch(history -> history.getRewardCategory() == RewardHistoryCategoryEnumType.퀴즈);
+                .anyMatch(
+                        history -> history.getRewardCategory() == RewardHistoryCategoryEnumType.퀴즈);
     }
 
     private boolean checkPresentHistory(Long studentIdx, LocalDate date) {
-        List<RewardHistory> findRewardHistories = rewardHistoryRepository.findHistoryByDate(studentIdx, date);
+        List<RewardHistory> findRewardHistories =
+                rewardHistoryRepository.findHistoryByDate(studentIdx, date);
         return findRewardHistories.stream()
-                .anyMatch(history -> history.getRewardCategory() == RewardHistoryCategoryEnumType.선물);
+                .anyMatch(
+                        history -> history.getRewardCategory() == RewardHistoryCategoryEnumType.선물);
     }
 
     @Builder

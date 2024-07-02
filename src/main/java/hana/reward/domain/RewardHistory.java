@@ -1,7 +1,6 @@
 package hana.reward.domain;
 
 import hana.common.annotation.TypeInfo;
-import hana.common.entity.BaseEntity;
 import hana.common.entity.BaseTimeEntity;
 import hana.member.domain.Student;
 import jakarta.persistence.*;
@@ -31,9 +30,7 @@ public class RewardHistory extends BaseTimeEntity {
 
     @Builder
     public RewardHistory(
-            Long rewardHistoryIdx,
-            Student student,
-            RewardHistoryCategoryEnumType rewardCategory) {
+            Long rewardHistoryIdx, Student student, RewardHistoryCategoryEnumType rewardCategory) {
         this.rewardHistoryIdx = rewardHistoryIdx;
         this.student = student;
         this.rewardCategory = rewardCategory;
