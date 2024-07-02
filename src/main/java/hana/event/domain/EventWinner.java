@@ -5,6 +5,7 @@ import hana.common.entity.BaseEntity;
 import hana.member.domain.Student;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,4 +27,10 @@ public class EventWinner extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_prize_idx", nullable = false)
     private EventPrize eventPrize;
+
+    @Builder
+    public EventWinner(Student student, EventPrize eventPrize) {
+        this.student = student;
+        this.eventPrize = eventPrize;
+    }
 }
