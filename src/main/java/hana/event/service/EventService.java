@@ -4,7 +4,9 @@ import hana.common.annotation.MethodInfo;
 import hana.common.annotation.TypeInfo;
 import hana.event.domain.*;
 import hana.member.domain.MemberToken;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,7 +15,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class EventService {
     private final EventRepository eventRepository;
+    private final EventPrizeRepository eventPrizeRepository;
+    private final EventWinnerRepository eventWinnerRepository;
+    private final EventArrivalRepository eventArrivalRepository;
     private final ScheduledEventRepository scheduledEventRepository;
+    private final EventTokenRepository eventTokenRepository;
+    private final Random random;
 
     @MethodInfo(name = "countEvent", description = "이벤트 개수를 조회합니다.")
     public Long countEvent() {
@@ -114,7 +121,17 @@ public class EventService {
 
     public EventService(
             EventRepository eventRepository,
+            EventPrizeRepository eventPrizeRepository,
+            EventWinnerRepository eventWinnerRepository,
+            EventArrivalRepository eventArrivalRepository,
+            ScheduledEventRepository scheduledEventRepository,
             EventTokenRepository eventTokenRepository) {
         this.eventRepository = eventRepository;
+        this.eventPrizeRepository = eventPrizeRepository;
+        this.eventWinnerRepository = eventWinnerRepository;
+        this.eventArrivalRepository = eventArrivalRepository;
+        this.scheduledEventRepository = scheduledEventRepository;
+        this.eventTokenRepository = eventTokenRepository;
+        this.random = new Random();
     }
 }
