@@ -9,6 +9,7 @@ import hana.common.config.RedisTestConfig;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 @TypeInfo(name = "ExampleClass", description = "예시 클래스")
 class ExampleClass {}
@@ -16,6 +17,7 @@ class ExampleClass {}
 @TypeInfo(name = "TypeInfoTest", description = "TypeInfo 어노테이션 테스트")
 @SpringBootTest
 @ExtendWith({AppTestConfig.class, MySQLTestConfig.class, RedisTestConfig.class})
+@ActiveProfiles("test")
 public class TypeInfoTest {
 
     @MethodInfo(name = "testTypeInfo", description = "TypeInfo 어노테이션을 테스트합니다.")

@@ -14,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -22,6 +23,7 @@ import org.testcontainers.utility.DockerImageName;
 @TypeInfo(name = "MySQLTestConfig", description = "MySQL 테스트 설정 클래스")
 @Configuration
 @Testcontainers
+@ActiveProfiles("test")
 public class MySQLTestConfig implements BeforeAllCallback {
     @Container
     private static final GenericContainer<?> mySQLContainer =
