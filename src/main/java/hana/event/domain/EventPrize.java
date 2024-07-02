@@ -4,6 +4,7 @@ import hana.common.annotation.TypeInfo;
 import hana.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -30,4 +31,17 @@ public class EventPrize extends BaseEntity {
 
     @Column(name = "event_prize_limit", nullable = false)
     private long eventPrizeLimit;
+
+    @Builder
+    public EventPrize(
+            Event event, long eventPrizeRank, String eventPrizeName, long eventPrizeLimit) {
+        this.event = event;
+        this.eventPrizeRank = eventPrizeRank;
+        this.eventPrizeName = eventPrizeName;
+        this.eventPrizeLimit = eventPrizeLimit;
+    }
+
+    public void setEventPrizeLimit(long eventPrizeLimit) {
+        this.eventPrizeLimit = eventPrizeLimit;
+    }
 }
