@@ -34,6 +34,12 @@ public class Story extends BaseEntity {
     @JoinColumn(name = "dept_idx")
     private Dept dept;
 
+    @Column(name = "story_like_amount", columnDefinition = "bigint default 0")
+    private Long storyLikeAmount;
+
+    @Column(name = "story_comment_amount", columnDefinition = "bigint default 0")
+    private Long storyCommentAmount;
+
     @Builder
     public Story(String storyTitle, String storyContent, Dept dept) {
         this.storyTitle = storyTitle;
@@ -52,5 +58,21 @@ public class Story extends BaseEntity {
 
     public void delete() {
         this.deletedYn = true;
+    }
+
+    public void decrementLikeAmount() {
+        this.storyLikeAmount = this.storyLikeAmount - 1;
+    }
+
+    public void incrementLikeAmount() {
+        this.storyLikeAmount = this.storyLikeAmount + 1;
+    }
+
+    public void decrementCommentAmount() {
+        this.storyCommentAmount = this.storyCommentAmount - 1;
+    }
+
+    public void incrementCommentAmount() {
+        this.storyCommentAmount = this.storyCommentAmount + 1;
     }
 }

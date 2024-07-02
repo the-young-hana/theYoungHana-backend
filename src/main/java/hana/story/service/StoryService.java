@@ -50,8 +50,8 @@ public class StoryService {
 
         for (Story s : stories) {
             long storyIdx = s.getStoryIdx();
-            long storyCommentNum = storyCommentService.getStoryCommentNum(storyIdx);
-            long storyLikeNum = storyLikeService.getStoryLikeNum(storyIdx);
+            long storyCommentNum = s.getStoryCommentAmount();
+            long storyLikeNum = s.getStoryLikeAmount();
             boolean isLiked = storyLikeService.checkLike(s, jwtUtils.getStudent());
             LocalDateTime createdAt = s.getCreatedAt();
             List<DeptAccountTransactionResDto> transactionList =
@@ -163,7 +163,13 @@ public class StoryService {
     @Transactional
     public StoryReadResDto toggleStoryLike(Long storyIdx, Student student) {
         Story story = findByStoryIdx(storyIdx);
-        storyLikeService.toggleLike(story, student);
+        if (storyLikeService.checkLike(story, student)) {
+            storyLikeService.deleteLike(story, student);
+            story.decrementLikeAmount();
+        } else {
+            storyLikeService.createLike(story, student);
+            story.incrementLikeAmount();
+        }
 
         return getStory(storyIdx);
     }
@@ -181,8 +187,8 @@ public class StoryService {
             List<DeptAccountTransactionResDto> transactionList) {
         Long storyIdx = story.getStoryIdx();
         boolean isLiked = storyLikeService.checkLike(story, jwtUtils.getStudent());
-        Long storyLikeNum = storyLikeService.getStoryLikeNum(storyIdx);
-        Long storyCommentNum = storyCommentService.getStoryCommentNum(storyIdx);
+        long storyCommentNum = story.getStoryCommentAmount();
+        long storyLikeNum = story.getStoryLikeAmount();
 
         return StoryReadResDto.builder()
                 .data(

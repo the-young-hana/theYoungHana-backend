@@ -27,10 +27,6 @@ public class StoryCommentService {
         this.queryFactory = queryFactory;
     }
 
-    public Long getStoryCommentNum(Long storyIdx) {
-        return storyCommentRepository.countByStory_StoryIdxAndDeletedYnFalse(storyIdx);
-    }
-
     public StoryRepresentativeCommentResDto getStoryComment(Long storyIdx) {
         Optional<StoryComment> storyComment =
                 storyCommentRepository.findFirstByStory_StoryIdxAndDeletedYnFalse(storyIdx);
@@ -151,7 +147,7 @@ public class StoryCommentService {
                         .build();
 
         storyCommentRepository.save(storyComment);
-
+        story.incrementCommentAmount();
         return StoryCreateCommentResDto.builder()
                 .data(
                         StoryCreateCommentResDto.Data.builder()
@@ -208,7 +204,14 @@ public class StoryCommentService {
             throw new RuntimeException("Story ID mismatch");
         }
 
-        storyComment.delete();
-        storyCommentRepository.save(storyComment);
+        if (!storyComment.isDeletedYn()) {
+            storyComment.delete();
+            storyCommentRepository.save(storyComment);
+
+            storyRepository
+                    .findById(storyIdx)
+                    .orElseThrow(() -> new RuntimeException("Story not found"))
+                    .decrementCommentAmount();
+        }
     }
 }

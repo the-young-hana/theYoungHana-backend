@@ -10,10 +10,6 @@ import org.springframework.stereotype.Service;
 public class StoryLikeService {
     private final StoryLikeRepository storyLikeRepository;
 
-    public Long getStoryLikeNum(Long storyIdx) {
-        return storyLikeRepository.countByStory_StoryIdx(storyIdx);
-    }
-
     public Boolean checkLike(Story story, Student student) {
         return storyLikeRepository.existsByStoryAndStudent(story, student);
     }
@@ -24,14 +20,6 @@ public class StoryLikeService {
 
     public void deleteLike(Story story, Student student) {
         storyLikeRepository.deleteByStoryAndStudent(story, student);
-    }
-
-    public void toggleLike(Story story, Student student) {
-        if (checkLike(story, student)) {
-            deleteLike(story, student);
-        } else {
-            createLike(story, student);
-        }
     }
 
     public StoryLikeService(StoryLikeRepository storyLikeRepository) {
