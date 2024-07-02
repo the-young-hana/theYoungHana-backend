@@ -24,6 +24,11 @@ public class EventService {
     private final EventTokenRepository eventTokenRepository;
     private final Random random;
 
+    @MethodInfo(name = "createEvent", description = "이벤트를 생성합니다.")
+    public Event createEvent(Event event) {
+        return eventRepository.save(event);
+    }
+
     @MethodInfo(name = "countEvent", description = "이벤트 개수를 조회합니다.")
     public Long countEvent() {
         return eventRepository.count();
@@ -35,19 +40,69 @@ public class EventService {
     }
 
     @MethodInfo(name = "searchEvents", description = "이벤트 목록을 검색합니다.")
-    public List<Event> searchEvents(String value, Boolean isEnd, Integer page) {
+    public List<Event> searchEvents(String value, Boolean isEnd, Integer page, Long deptIdx) {
         Pageable pageable = PageRequest.of(page, 15);
 
-        if (isEnd) {
-            return eventRepository.searchEventsAfterIsEnd(value, pageable);
+        if (value != null) {
+            if (!isEnd) {
+                return eventRepository.searchEventsAfterIsEnd(value, pageable, deptIdx);
+            } else {
+                return eventRepository.searchEventsBeforeIsEnd(value, pageable, deptIdx);
+            }
         } else {
-            return eventRepository.searchEventsBeforeIsEnd(value, pageable);
+            if (!isEnd) {
+                return eventRepository.findEventsAfterIsEnd(pageable, deptIdx);
+            } else {
+                return eventRepository.findEventsBeforeIsEnd(pageable, deptIdx);
+            }
         }
+    }
+
+    @MethodInfo(name = "updateEvent", description = "이벤트를 수정합니다.")
+    public Event updateEvent(Long eventIdx, Event event) {
+        eventRepository.update(eventIdx, event);
+        return eventRepository.findByEventIdx(eventIdx);
+    }
+
+    @MethodInfo(name = "deleteEvent", description = "이벤트를 삭제합니다.")
+    public void deleteEvent(Long eventIdx) {
+        eventRepository.delete(eventIdx);
+    }
+
+    @MethodInfo(name = "createEventPrizes", description = "이벤트 상품들을 생성합니다.")
+    public void createEventPrizes(List<EventPrize> eventPrizes) {
+        eventPrizeRepository.saveAll(eventPrizes);
     }
 
     @MethodInfo(name = "readEventPrizes", description = "이벤트 상품들을 조회합니다.")
     public List<EventPrize> readEventPrizes(Long eventIdx) {
         return eventPrizeRepository.findAllByEventIdx(eventIdx);
+    }
+
+    @MethodInfo(name = "readEventPrize", description = "이벤트 상품을 조회합니다.")
+    public EventPrize readEventPrize(Long eventIdx) {
+        return eventPrizeRepository.findByEventIdx(eventIdx);
+    }
+
+    @MethodInfo(name = "isEventWinner", description = "이벤트 당첨자인지 확인합니다.")
+    public Boolean isEventWinner(Long eventIdx, Long studentIdx) {
+        return eventWinnerRepository.findByEventIdxAndStudentIdx(eventIdx, studentIdx) != null;
+    }
+
+    @MethodInfo(name = "updateEventPrizes", description = "이벤트 상품들을 수정합니다.")
+    public void updateEventPrizes(Long eventIdx, List<EventPrize> eventPrizes) {
+        eventPrizeRepository.deleteAllByEventIdx(eventIdx);
+        eventPrizeRepository.saveAll(eventPrizes);
+    }
+
+    @MethodInfo(name = "deleteEventPrizes", description = "이벤트 상품들을 삭제합니다.")
+    public void deleteEventPrizes(Long eventIdx) {
+        eventPrizeRepository.deleteAllByEventIdx(eventIdx);
+    }
+
+    @MethodInfo(name = "createEventWinner", description = "이벤트 당첨자를 생성합니다.")
+    public EventWinner createEventWinner(EventWinner eventWinner) {
+        return eventWinnerRepository.save(eventWinner);
     }
 
     @MethodInfo(name = "createEventWinners", description = "이벤트 당첨자들을 생성합니다.")
@@ -65,6 +120,16 @@ public class EventService {
         return eventArrivalRepository.findAllByEventIdx(eventIdx);
     }
 
+    @MethodInfo(name = "readEventWinners", description = "이벤트 당첨자 목록을 조회합니다.")
+    public List<EventWinner> readEventWinners(Long eventIdx) {
+        return eventWinnerRepository.findAllByEventIdx(eventIdx);
+    }
+
+    @MethodInfo(name = "isEventArrival", description = "이벤트 당첨자인지 확인합니다.")
+    public Boolean isEventArrival(Long eventIdx, Long studentIdx) {
+        return eventArrivalRepository.findByEventIdxAndStudentIdx(eventIdx, studentIdx) != null;
+    }
+
     @MethodInfo(name = "scheduleEvent", description = "이벤트를 예약합니다.")
     public ScheduledEvent scheduleEvent(ScheduledEvent scheduledEvent) {
         return scheduledEventRepository.save(scheduledEvent);
@@ -74,6 +139,11 @@ public class EventService {
     public List<ScheduledEvent> readScheduledEvents() {
         return scheduledEventRepository.findAllByScheduledDatetime(
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+    }
+
+    @MethodInfo(name = "deleteScheduledEvent", description = "이벤트 인덱스로 예약 이벤트를 삭제합니다.")
+    public void deleteScheduledEvent(Long eventIdx) {
+        scheduledEventRepository.deleteAllByEventIdx(eventIdx);
     }
 
     @MethodInfo(name = "drawEventWinners", description = "이벤트 당첨자를 추첨합니다.")

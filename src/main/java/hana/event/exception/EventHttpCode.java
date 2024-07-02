@@ -5,7 +5,8 @@ import hana.common.dto.BaseHttpReason;
 import org.springframework.http.HttpStatus;
 
 public enum EventHttpCode implements BaseHttpCode {
-    UNAVAILABLE_EVENT(HttpStatus.NOT_FOUND, "EVT-001", "해당 이벤트가 존재하지 않습니다.");
+    UNAVAILABLE_EVENT(HttpStatus.NOT_FOUND, "EVT-001", "해당 이벤트가 존재하지 않습니다."),
+    IN_PROGRESS_EVENT(HttpStatus.BAD_REQUEST, "EVT-002", "현재 진행 중이거나 종료된 이벤트입니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
