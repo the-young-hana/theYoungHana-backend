@@ -49,7 +49,7 @@ public class Event extends BaseEntity {
     private String eventImageList;
 
     @Column(name = "event_limit", nullable = false)
-    private long eventLimit;
+    private Long eventLimit;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 5)
