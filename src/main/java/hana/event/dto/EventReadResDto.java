@@ -1,6 +1,7 @@
 package hana.event.dto;
 
 import hana.common.dto.BaseResponse;
+import hana.event.domain.EventEnumType;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;
@@ -26,6 +27,7 @@ public class EventReadResDto extends BaseResponse {
         private final LocalDateTime eventEnd;
         private final Integer isEnd;
         private final Boolean isMine;
+        private final EventEnumType eventType;
 
         @Builder
         public Data(
@@ -36,7 +38,8 @@ public class EventReadResDto extends BaseResponse {
                 LocalDateTime eventStart,
                 LocalDateTime eventEnd,
                 Integer isEnd,
-                Boolean isMine) {
+                Boolean isMine,
+                EventEnumType eventType) {
             this.eventTitle = eventTitle;
             this.eventFee = eventFee;
             this.eventContent = eventContent;
@@ -45,6 +48,7 @@ public class EventReadResDto extends BaseResponse {
             this.eventEnd = eventEnd;
             this.isEnd = isEnd;
             this.isMine = isMine;
+            this.eventType = eventType;
         }
     }
 }
