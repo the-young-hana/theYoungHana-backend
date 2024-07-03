@@ -66,8 +66,10 @@ jobs:
             echo "ENV S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }}" >> dockerfile.temp
             echo "ENV S3_ACCESS_KEY=${{ secrets.S3_ACCESS_KEY }}" >> dockerfile.temp
             echo "ENV S3_SECRET_KEY=${{ secrets.S3_SECRET_KEY }}" >> dockerfile.temp
-            echo "ENV FCM_GOOGLE_APPLICATION_CREDENTIALS=${{ secrets.FCM_GOOGLE_APPLICATION_CREDENTIALS }}" >> dockerfile.temp
             echo "ENV FCM_URL=${{ secrets.FCM_URL }}" >> dockerfile.temp
+            echo 'ENV GOOGLE_PRIVATE_KEY_ID="${{ secrets.GOOGLE_PRIVATE_KEY_ID }}"' >> dockerfile.temp
+            echo "ENV GOOGLE_CLIENT_EMAIL=${{ secrets.GOOGLE_CLIENT_EMAIL }}" >> dockerfile.temp
+            echo "ENV GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> dockerfile.temp
             
             mv dockerfile.temp dockerfile
         working-directory: ./
