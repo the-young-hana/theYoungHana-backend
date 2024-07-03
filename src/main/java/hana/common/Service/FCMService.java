@@ -32,31 +32,26 @@ public class FCMService {
     // push 메세지 처리를 수행하는 비지니스 로직
     // return 성공(1), 실패(0)
     @MethodInfo(name = "sendMessageTo", description = "FCM 메세지를 전송합니다.")
-    public int sendMessageTo(FcmSendReqDto fcmSendReqDto) {
-        try {
-            String message = makeMessage(fcmSendReqDto);
-            URL url = new URL(FCM_URL);
-            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-            String accessToken = getAccessToken();
+    public int sendMessageTo(FcmSendReqDto fcmSendReqDto) throws IOException {
+        String message = makeMessage(fcmSendReqDto);
+        URL url = new URL(FCM_URL);
+        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+        String accessToken = getAccessToken();
 
-            httpURLConnection.setRequestMethod("POST");
-            httpURLConnection.setRequestProperty("Authorization", "Bearer " + accessToken);
-            httpURLConnection.setRequestProperty("Content-Type", "application/json; UTF-8");
-            httpURLConnection.setDoOutput(true);
+        httpURLConnection.setRequestMethod("POST");
+        httpURLConnection.setRequestProperty("Authorization", "Bearer " + accessToken);
+        httpURLConnection.setRequestProperty("Content-Type", "application/json; UTF-8");
+        httpURLConnection.setDoOutput(true);
 
-            // Send the message
-            try (OutputStream outputStream = httpURLConnection.getOutputStream()) {
-                byte[] input = message.getBytes(StandardCharsets.UTF_8);
-                outputStream.write(input, 0, input.length);
-            }
-
-            int responseCode = httpURLConnection.getResponseCode();
-
-            return responseCode == HttpURLConnection.HTTP_OK ? 1 : 0;
-        } catch (Exception exception) {
-            throw new IllegalArgumentException(
-                    "FCM 메시지를 전송하는 데에 실패하였습니다. (FCM 메시지를 지원하지 않는 기기에서의 로그인을 지원하지 않습니다.");
+        // Send the message
+        try (OutputStream outputStream = httpURLConnection.getOutputStream()) {
+            byte[] input = message.getBytes(StandardCharsets.UTF_8);
+            outputStream.write(input, 0, input.length);
         }
+
+        int responseCode = httpURLConnection.getResponseCode();
+
+        return responseCode == HttpURLConnection.HTTP_OK ? 1 : 0;
     }
 
     @MethodInfo(name = "getAccessToken", description = "FCM 액세스 토큰을 발급합니다.")
