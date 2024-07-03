@@ -1,12 +1,12 @@
 package hana.common.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
 import hana.common.annotation.MethodInfo;
 import hana.common.annotation.TypeInfo;
 import hana.common.dto.notification.FcmMessageResDto;
 import hana.common.dto.notification.FcmSendReqDto;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -15,19 +15,25 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 
 @TypeInfo(name = "FCMService", description = "FCM 서비스")
 @Service
 @RequiredArgsConstructor
 public class FCMService {
-    @Value("${fcm.google_application_credentials}")
-    private String GOOGLE_APPLICATION_CREDENTIALS;
-
     @Value("${fcm.url}")
     private String FCM_URL;
+
+    @Value("${GOOGLE_PRIVATE_KEY}")
+    private String GOOGLE_PRIVATE_KEY;
+
+    @Value("${GOOGLE_CLIENT_EMAIL}")
+    private String GOOGLE_CLIENT_EMAIL;
+
+    @Value("${GOOGLE_CLIENT_ID}")
+    private String GOOGLE_CLIENT_ID;
+
+    private final ObjectMapper objectMapper;
 
     // push 메세지 처리를 수행하는 비지니스 로직
     // return 성공(1), 실패(0)
@@ -57,10 +63,31 @@ public class FCMService {
     @MethodInfo(name = "getAccessToken", description = "FCM 액세스 토큰을 발급합니다.")
     // Firebase Admin SDK의 비공개 키를 참조하여 Bearer 토큰 발급
     private String getAccessToken() throws IOException {
+        String credentialsJson =
+                String.format(
+                        "{"
+                                + "\"type\": \"service_account\","
+                                + "\"project_id\": \"theyounghana-ff6c3\","
+                                + "\"private_key_id\": \"%s\","
+                                + "\"private_key\": \"%s\","
+                                + "\"client_email\": \"%s\","
+                                + "\"client_id\": \"%s\","
+                                + "\"auth_uri\": \"https://accounts.google.com/o/oauth2/auth\","
+                                + "\"token_uri\": \"https://oauth2.googleapis.com/token\","
+                                + "\"auth_provider_x509_cert_url\": \"https://www.googleapis.com/oauth2/v1/certs\","
+                                + "\"client_x509_cert_url\": \"https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-xsbw0@theyounghana-ff6c3.iam.gserviceaccount.com\","
+                                + "\"universe_domain\": \"googleapis.com\""
+                                + "}",
+                        "b4fd60e21748ba12b3075645d0dbcfd860966030", // private_key_id 하드코딩
+                        GOOGLE_PRIVATE_KEY.replace("\\n", "\n"), // private_key 환경 변수
+                        GOOGLE_CLIENT_EMAIL, // client_email 환경 변수
+                        GOOGLE_CLIENT_ID // client_id 환경 변수
+                        );
+
         GoogleCredentials googleCredentials =
                 GoogleCredentials.fromStream(
-                                new ClassPathResource(GOOGLE_APPLICATION_CREDENTIALS)
-                                        .getInputStream())
+                                new ByteArrayInputStream(
+                                        credentialsJson.getBytes(StandardCharsets.UTF_8)))
                         .createScoped(
                                 Arrays.asList(
                                         "https://www.googleapis.com/auth/firebase.messaging",
@@ -72,7 +99,6 @@ public class FCMService {
     @MethodInfo(name = "makeMessage", description = "FCM 메세지를 생성합니다.")
     // FCM 전송 정보를 기반으로 메세지를 구성 object -> string
     private String makeMessage(FcmSendReqDto fcmSendReqDto) throws JsonProcessingException {
-        ObjectMapper om = new ObjectMapper();
         FcmMessageResDto fcmMessageResDto =
                 FcmMessageResDto.builder()
                         .message(
@@ -88,6 +114,6 @@ public class FCMService {
                         .validateOnly(false)
                         .build();
 
-        return om.writeValueAsString(fcmMessageResDto);
+        return objectMapper.writeValueAsString(fcmMessageResDto);
     }
 }
