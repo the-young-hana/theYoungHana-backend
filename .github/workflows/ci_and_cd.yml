@@ -13,18 +13,6 @@ jobs:
       - name: 코드 체크아웃
         uses: actions/checkout@v3
 
-      - name: 구글 Credential 파일 추가
-        run: |
-          touch theyounghana-ff6c3-firebase-adminsdk-xsbw0-b4fd60e217.json
-          echo ${{ secrets.FCM_GOOGLE_APPLICATION_CREDENTIALS_FILE }} | base64 -d > theyounghana-ff6c3-firebase-adminsdk-xsbw0-b4fd60e217.json
-
-        working-directory: src/main/resources
-
-      - name: Validate JSON file
-        run: |
-          cat src/main/resources/theyounghana-ff6c3-firebase-adminsdk-xsbw0-b4fd60e217.json
-          jq . src/main/resources/theyounghana-ff6c3-firebase-adminsdk-xsbw0-b4fd60e217.json
-
       - name: JDK 17 설정
         uses: actions/setup-java@v3
         with:
@@ -44,38 +32,40 @@ jobs:
 
       - name: dockerfile 갱신
         run: |
-            cat dockerfile > dockerfile.temp
-            
-            echo "ENV SERVER_PORT=${{ secrets.SERVER_PORT }}" >> dockerfile.temp
-            echo "ENV LOGGING_LEVEL=${{ secrets.LOGGING_LEVEL }}" >> dockerfile.temp
-            echo "ENV MYSQL_HOST=${{ secrets.MYSQL_HOST }}" >> dockerfile.temp
-            echo "ENV MYSQL_PORT=${{ secrets.MYSQL_PORT }}" >> dockerfile.temp
-            echo "ENV MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> dockerfile.temp
-            echo "ENV MYSQL_USERNAME=${{ secrets.MYSQL_USERNAME }}" >> dockerfile.temp
-            echo "ENV MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> dockerfile.temp
-            echo "ENV REDIS_HOST=${{ secrets.REDIS_HOST }}" >> dockerfile.temp
-            echo "ENV REDIS_PORT=${{ secrets.REDIS_PORT }}" >> dockerfile.temp
-            echo "ENV REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" >> dockerfile.temp
-            echo "ENV JPA_SHOW_SQL=${{ secrets.JPA_SHOW_SQL }}" >> dockerfile.temp
-            echo "ENV JPA_FORMAT_SQL=${{ secrets.JPA_FORMAT_SQL }}" >> dockerfile.temp
-            echo "ENV JPA_BATCH_FETCH_SIZE=${{ secrets.JPA_BATCH_FETCH_SIZE }}" >> dockerfile.temp
-            echo "ENV JPA_DDL_AUTO=${{ secrets.JPA_DDL_AUTO }}" >> dockerfile.temp
-            echo "ENV JPA_DETER_DATASOURCE_INITIALIZATION=${{ secrets.JPA_DETER_DATASOURCE_INITIALIZATION }}" >> dockerfile.temp
-            echo "ENV JPA_JDBC_BATCH_SIZE=${{ secrets.JPA_JDBC_BATCH_SIZE }}" >> dockerfile.temp
-            echo "ENV JPA_ORDER_INSERTS=${{ secrets.JPA_ORDER_INSERTS }}" >> dockerfile.temp
-            echo "ENV JPA_ORDER_UPDATES=${{ secrets.JPA_ORDER_UPDATES }}" >> dockerfile.temp
-            echo "ENV JPA_USE_SQL_COMMENTS=${{ secrets.JPA_USE_SQL_COMMENTS }}" >> dockerfile.temp
-            echo "ENV DOCKER_COMPOSE_ENABLED=${{ secrets.DOCKER_COMPOSE_ENABLED }}" >> dockerfile.temp
-            echo "ENV JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> dockerfile.temp
-            echo "ENV ACCESS_TOKEN_EXPIRATION=${{ secrets.ACCESS_TOKEN_EXPIRATION }}" >> dockerfile.temp
-            echo "ENV REFRESH_TOKEN_EXPIRATION=${{ secrets.REFRESH_TOKEN_EXPIRATION }}" >> dockerfile.temp
-            echo "ENV S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }}" >> dockerfile.temp
-            echo "ENV S3_ACCESS_KEY=${{ secrets.S3_ACCESS_KEY }}" >> dockerfile.temp
-            echo "ENV S3_SECRET_KEY=${{ secrets.S3_SECRET_KEY }}" >> dockerfile.temp
-            echo "ENV FCM_GOOGLE_APPLICATION_CREDENTIALS=${{ secrets.FCM_GOOGLE_APPLICATION_CREDENTIALS }}" >> dockerfile.temp
-            echo "ENV FCM_URL=${{ secrets.FCM_URL }}" >> dockerfile.temp
-            
-            mv dockerfile.temp dockerfile
+          cat dockerfile > dockerfile.temp
+          
+          echo "ENV SERVER_PORT=${{ secrets.SERVER_PORT }}" >> dockerfile.temp
+          echo "ENV LOGGING_LEVEL=${{ secrets.LOGGING_LEVEL }}" >> dockerfile.temp
+          echo "ENV MYSQL_HOST=${{ secrets.MYSQL_HOST }}" >> dockerfile.temp
+          echo "ENV MYSQL_PORT=${{ secrets.MYSQL_PORT }}" >> dockerfile.temp
+          echo "ENV MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> dockerfile.temp
+          echo "ENV MYSQL_USERNAME=${{ secrets.MYSQL_USERNAME }}" >> dockerfile.temp
+          echo "ENV MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> dockerfile.temp
+          echo "ENV REDIS_HOST=${{ secrets.REDIS_HOST }}" >> dockerfile.temp
+          echo "ENV REDIS_PORT=${{ secrets.REDIS_PORT }}" >> dockerfile.temp
+          echo "ENV REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" >> dockerfile.temp
+          echo "ENV JPA_SHOW_SQL=${{ secrets.JPA_SHOW_SQL }}" >> dockerfile.temp
+          echo "ENV JPA_FORMAT_SQL=${{ secrets.JPA_FORMAT_SQL }}" >> dockerfile.temp
+          echo "ENV JPA_BATCH_FETCH_SIZE=${{ secrets.JPA_BATCH_FETCH_SIZE }}" >> dockerfile.temp
+          echo "ENV JPA_DDL_AUTO=${{ secrets.JPA_DDL_AUTO }}" >> dockerfile.temp
+          echo "ENV JPA_DETER_DATASOURCE_INITIALIZATION=${{ secrets.JPA_DETER_DATASOURCE_INITIALIZATION }}" >> dockerfile.temp
+          echo "ENV JPA_JDBC_BATCH_SIZE=${{ secrets.JPA_JDBC_BATCH_SIZE }}" >> dockerfile.temp
+          echo "ENV JPA_ORDER_INSERTS=${{ secrets.JPA_ORDER_INSERTS }}" >> dockerfile.temp
+          echo "ENV JPA_ORDER_UPDATES=${{ secrets.JPA_ORDER_UPDATES }}" >> dockerfile.temp
+          echo "ENV JPA_USE_SQL_COMMENTS=${{ secrets.JPA_USE_SQL_COMMENTS }}" >> dockerfile.temp
+          echo "ENV DOCKER_COMPOSE_ENABLED=${{ secrets.DOCKER_COMPOSE_ENABLED }}" >> dockerfile.temp
+          echo "ENV JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> dockerfile.temp
+          echo "ENV ACCESS_TOKEN_EXPIRATION=${{ secrets.ACCESS_TOKEN_EXPIRATION }}" >> dockerfile.temp
+          echo "ENV REFRESH_TOKEN_EXPIRATION=${{ secrets.REFRESH_TOKEN_EXPIRATION }}" >> dockerfile.temp
+          echo "ENV S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }}" >> dockerfile.temp
+          echo "ENV S3_ACCESS_KEY=${{ secrets.S3_ACCESS_KEY }}" >> dockerfile.temp
+          echo "ENV S3_SECRET_KEY=${{ secrets.S3_SECRET_KEY }}" >> dockerfile.temp
+          echo "ENV FCM_URL=${{ secrets.FCM_URL }}" >> dockerfile.temp
+          echo "ENV GOOGLE_PRIVATE_KEY=${{ secrets.GOOGLE_PRIVATE_KEY }}" >> dockerfile.temp
+          echo "ENV GOOGLE_CLIENT_EMAIL=${{ secrets.GOOGLE_CLIENT_EMAIL }}" >> dockerfile.temp
+          echo "ENV GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> dockerfile.temp
+          
+          mv dockerfile.temp dockerfile
         working-directory: ./
 
       - name: Gradle 빌드
