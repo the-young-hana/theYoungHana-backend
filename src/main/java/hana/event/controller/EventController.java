@@ -189,14 +189,7 @@ public class EventController {
                 EventReadResDto.builder()
                         .data(
                                 EventReadResDto.Data.builder()
-                                        .eventTitle(event.getEventTitle())
-                                        .eventFee(event.getEventFee())
-                                        .eventContent(event.getEventContent())
-                                        .eventImageList(
-                                                jsonUtils.convertJsonToList(
-                                                        event.getEventImageList()))
-                                        .eventStart(event.getEventStartDatetime())
-                                        .eventEnd(event.getEventEndDatetime())
+                                        .eventIdx(event.getEventIdx())
                                         .isEnd(
                                                 LocalDateTime.now()
                                                                 .isBefore(
@@ -214,6 +207,38 @@ public class EventController {
                                                         .getMemberIdx()
                                                         .equals(member.getMemberIdx()))
                                         .eventType(event.getEventType())
+                                        .eventTitle(event.getEventTitle())
+                                        .eventStart(event.getEventStartDatetime())
+                                        .eventEnd(event.getEventEndDatetime())
+                                        .eventDt(event.getEventDatetime())
+                                        .eventFee(event.getEventFee())
+                                        .eventFeeStart(event.getEventFeeStartDatetime())
+                                        .eventFeeEnd(event.getEventFeeEndDatetime())
+                                        .eventContent(event.getEventContent())
+                                        .eventImageList(
+                                                jsonUtils.convertJsonToList(
+                                                        event.getEventImageList()))
+                                        .eventLimit(event.getEventLimit())
+                                        .eventPrizeList(
+                                                eventService
+                                                        .readEventPrizes(event.getEventIdx())
+                                                        .stream()
+                                                        .map(
+                                                                eventPrize ->
+                                                                        EventReadResDto.Data
+                                                                                .EventPrize
+                                                                                .builder()
+                                                                                .prizeRank(
+                                                                                        eventPrize
+                                                                                                .getEventPrizeRank())
+                                                                                .prizeName(
+                                                                                        eventPrize
+                                                                                                .getEventPrizeName())
+                                                                                .prizeLimit(
+                                                                                        eventPrize
+                                                                                                .getEventPrizeLimit())
+                                                                                .build())
+                                                        .toList())
                                         .build())
                         .build());
     }
@@ -240,9 +265,7 @@ public class EventController {
                         responseCode = "200",
                         description = "이벤트 추가 성공",
                         content =
-                                @Content(
-                                        schema =
-                                                @Schema(implementation = EventCreateResDto.class))),
+                                @Content(schema = @Schema(implementation = EventReadResDto.class))),
                 @ApiResponse(
                         responseCode = "400",
                         description = "이벤트 추가 실패",
@@ -271,7 +294,7 @@ public class EventController {
                                                         implementation =
                                                                 BaseExceptionResponse.class)))
             })
-    public ResponseEntity<EventCreateResDto> createEvent(
+    public ResponseEntity<EventReadResDto> createEvent(
             @Valid @RequestBody EventCreateReqDto eventCreateReqDto)
             throws JsonProcessingException {
 
@@ -350,17 +373,10 @@ public class EventController {
         createEventSchedule(updateEvent);
 
         return ResponseEntity.ok(
-                EventCreateResDto.builder()
+                EventReadResDto.builder()
                         .data(
-                                EventCreateResDto.Data.builder()
-                                        .eventTitle(updateEvent.getEventTitle())
-                                        .eventFee(updateEvent.getEventFee())
-                                        .eventContent(updateEvent.getEventContent())
-                                        .eventImageList(
-                                                jsonUtils.convertJsonToList(
-                                                        updateEvent.getEventImageList()))
-                                        .eventStart(updateEvent.getEventStartDatetime())
-                                        .eventEnd(updateEvent.getEventEndDatetime())
+                                EventReadResDto.Data.builder()
+                                        .eventIdx(updateEvent.getEventIdx())
                                         .isEnd(
                                                 LocalDateTime.now()
                                                                 .isBefore(
@@ -375,6 +391,36 @@ public class EventController {
                                                                 : 1)
                                         .isMine(true)
                                         .eventType(event.getEventType())
+                                        .eventTitle(updateEvent.getEventTitle())
+                                        .eventStart(updateEvent.getEventStartDatetime())
+                                        .eventEnd(updateEvent.getEventEndDatetime())
+                                        .eventDt(updateEvent.getEventDatetime())
+                                        .eventFee(updateEvent.getEventFee())
+                                        .eventFeeStart(updateEvent.getEventFeeStartDatetime())
+                                        .eventFeeEnd(updateEvent.getEventFeeEndDatetime())
+                                        .eventContent(updateEvent.getEventContent())
+                                        .eventImageList(
+                                                jsonUtils.convertJsonToList(
+                                                        updateEvent.getEventImageList()))
+                                        .eventLimit(updateEvent.getEventLimit())
+                                        .eventPrizeList(
+                                                eventPrizes.stream()
+                                                        .map(
+                                                                eventPrize ->
+                                                                        EventReadResDto.Data
+                                                                                .EventPrize
+                                                                                .builder()
+                                                                                .prizeRank(
+                                                                                        eventPrize
+                                                                                                .getEventPrizeRank())
+                                                                                .prizeName(
+                                                                                        eventPrize
+                                                                                                .getEventPrizeName())
+                                                                                .prizeLimit(
+                                                                                        eventPrize
+                                                                                                .getEventPrizeLimit())
+                                                                                .build())
+                                                        .toList())
                                         .build())
                         .build());
     }
@@ -401,9 +447,7 @@ public class EventController {
                         responseCode = "200",
                         description = "이벤트 수정 성공",
                         content =
-                                @Content(
-                                        schema =
-                                                @Schema(implementation = EventUpdateResDto.class))),
+                                @Content(schema = @Schema(implementation = EventReadResDto.class))),
                 @ApiResponse(
                         responseCode = "400",
                         description = "이벤트 수정 실패",
@@ -432,7 +476,7 @@ public class EventController {
                                                         implementation =
                                                                 BaseExceptionResponse.class)))
             })
-    public ResponseEntity<EventUpdateResDto> updateEvent(
+    public ResponseEntity<EventReadResDto> updateEvent(
             @PathVariable("eventIdx") Long eventIdx, EventUpdateReqDto eventUpdateReqDto)
             throws JsonProcessingException {
         if (LocalDateTime.now().isAfter(eventService.readEvent(eventIdx).getEventStartDatetime())) {
@@ -501,17 +545,10 @@ public class EventController {
         createEventSchedule(updateEvent);
 
         return ResponseEntity.ok(
-                EventUpdateResDto.builder()
+                EventReadResDto.builder()
                         .data(
-                                EventUpdateResDto.Data.builder()
-                                        .eventTitle(updateEvent.getEventTitle())
-                                        .eventFee(updateEvent.getEventFee())
-                                        .eventContent(updateEvent.getEventContent())
-                                        .eventImageList(
-                                                jsonUtils.convertJsonToList(
-                                                        updateEvent.getEventImageList()))
-                                        .eventStart(updateEvent.getEventStartDatetime())
-                                        .eventEnd(updateEvent.getEventEndDatetime())
+                                EventReadResDto.Data.builder()
+                                        .eventIdx(updateEvent.getEventIdx())
                                         .isEnd(
                                                 LocalDateTime.now()
                                                                 .isBefore(
@@ -526,6 +563,36 @@ public class EventController {
                                                                 : 1)
                                         .isMine(true)
                                         .eventType(updateEvent.getEventType())
+                                        .eventTitle(updateEvent.getEventTitle())
+                                        .eventStart(updateEvent.getEventStartDatetime())
+                                        .eventEnd(updateEvent.getEventEndDatetime())
+                                        .eventDt(updateEvent.getEventDatetime())
+                                        .eventFee(updateEvent.getEventFee())
+                                        .eventFeeStart(updateEvent.getEventFeeStartDatetime())
+                                        .eventFeeEnd(updateEvent.getEventFeeEndDatetime())
+                                        .eventContent(updateEvent.getEventContent())
+                                        .eventImageList(
+                                                jsonUtils.convertJsonToList(
+                                                        updateEvent.getEventImageList()))
+                                        .eventLimit(updateEvent.getEventLimit())
+                                        .eventPrizeList(
+                                                eventPrizes.stream()
+                                                        .map(
+                                                                eventPrize ->
+                                                                        EventReadResDto.Data
+                                                                                .EventPrize
+                                                                                .builder()
+                                                                                .prizeRank(
+                                                                                        eventPrize
+                                                                                                .getEventPrizeRank())
+                                                                                .prizeName(
+                                                                                        eventPrize
+                                                                                                .getEventPrizeName())
+                                                                                .prizeLimit(
+                                                                                        eventPrize
+                                                                                                .getEventPrizeLimit())
+                                                                                .build())
+                                                        .toList())
                                         .build())
                         .build());
     }
