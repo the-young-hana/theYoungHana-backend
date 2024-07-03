@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.TimeToLive;
 import org.springframework.data.redis.core.index.Indexed;
 
 @TypeInfo(name = "ScheduledEvent", description = "예약 이벤트 엔티티")
@@ -44,6 +45,7 @@ public class ScheduledEvent {
     @Indexed private Long eventLimit;
 
     @Indexed private String scheduledDatetime;
+    @TimeToLive private Long ttl;
 
     @Builder
     public ScheduledEvent(
@@ -58,7 +60,8 @@ public class ScheduledEvent {
             LocalDateTime eventFeeStartDatetime,
             LocalDateTime eventFeeEndDatetime,
             Long eventLimit,
-            String scheduledDatetime) {
+            String scheduledDatetime,
+            Long ttl) {
         this.eventIdx = eventIdx;
         this.eventTitle = eventTitle;
         this.deptIdx = deptIdx;
@@ -71,5 +74,6 @@ public class ScheduledEvent {
         this.eventFeeEndDatetime = eventFeeEndDatetime;
         this.eventLimit = eventLimit;
         this.scheduledDatetime = scheduledDatetime;
+        this.ttl = ttl;
     }
 }
