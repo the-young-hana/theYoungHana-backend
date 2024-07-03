@@ -13,6 +13,7 @@ public class DeptService {
                 .findById(deptIdx)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 학과입니다."));
     }
+
     public Dept findDeptByDeptIdx(Long deptIdx) {
         return deptRepository
                 .findDeptByDeptIdx(deptIdx)
