@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 public class EventReadResDto extends BaseResponse {
@@ -32,7 +31,7 @@ public class EventReadResDto extends BaseResponse {
         private final LocalDateTime eventFeeStart;
         private final LocalDateTime eventFeeEnd;
         private final String eventContent;
-        private final List<MultipartFile> eventImageList;
+        private final String eventImageList;
         private final Long eventLimit;
         private final List<EventPrize> eventPrizeList;
 
@@ -50,7 +49,7 @@ public class EventReadResDto extends BaseResponse {
                 LocalDateTime eventFeeStart,
                 LocalDateTime eventFeeEnd,
                 String eventContent,
-                List<MultipartFile> eventImageList,
+                String eventImageList,
                 Long eventLimit,
                 List<EventPrize> eventPrizeList) {
             this.eventIdx = eventIdx;

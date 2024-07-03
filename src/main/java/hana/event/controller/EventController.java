@@ -23,11 +23,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @TypeInfo(name = "EventController", description = "이벤트 컨트롤러")
 @RestController
@@ -215,9 +218,7 @@ public class EventController {
                                         .eventFeeStart(event.getEventFeeStartDatetime())
                                         .eventFeeEnd(event.getEventFeeEndDatetime())
                                         .eventContent(event.getEventContent())
-                                        .eventImageList(
-                                                jsonUtils.convertJsonToList(
-                                                        event.getEventImageList()))
+                                        .eventImageList(event.getEventImageList())
                                         .eventLimit(event.getEventLimit())
                                         .eventPrizeList(
                                                 eventService
@@ -244,22 +245,12 @@ public class EventController {
     }
 
     @MethodInfo(name = "createEvent", description = "이벤트를 추가합니다.")
-    @PostMapping("/events")
+    @PostMapping(value = "/events", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @AuthenticatedMember
     @Operation(
             summary = "이벤트 추가",
             description = "이벤트를 추가합니다.",
             method = "POST",
-            requestBody =
-                    @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                            description = "이벤트 추가 요청",
-                            required = true,
-                            content =
-                                    @Content(
-                                            schema =
-                                                    @Schema(
-                                                            implementation =
-                                                                    EventCreateReqDto.class))),
             responses = {
                 @ApiResponse(
                         responseCode = "200",
@@ -295,7 +286,9 @@ public class EventController {
                                                                 BaseExceptionResponse.class)))
             })
     public ResponseEntity<EventReadResDto> createEvent(
-            @Valid @RequestBody EventCreateReqDto eventCreateReqDto)
+            @Valid @RequestPart("eventCreateReqDto") EventCreateReqDto eventCreateReqDto,
+            @RequestPart(value = "eventImageList", required = false)
+                    List<MultipartFile> eventImageList)
             throws JsonProcessingException {
 
         if (eventCreateReqDto.getEventStart().isBefore(LocalDateTime.now())) {
@@ -354,7 +347,7 @@ public class EventController {
                                         jsonUtils.convertListToJson(
                                                 imageUtils.createImages(
                                                         "events/" + event.getEventIdx(),
-                                                        eventCreateReqDto.getEventImageList())))
+                                                        eventImageList)))
                                 .build());
 
         List<EventPrize> eventPrizes =
@@ -399,9 +392,7 @@ public class EventController {
                                         .eventFeeStart(updateEvent.getEventFeeStartDatetime())
                                         .eventFeeEnd(updateEvent.getEventFeeEndDatetime())
                                         .eventContent(updateEvent.getEventContent())
-                                        .eventImageList(
-                                                jsonUtils.convertJsonToList(
-                                                        updateEvent.getEventImageList()))
+                                        .eventImageList(updateEvent.getEventImageList())
                                         .eventLimit(updateEvent.getEventLimit())
                                         .eventPrizeList(
                                                 eventPrizes.stream()
@@ -426,22 +417,12 @@ public class EventController {
     }
 
     @MethodInfo(name = "updateEvent", description = "이벤트를 수정합니다.")
-    @PutMapping("/events/{eventIdx}")
+    @PutMapping(value = "/events/{eventIdx}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @AuthenticatedMember
     @Operation(
             summary = "이벤트 수정",
             description = "이벤트를 수정합니다.",
             method = "PUT",
-            requestBody =
-                    @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                            description = "이벤트 수정 요청",
-                            required = true,
-                            content =
-                                    @Content(
-                                            schema =
-                                                    @Schema(
-                                                            implementation =
-                                                                    EventUpdateReqDto.class))),
             responses = {
                 @ApiResponse(
                         responseCode = "200",
@@ -477,7 +458,10 @@ public class EventController {
                                                                 BaseExceptionResponse.class)))
             })
     public ResponseEntity<EventReadResDto> updateEvent(
-            @PathVariable("eventIdx") Long eventIdx, EventUpdateReqDto eventUpdateReqDto)
+            @PathVariable("eventIdx") Long eventIdx,
+            @RequestPart("eventUpdateReqDto") EventUpdateReqDto eventUpdateReqDto,
+            @RequestPart(value = "eventImageList", required = false)
+                    List<MultipartFile> eventImageList)
             throws JsonProcessingException {
         if (LocalDateTime.now().isAfter(eventService.readEvent(eventIdx).getEventStartDatetime())) {
             throw new InProgressEventException();
@@ -523,8 +507,7 @@ public class EventController {
                                 .eventImageList(
                                         jsonUtils.convertListToJson(
                                                 imageUtils.createImages(
-                                                        "events/" + eventIdx,
-                                                        eventUpdateReqDto.getEventImageList())))
+                                                        "events/" + eventIdx, eventImageList)))
                                 .build());
 
         List<EventPrize> eventPrizes =
@@ -571,9 +554,7 @@ public class EventController {
                                         .eventFeeStart(updateEvent.getEventFeeStartDatetime())
                                         .eventFeeEnd(updateEvent.getEventFeeEndDatetime())
                                         .eventContent(updateEvent.getEventContent())
-                                        .eventImageList(
-                                                jsonUtils.convertJsonToList(
-                                                        updateEvent.getEventImageList()))
+                                        .eventImageList(updateEvent.getEventImageList())
                                         .eventLimit(updateEvent.getEventLimit())
                                         .eventPrizeList(
                                                 eventPrizes.stream()
@@ -643,6 +624,13 @@ public class EventController {
     public ResponseEntity<EventDeleteResDto> deleteEvent(@PathVariable("eventIdx") Long eventIdx) {
         if (LocalDateTime.now().isAfter(eventService.readEvent(eventIdx).getEventStartDatetime())) {
             throw new InProgressEventException();
+        }
+        if (!eventService
+                .readEvent(eventIdx)
+                .getCreatedBy()
+                .getMemberIdx()
+                .equals(jwtUtils.getMember().getMemberIdx())) {
+            throw new IllegalArgumentException("해당 이벤트를 삭제할 권한이 없습니다.");
         }
 
         eventService.deleteEvent(eventIdx);
@@ -892,6 +880,10 @@ public class EventController {
                                 updateEvent
                                         .getEventStartDatetime()
                                         .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))
+                        .ttl(
+                                updateEvent.getEventStartDatetime().toEpochSecond(ZoneOffset.UTC)
+                                        - LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
+                                        + 60)
                         .build());
 
         eventService.scheduleEvent(
@@ -911,6 +903,10 @@ public class EventController {
                                 updateEvent
                                         .getEventEndDatetime()
                                         .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))
+                        .ttl(
+                                updateEvent.getEventEndDatetime().toEpochSecond(ZoneOffset.UTC)
+                                        - LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
+                                        + 60)
                         .build());
 
         if (updateEvent.getEventType().getDescription() == "응모") {
@@ -933,6 +929,10 @@ public class EventController {
                                             .format(
                                                     DateTimeFormatter.ofPattern(
                                                             "yyyy-MM-dd HH:mm")))
+                            .ttl(
+                                    updateEvent.getEventDatetime().toEpochSecond(ZoneOffset.UTC)
+                                            - LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
+                                            + 60)
                             .build());
         }
 
@@ -956,6 +956,12 @@ public class EventController {
                                             .format(
                                                     DateTimeFormatter.ofPattern(
                                                             "yyyy-MM-dd HH:mm")))
+                            .ttl(
+                                    updateEvent
+                                                    .getEventStartDatetime()
+                                                    .toEpochSecond(ZoneOffset.UTC)
+                                            - LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
+                                            + 60)
                             .build());
 
             eventService.scheduleEvent(
@@ -977,6 +983,10 @@ public class EventController {
                                             .format(
                                                     DateTimeFormatter.ofPattern(
                                                             "yyyy-MM-dd HH:mm")))
+                            .ttl(
+                                    updateEvent.getEventDatetime().toEpochSecond(ZoneOffset.UTC)
+                                            - LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
+                                            + 60)
                             .build());
         }
 
@@ -1000,6 +1010,12 @@ public class EventController {
                                             .format(
                                                     DateTimeFormatter.ofPattern(
                                                             "yyyy-MM-dd HH:mm")))
+                            .ttl(
+                                    updateEvent
+                                                    .getEventFeeStartDatetime()
+                                                    .toEpochSecond(ZoneOffset.UTC)
+                                            - LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
+                                            + 60)
                             .build());
 
             eventService.scheduleEvent(
@@ -1021,6 +1037,12 @@ public class EventController {
                                             .format(
                                                     DateTimeFormatter.ofPattern(
                                                             "yyyy-MM-dd HH:mm")))
+                            .ttl(
+                                    updateEvent
+                                                    .getEventFeeEndDatetime()
+                                                    .toEpochSecond(ZoneOffset.UTC)
+                                            - LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
+                                            + 60)
                             .build());
         }
     }
