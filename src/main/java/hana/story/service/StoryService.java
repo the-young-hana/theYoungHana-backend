@@ -1,5 +1,6 @@
 package hana.story.service;
 
+import hana.account.domain.TransactionTypeEnumType;
 import hana.account.dto.DeptAccountTransactionResDto;
 import hana.account.service.TransactionService;
 import hana.college.service.DeptService;
@@ -11,8 +12,6 @@ import hana.member.domain.Student;
 import hana.story.domain.Story;
 import hana.story.domain.StoryRepository;
 import hana.story.dto.*;
-import jakarta.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -21,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @TypeInfo(name = "StoryService", description = "스토리 서비스")
@@ -35,7 +35,7 @@ public class StoryService {
     private final ImageUtils imageUtils;
     private final JwtUtils jwtUtils;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public StoriesReadResDto getStories(Integer page, Long deptIdx) {
 
         // deptIdx로 스토리 조회
@@ -50,29 +50,43 @@ public class StoryService {
 
         for (Story s : stories) {
             long storyIdx = s.getStoryIdx();
-            long storyCommentNum = s.getStoryCommentAmount();
-            long storyLikeNum = s.getStoryLikeAmount();
             boolean isLiked = storyLikeService.checkLike(s, jwtUtils.getStudent());
-            LocalDateTime createdAt = s.getCreatedAt();
             List<DeptAccountTransactionResDto> transactionList =
                     transactionService.getTransactionsByStory(storyIdx);
-
             datas.add(
                     StoriesReadResDto.Data.builder()
-                            .storyCommentNum(storyCommentNum)
+                            .storyCommentNum(s.getStoryCommentAmount())
                             .storyIdx(storyIdx)
-                            .storyLikeNum(storyLikeNum)
+                            .storyLikeNum(s.getStoryLikeAmount())
                             .storyTitle(s.getStoryTitle())
                             .isLiked(isLiked)
                             .transactionList(transactionList)
-                            .createdAt(createdAt)
+                            .startDate(transactionList.get(0).getTransactionDate().toLocalDate())
+                            .endDate(
+                                    transactionList
+                                            .get(transactionList.size() - 1)
+                                            .getTransactionDate()
+                                            .toLocalDate())
+                            .totalAmount(
+                                    transactionList.stream()
+                                            .filter(
+                                                    x ->
+                                                            x.getTransactionType()
+                                                                    .equals(
+                                                                            TransactionTypeEnumType
+                                                                                    .출금))
+                                            .mapToLong(
+                                                    DeptAccountTransactionResDto
+                                                            ::getTransactionAmount)
+                                            .sum())
+                            .createdAt(s.getCreatedAt())
                             .build());
         }
 
         return StoriesReadResDto.builder().data(datas).build();
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public StoryReadResDto getStory(Long storyIdx) {
         Story story = findByStoryIdx(storyIdx);
 
