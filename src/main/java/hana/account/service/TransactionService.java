@@ -85,7 +85,7 @@ public class TransactionService {
     public TransactionsReadResDto getTransactions(
             Long deptIdx, String startDate, String endDate, String type, String sort, Long page) {
 
-        Dept dept = deptService.findByDeptIdx(deptIdx);
+        Dept dept = deptService.findDeptByDeptIdx(deptIdx);
         Account deptAccount = dept.getAccount();
 
         List<TransactionsByDateResDto> transactions =

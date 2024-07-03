@@ -32,4 +32,7 @@ public interface DeptRepository extends JpaRepository<Dept, Long> {
     List<Object[]> getRanking(int offset);
 
     Optional<Dept> findByDeptAccountNumber(String deptAccountNumber);
+
+    @Query("select distinct d from Dept d inner join fetch d.account where d.deptIdx = :deptIdx")
+    Optional<Dept> findDeptByDeptIdx(Long deptIdx);
 }
