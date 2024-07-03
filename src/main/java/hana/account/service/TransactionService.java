@@ -10,11 +10,11 @@ import hana.college.service.DeptService;
 import hana.common.annotation.TypeInfo;
 import hana.common.exception.AccessDeniedCustomException;
 import hana.common.utils.JwtUtils;
-import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @TypeInfo(name = "TransactionService", description = "거래 서비스")
 @Service
@@ -103,7 +103,7 @@ public class TransactionService {
                 .build();
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<DeptAccountTransactionResDto> getTransactionsByStory(Long storyIdx) {
         return transactionRepository.getTransactionsByStory(storyIdx);
     }

@@ -110,6 +110,7 @@ public class TransactionRepositoryImpl implements TransactionRepositoryCustom {
                 .leftJoin(transactionDetail)
                 .on(transaction.transactionIdx.eq(transactionDetail.transaction.transactionIdx))
                 .where(transactionDetail.story.storyIdx.eq(storyIdx))
+                .orderBy(transaction.createdAt.asc())
                 .fetch();
     }
 }
