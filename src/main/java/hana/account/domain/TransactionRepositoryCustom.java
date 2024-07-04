@@ -9,4 +9,6 @@ public interface TransactionRepositoryCustom {
             Long accountIdx, String startDate, String endDate, String type, String sort, Long page);
 
     List<DeptAccountTransactionResDto> getTransactionsByStory(Long storyIdx);
+
+    List<TransactionsByDateResDto> getTransactionsForStoryDetail(Long storyIdx);
 }

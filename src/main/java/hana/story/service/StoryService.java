@@ -99,11 +99,7 @@ public class StoryService {
             imageList.add(matcher.group());
         }
 
-        return makeStoryResDto(
-                story,
-                imageList,
-                storyCommentService.getStoryComment(storyIdx),
-                transactionService.getTransactionsByStory(storyIdx));
+        return makeStoryResDto(story, imageList);
     }
 
     @Transactional
@@ -128,11 +124,7 @@ public class StoryService {
         // 거래 저장
         transactionDetailService.saveTransactionDetails(reqDto.getTransactionList(), savedStory);
 
-        return makeStoryResDto(
-                story,
-                imgURLs,
-                storyCommentService.getStoryComment(savedStory.getStoryIdx()),
-                transactionService.getTransactionsByStory(savedStory.getStoryIdx()));
+        return makeStoryResDto(story, imgURLs);
     }
 
     @Transactional
@@ -154,11 +146,7 @@ public class StoryService {
         transactionDetailService.deleteTransactionDetailsByStory(storyIdx);
         transactionDetailService.saveTransactionDetails(reqDto.getTransactionList(), story);
 
-        return makeStoryResDto(
-                story,
-                imgURLList,
-                storyCommentService.getStoryComment(storyIdx),
-                transactionService.getTransactionsByStory(storyIdx));
+        return makeStoryResDto(story, imgURLList);
     }
 
     @Transactional
@@ -194,15 +182,8 @@ public class StoryService {
                 .orElseThrow(() -> new IllegalArgumentException("스토리를 찾을 수 없습니다."));
     }
 
-    private StoryReadResDto makeStoryResDto(
-            Story story,
-            List<String> storyImageList,
-            StoryRepresentativeCommentResDto storyComment,
-            List<DeptAccountTransactionResDto> transactionList) {
+    private StoryReadResDto makeStoryResDto(Story story, List<String> storyImageList) {
         Long storyIdx = story.getStoryIdx();
-        boolean isLiked = storyLikeService.checkLike(story, jwtUtils.getStudent());
-        long storyCommentNum = story.getStoryCommentAmount();
-        long storyLikeNum = story.getStoryLikeAmount();
 
         return StoryReadResDto.builder()
                 .data(
@@ -210,12 +191,13 @@ public class StoryService {
                                 .storyIdx(storyIdx)
                                 .storyTitle(story.getStoryTitle())
                                 .storyContent(story.getStoryContent())
-                                .isLiked(isLiked)
-                                .storyLikeNum(storyLikeNum)
-                                .storyCommentNum(storyCommentNum)
-                                .storyComment(storyComment)
+                                .isLiked(storyLikeService.checkLike(story, jwtUtils.getStudent()))
+                                .storyLikeNum(story.getStoryLikeAmount())
+                                .storyCommentNum(story.getStoryCommentAmount())
+                                .storyComment(storyCommentService.getStoryComment(storyIdx))
                                 .storyImageList(storyImageList)
-                                .transactionList(transactionList)
+                                .transactionList(
+                                        transactionService.getTransactionsForStoryDetail(storyIdx))
                                 .createdAt(story.getCreatedAt())
                                 .build())
                 .build();
