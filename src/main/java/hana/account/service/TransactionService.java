@@ -11,8 +11,10 @@ import hana.common.annotation.TypeInfo;
 import hana.common.exception.AccessDeniedCustomException;
 import hana.common.utils.JwtUtils;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,12 +34,15 @@ public class TransactionService {
         Account myAccount = accountService.findByAccountIdx(dto.getMyAccountIdx());
 
         // 내 계좌인지 확인
-        if (!myAccount.getMember().equals(jwtUtils.getMember())) {
+        if (!Objects.equals(
+                myAccount.getMember().getMemberIdx(), jwtUtils.getMember().getMemberIdx())) {
+
             throw new AccessDeniedCustomException();
         }
 
-        accountService.withdraw(dto.getMyAccountIdx(), dto.getAmount());
+        accountService.withdraw(dto.getMyAccountIdx(), dto.getAmount(), dto.getDeptIdx());
 
+        // 학과 계좌 입금
         Account receiveAccount;
         if (dto.getReceiveAccount()
                 .startsWith("125934691")) { // 125910692는 일반 하나은행 계좌, 125934691은 가상 계좌로 가정
@@ -48,7 +53,9 @@ public class TransactionService {
             receiveAccount = accountService.findByAccountNumber(dto.getReceiveAccount());
         }
 
-        accountService.deposit(receiveAccount.getAccountNumber(), dto.getAmount());
+        accountService.deposit(
+                receiveAccount.getAccountNumber(), dto.getAmount(), dto.getDeptIdx());
+
         // 거래 내역 생성(출금)
         transactionRepository.save(
                 Transaction.builder()
@@ -82,25 +89,33 @@ public class TransactionService {
     }
 
     @Transactional
-    public TransactionsReadResDto getTransactions(
-            Long deptIdx, String startDate, String endDate, String type, String sort, Long page) {
+    public List<TransactionsByDateResDto> getTransactions(
+            Long accountIdx,
+            String startDate,
+            String endDate,
+            String type,
+            String sort,
+            Long page) {
 
+        return transactionRepository.getTransactionsByDate(
+                accountIdx, startDate, endDate, type, sort, page);
+    }
+
+    @Cacheable(
+            value = "DeptAccountInfoDto",
+            key = "'deptAccount' + #deptIdx",
+            unless = "#result == null",
+            cacheManager = "redisCacheManager")
+    public DeptAccountInfoDto getDeptAccountInfo(Long deptIdx) {
         Dept dept = deptService.findDeptByDeptIdx(deptIdx);
-        Account deptAccount = dept.getAccount();
+        Account account = dept.getAccount();
+        Long accountIdx = account.getAccountIdx();
 
-        List<TransactionsByDateResDto> transactions =
-                transactionRepository.getTransactionsByDate(
-                        deptAccount.getAccountIdx(), startDate, endDate, type, sort, page);
-
-        return TransactionsReadResDto.builder()
-                .data(
-                        TransactionsReadResDto.Data.builder()
-                                .deptName(dept.getDeptName())
-                                .deptAccountNumber(dept.getDeptAccountNumber())
-                                .deptAccountBalance(deptAccount.getAccountBalance())
-                                .deptAccountTransactions(transactions)
-                                .build())
-                .build();
+        return new DeptAccountInfoDto(
+                dept.getDeptName(),
+                account.getAccountNumber(),
+                account.getAccountBalance(),
+                accountIdx);
     }
 
     @Transactional(readOnly = true)

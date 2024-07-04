@@ -1,8 +1,6 @@
 package hana.account.controller;
 
-import hana.account.dto.TransactionsReadResDto;
-import hana.account.dto.TransactionsRemitCreateReqDto;
-import hana.account.dto.TransactionsRemitCreateResDto;
+import hana.account.dto.*;
 import hana.account.service.TransactionService;
 import hana.common.annotation.MethodInfo;
 import hana.common.annotation.TypeInfo;
@@ -13,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -74,9 +73,18 @@ public class TransactionController {
             @RequestParam("type") String type,
             @RequestParam("sort") String sort,
             @RequestParam("page") Long page) {
-        TransactionsReadResDto returnDto =
-                transactionService.getTransactions(deptIdx, start, end, type, sort, page);
-        return ResponseEntity.ok(returnDto);
+        DeptAccountInfoDto deptAccountInfo = transactionService.getDeptAccountInfo(deptIdx);
+        List<TransactionsByDateResDto> transactions =
+                transactionService.getTransactions(
+                        deptAccountInfo.getDeptAccountIdx(), start, end, type, sort, page);
+        return ResponseEntity.ok(
+                TransactionsReadResDto.builder()
+                        .data(
+                                TransactionsReadResDto.Data.builder()
+                                        .deptAccountInfo(deptAccountInfo)
+                                        .deptAccountTransactions(transactions)
+                                        .build())
+                        .build());
     }
 
     @MethodInfo(name = "remit", description = "송금")
