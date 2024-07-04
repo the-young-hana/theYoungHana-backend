@@ -1,8 +1,13 @@
 package hana.knowledge.service;
 
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import hana.common.annotation.TypeInfo;
 import hana.knowledge.domain.Knowledge;
 import hana.knowledge.domain.KnowledgeRepository;
+import hana.knowledge.domain.QKnowledge;
+import hana.knowledge.dto.KnowledgePaginationDto;
 import hana.knowledge.dto.KnowledgeReadResDto;
 import hana.knowledge.dto.KnowledgesReadResDto;
 import hana.knowledge.exception.UnlistedKnowledgeException;
@@ -15,10 +20,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class KnowledgeService {
     private final KnowledgeRepository knowledgeRepository;
+    private final JPAQueryFactory queryFactory;
 
-    public KnowledgesReadResDto getKnowledges() {
-        List<KnowledgesReadResDto.Data> data =
-                knowledgeRepository.findAll().stream()
+    public KnowledgesReadResDto readKnowledges(Long lastKnowledgeIdx) {
+        List<KnowledgePaginationDto> knowledgesPage = paginationNoOffset(lastKnowledgeIdx, 10);
+
+        List<KnowledgesReadResDto.Data> knowledgeDataList =
+                knowledgesPage.stream()
                         .map(
                                 knowledge ->
                                         KnowledgesReadResDto.Data.builder()
@@ -29,7 +37,31 @@ public class KnowledgeService {
                                                 .build())
                         .collect(Collectors.toCollection(ArrayList::new));
 
-        return new KnowledgesReadResDto(data);
+        return KnowledgesReadResDto.builder().data(knowledgeDataList).build();
+    }
+
+    private List<KnowledgePaginationDto> paginationNoOffset(Long lastKnowledgeIdx, int pageSize) {
+        QKnowledge knowledge = QKnowledge.knowledge;
+        return queryFactory
+                .select(
+                        Projections.constructor(
+                                KnowledgePaginationDto.class,
+                                knowledge.knowledgeIdx,
+                                knowledge.knowledgeTitle,
+                                knowledge.knowledgeSummary,
+                                knowledge.knowledgeImage))
+                .from(knowledge)
+                .where(gteKnowledgeId(lastKnowledgeIdx), knowledge.deletedYn.isFalse())
+                .orderBy(knowledge.knowledgeIdx.asc())
+                .limit(pageSize)
+                .fetch();
+    }
+
+    private BooleanExpression gteKnowledgeId(Long knowledgeId) {
+        if (knowledgeId == null) {
+            return null;
+        }
+        return QKnowledge.knowledge.knowledgeIdx.goe(knowledgeId);
     }
 
     public KnowledgeReadResDto getKnowledgeById(Long knowledgeIdx) {
@@ -51,7 +83,8 @@ public class KnowledgeService {
         return KnowledgeReadResDto.builder().data(data).build();
     }
 
-    public KnowledgeService(KnowledgeRepository knowledgeRepository) {
+    public KnowledgeService(KnowledgeRepository knowledgeRepository, JPAQueryFactory queryFactory) {
         this.knowledgeRepository = knowledgeRepository;
+        this.queryFactory = queryFactory;
     }
 }
