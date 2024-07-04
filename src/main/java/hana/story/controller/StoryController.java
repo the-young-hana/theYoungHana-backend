@@ -215,9 +215,8 @@ public class StoryController {
             })
     public ResponseEntity<StoryReadResDto> updateStory(
             @PathVariable("storyIdx") Long storyIdx,
-            @RequestPart(value = "StoryUpdateReqDto") StoryUpdateReqDto storyUpdateReqDto,
-            @RequestPart(value = "imgs", required = false) List<MultipartFile> imgs) {
-        return ResponseEntity.ok(storyService.updateStory(storyIdx, storyUpdateReqDto, imgs));
+            @RequestBody StoryUpdateReqDto storyUpdateReqDto) {
+        return ResponseEntity.ok(storyService.updateStory(storyIdx, storyUpdateReqDto));
     }
 
     @MethodInfo(name = "deleteStory", description = "스토리를 삭제합니다.")
