@@ -31,7 +31,7 @@ public class EventReadResDto extends BaseResponse {
         private final LocalDateTime eventFeeStart;
         private final LocalDateTime eventFeeEnd;
         private final String eventContent;
-        private final String eventImageList;
+        private final List<String> eventImageList;
         private final Long eventLimit;
         private final List<EventPrize> eventPrizeList;
 
@@ -49,7 +49,7 @@ public class EventReadResDto extends BaseResponse {
                 LocalDateTime eventFeeStart,
                 LocalDateTime eventFeeEnd,
                 String eventContent,
-                String eventImageList,
+                List<String> eventImageList,
                 Long eventLimit,
                 List<EventPrize> eventPrizeList) {
             this.eventIdx = eventIdx;

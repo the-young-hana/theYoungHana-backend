@@ -5,13 +5,14 @@ import hana.common.annotation.AuthenticatedMember;
 import hana.common.annotation.MethodInfo;
 import hana.common.annotation.TypeInfo;
 import hana.common.exception.BaseExceptionResponse;
+import hana.common.exception.PageStartIndexException;
 import hana.common.utils.ImageUtils;
 import hana.common.utils.JsonUtils;
 import hana.common.utils.JwtUtils;
 import hana.event.domain.*;
 import hana.event.dto.*;
-import hana.event.exception.InProgressEventException;
-import hana.event.exception.UnavailableEventException;
+import hana.event.exception.*;
+import hana.event.exception.EventDeleteOnlyOwnerException;
 import hana.event.service.EventService;
 import hana.member.domain.Member;
 import hana.member.domain.Student;
@@ -90,7 +91,7 @@ public class EventController {
             @RequestParam("isEnd") Boolean isEnd,
             @RequestParam("page") Integer page) {
         if (page == 0) {
-            throw new IllegalArgumentException("page는 1부터 시작해야 합니다.");
+            throw new PageStartIndexException();
         }
 
         return ResponseEntity.ok(
@@ -185,7 +186,7 @@ public class EventController {
 
         if (!Objects.equals(
                 event.getDept().getDeptIdx(), jwtUtils.getStudent().getDept().getDeptIdx())) {
-            throw new IllegalArgumentException("해당 학과의 이벤트가 아닙니다.");
+            throw new DeptNotMatchException();
         }
 
         return ResponseEntity.ok(
@@ -218,7 +219,9 @@ public class EventController {
                                         .eventFeeStart(event.getEventFeeStartDatetime())
                                         .eventFeeEnd(event.getEventFeeEndDatetime())
                                         .eventContent(event.getEventContent())
-                                        .eventImageList(event.getEventImageList())
+                                        .eventImageList(
+                                                jsonUtils.convertJsonToList(
+                                                        event.getEventImageList()))
                                         .eventLimit(event.getEventLimit())
                                         .eventPrizeList(
                                                 eventService
@@ -292,23 +295,23 @@ public class EventController {
             throws JsonProcessingException {
 
         if (eventCreateReqDto.getEventStart().isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("이벤트 시작일은 현재 시간 이후여야 합니다.");
+            throw new EventStartInvalidException();
         }
 
         if (eventCreateReqDto.getEventEnd().isBefore(eventCreateReqDto.getEventStart())) {
-            throw new IllegalArgumentException("이벤트 종료일은 이벤트 시작일 이후여야 합니다.");
+            throw new EventEndInvalidException();
         }
 
         if (eventCreateReqDto.getEventDt().isBefore(eventCreateReqDto.getEventEnd())) {
-            throw new IllegalArgumentException("이벤트 발표일은 이벤트 종료일 이후여야 합니다.");
+            throw new EventDateInvalidException();
         }
 
         if (eventCreateReqDto.getEventFeeStart().isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("이벤트 입금 시작일은 이벤트 종료일 이후여야 합니다.");
+            throw new EventFeeStartInvalidException();
         }
 
         if (eventCreateReqDto.getEventFeeEnd().isBefore(eventCreateReqDto.getEventFeeStart())) {
-            throw new IllegalArgumentException("이벤트 입금 종료일은 이벤트 입금 시작일 이후여야 합니다.");
+            throw new EventFeeEndInvalidException();
         }
 
         Event event =
@@ -392,7 +395,9 @@ public class EventController {
                                         .eventFeeStart(updateEvent.getEventFeeStartDatetime())
                                         .eventFeeEnd(updateEvent.getEventFeeEndDatetime())
                                         .eventContent(updateEvent.getEventContent())
-                                        .eventImageList(updateEvent.getEventImageList())
+                                        .eventImageList(
+                                                jsonUtils.convertJsonToList(
+                                                        updateEvent.getEventImageList()))
                                         .eventLimit(updateEvent.getEventLimit())
                                         .eventPrizeList(
                                                 eventPrizes.stream()
@@ -468,23 +473,23 @@ public class EventController {
         }
 
         if (eventUpdateReqDto.getEventStart().isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("이벤트 시작일은 현재 시간 이후여야 합니다.");
+            throw new EventStartInvalidException();
         }
 
         if (eventUpdateReqDto.getEventEnd().isBefore(eventUpdateReqDto.getEventStart())) {
-            throw new IllegalArgumentException("이벤트 종료일은 이벤트 시작일 이후여야 합니다.");
+            throw new EventEndInvalidException();
         }
 
         if (eventUpdateReqDto.getEventDt().isBefore(eventUpdateReqDto.getEventEnd())) {
-            throw new IllegalArgumentException("이벤트 발표일은 이벤트 종료일 이후여야 합니다.");
+            throw new EventDateInvalidException();
         }
 
         if (eventUpdateReqDto.getEventFeeStart().isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("이벤트 입금 시작일은 이벤트 종료일 이후여야 합니다.");
+            throw new EventFeeStartInvalidException();
         }
 
         if (eventUpdateReqDto.getEventFeeEnd().isBefore(eventUpdateReqDto.getEventFeeStart())) {
-            throw new IllegalArgumentException("이벤트 입금 종료일은 이벤트 입금 시작일 이후여야 합니다.");
+            throw new EventFeeEndInvalidException();
         }
 
         imageUtils.deleteImagesByDirectory("events/" + eventIdx);
@@ -554,7 +559,9 @@ public class EventController {
                                         .eventFeeStart(updateEvent.getEventFeeStartDatetime())
                                         .eventFeeEnd(updateEvent.getEventFeeEndDatetime())
                                         .eventContent(updateEvent.getEventContent())
-                                        .eventImageList(updateEvent.getEventImageList())
+                                        .eventImageList(
+                                                jsonUtils.convertJsonToList(
+                                                        updateEvent.getEventImageList()))
                                         .eventLimit(updateEvent.getEventLimit())
                                         .eventPrizeList(
                                                 eventPrizes.stream()
@@ -630,7 +637,7 @@ public class EventController {
                 .getCreatedBy()
                 .getMemberIdx()
                 .equals(jwtUtils.getMember().getMemberIdx())) {
-            throw new IllegalArgumentException("해당 이벤트를 삭제할 권한이 없습니다.");
+            throw new EventDeleteOnlyOwnerException();
         }
 
         eventService.deleteEvent(eventIdx);
@@ -832,7 +839,7 @@ public class EventController {
         switch (event.getEventType().getDescription()) {
             case "신청":
                 if (eventService.isEventWinner(eventIdx, student.getStudentIdx())) {
-                    throw new IllegalArgumentException("이미 참여한 이벤트입니다.");
+                    throw new EventAlreadyApplyException();
                 }
 
                 eventService.createEventWinner(
@@ -844,7 +851,7 @@ public class EventController {
                 break;
             case "응모":
                 if (eventService.isEventArrival(eventIdx, student.getStudentIdx())) {
-                    throw new IllegalArgumentException("이미 참여한 이벤트입니다.");
+                    throw new EventAlreadyApplyException();
                 }
 
                 eventService.createEventArrival(
