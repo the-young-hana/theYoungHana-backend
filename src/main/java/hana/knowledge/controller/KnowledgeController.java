@@ -12,10 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @TypeInfo(name = "KnowledgeController", description = "금융상식 컨트롤러")
 @RestController
@@ -68,8 +65,9 @@ public class KnowledgeController {
                                                         implementation =
                                                                 BaseExceptionResponse.class)))
             })
-    public ResponseEntity<KnowledgesReadResDto> readKnowledges() {
-        KnowledgesReadResDto response = knowledgeService.getKnowledges();
+    public ResponseEntity<KnowledgesReadResDto> readKnowledges(
+            @RequestParam(value = "lastKnowledgeIdx", required = false) Long lastKnowledgeIdx) {
+        KnowledgesReadResDto response = knowledgeService.readKnowledges(lastKnowledgeIdx);
         return ResponseEntity.ok(response);
     }
 
