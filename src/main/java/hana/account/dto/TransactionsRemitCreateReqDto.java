@@ -6,14 +6,17 @@ import lombok.Getter;
 @Getter
 public class TransactionsRemitCreateReqDto {
 
-    private Long myAccountIdx;
-    private Long amount;
-    private String receiveAccount;
+    private final Long myAccountIdx;
+    private final Long amount;
+    private final String receiveAccount;
+    private final Long deptIdx;
 
     @Builder
-    public TransactionsRemitCreateReqDto(Long myAccountIdx, Long amount, String receiveAccount) {
+    public TransactionsRemitCreateReqDto(
+            Long myAccountIdx, Long amount, String receiveAccount, Long deptIdx) {
         this.myAccountIdx = myAccountIdx;
         this.amount = amount;
+        this.deptIdx = deptIdx;
         this.receiveAccount = receiveAccount;
     }
 }

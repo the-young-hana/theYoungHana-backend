@@ -2,6 +2,7 @@ package hana.account.service;
 
 import hana.account.domain.Account;
 import hana.account.domain.AccountRepository;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,14 +22,22 @@ public class AccountService {
     }
 
     // 하나은행 입금
-    public void deposit(String accountNumber, Long amount) {
+    @CacheEvict(
+            value = "DeptAccountInfoDto",
+            key = "'deptAccount' + #deptIdx",
+            cacheManager = "redisCacheManager")
+    public void deposit(String accountNumber, Long amount, Long deptIdx) {
         // 계좌 없으면 예외처리
         Account account = findByAccountNumber(accountNumber);
         account.deposit(amount); // dynamic update
     }
 
     // 출금
-    public void withdraw(Long accountIdx, Long amount) {
+    @CacheEvict(
+            value = "DeptAccountInfoDto",
+            key = "'deptAccount' + #deptIdx",
+            cacheManager = "redisCacheManager")
+    public void withdraw(Long accountIdx, Long amount, Long deptIdx) {
         // 계좌 없으면 예외처리
         Account account = findByAccountIdx(accountIdx);
         // 잔액 예외처리

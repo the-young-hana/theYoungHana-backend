@@ -17,21 +17,15 @@ public class TransactionsReadResDto extends BaseResponse {
 
     @Getter
     public static class Data {
-        private final String deptName;
-        private final String deptAccountNumber;
-        private final Long deptAccountBalance;
+        private final DeptAccountInfoDto deptAccountInfo;
         private final List<TransactionsByDateResDto> transactionList;
 
         @Builder
         public Data(
-                String deptName,
-                String deptAccountNumber,
-                Long deptAccountBalance,
+                DeptAccountInfoDto deptAccountInfo,
                 List<TransactionsByDateResDto> deptAccountTransactions) {
             super();
-            this.deptName = deptName;
-            this.deptAccountNumber = deptAccountNumber;
-            this.deptAccountBalance = deptAccountBalance;
+            this.deptAccountInfo = deptAccountInfo;
             this.transactionList = deptAccountTransactions;
         }
     }
