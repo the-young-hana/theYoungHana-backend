@@ -219,7 +219,9 @@ public class EventController {
                                         .eventFeeStart(event.getEventFeeStartDatetime())
                                         .eventFeeEnd(event.getEventFeeEndDatetime())
                                         .eventContent(event.getEventContent())
-                                        .eventImageList(event.getEventImageList())
+                                        .eventImageList(
+                                                jsonUtils.convertJsonToList(
+                                                        event.getEventImageList()))
                                         .eventLimit(event.getEventLimit())
                                         .eventPrizeList(
                                                 eventService
@@ -393,7 +395,9 @@ public class EventController {
                                         .eventFeeStart(updateEvent.getEventFeeStartDatetime())
                                         .eventFeeEnd(updateEvent.getEventFeeEndDatetime())
                                         .eventContent(updateEvent.getEventContent())
-                                        .eventImageList(updateEvent.getEventImageList())
+                                        .eventImageList(
+                                                jsonUtils.convertJsonToList(
+                                                        updateEvent.getEventImageList()))
                                         .eventLimit(updateEvent.getEventLimit())
                                         .eventPrizeList(
                                                 eventPrizes.stream()
@@ -555,7 +559,8 @@ public class EventController {
                                         .eventFeeStart(updateEvent.getEventFeeStartDatetime())
                                         .eventFeeEnd(updateEvent.getEventFeeEndDatetime())
                                         .eventContent(updateEvent.getEventContent())
-                                        .eventImageList(updateEvent.getEventImageList())
+                                        .eventImageList(
+                                                jsonUtils.convertJsonToList(
                                         .eventLimit(updateEvent.getEventLimit())
                                         .eventPrizeList(
                                                 eventPrizes.stream()
