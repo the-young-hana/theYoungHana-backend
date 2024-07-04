@@ -128,8 +128,7 @@ public class StoryService {
     }
 
     @Transactional
-    public StoryReadResDto updateStory(
-            Long storyIdx, StoryUpdateReqDto reqDto, List<MultipartFile> imgs) {
+    public StoryReadResDto updateStory(Long storyIdx, StoryUpdateReqDto reqDto) {
         checkIsAdmin();
         Story story = findByStoryIdx(storyIdx);
         story.update(reqDto);
@@ -137,16 +136,20 @@ public class StoryService {
         String directory = "story/" + storyIdx;
         imageUtils.deleteImagesByDirectory(directory);
 
-        List<String> imgURLList =
-                (imgs == null || imgs.isEmpty()) ? null : imageUtils.createImages(directory, imgs);
-        String imgURLs = imgURLList == null ? null : imgURLList.toString();
-        story.postImages(imgURLs);
+        Matcher matcher =
+                Pattern.compile("https?://[^,\\s]+.png").matcher(story.getStoryImageList());
+
+        List<String> imageList = new ArrayList<>();
+
+        while (matcher.find()) {
+            imageList.add(matcher.group());
+        }
 
         // 거래 삭제 및 저장
         transactionDetailService.deleteTransactionDetailsByStory(storyIdx);
         transactionDetailService.saveTransactionDetails(reqDto.getTransactionList(), story);
 
-        return makeStoryResDto(story, imgURLList);
+        return makeStoryResDto(story, imageList);
     }
 
     @Transactional

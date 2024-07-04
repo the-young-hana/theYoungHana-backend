@@ -434,7 +434,7 @@ public class EventController {
     }
 
     @MethodInfo(name = "updateEvent", description = "이벤트를 수정합니다.")
-    @PutMapping(value = "/events/{eventIdx}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/events/{eventIdx}")
     @AuthenticatedMember
     @Operation(
             summary = "이벤트 수정",
