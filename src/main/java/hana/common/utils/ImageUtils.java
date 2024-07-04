@@ -42,6 +42,7 @@ public class ImageUtils {
     @MethodInfo(name = "createImages", description = "이미지들을 저장합니다.")
     public List<String> createImages(String directory, List<MultipartFile> multipartFiles) {
         List<String> urls = new ArrayList<>();
+
         for (MultipartFile multipartFile : multipartFiles) {
             urls.add(
                     createImage(
