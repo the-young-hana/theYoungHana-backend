@@ -65,6 +65,25 @@ services:
     restart: ${DOCKER_RESTART_POLICY}
     labels:
       org.springframework.boot.service-connection: prometheus
+  grafana:
+    image: grafana/grafana:${GRAFANA_VERSION}
+    container_name: grafana
+    hostname: grafana
+    depends_on:
+      - prometheus
+    ports:
+      - ${GRAFANA_PORT}:3000
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_USERNAME}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD}
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:${GRAFANA_PORT}/api/health" ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
+    networks:
+      - hana-network
+    restart: ${DOCKER_RESTART_POLICY}
 networks:
   hana-network:
     driver: bridge
