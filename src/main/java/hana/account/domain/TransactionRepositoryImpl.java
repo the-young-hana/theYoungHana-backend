@@ -86,9 +86,7 @@ public class TransactionRepositoryImpl implements TransactionRepositoryCustom {
                                                                         .isNotNull(),
                                                                 transaction.createdAt))));
 
-        return transactionsByDate.entrySet().stream()
-                .map(entry -> new TransactionsByDateResDto(entry.getKey(), entry.getValue()))
-                .collect(Collectors.toList());
+        return makeTransactionsByDate(transactionsByDate);
     }
 
     @Override
@@ -112,5 +110,47 @@ public class TransactionRepositoryImpl implements TransactionRepositoryCustom {
                 .where(transactionDetail.story.storyIdx.eq(storyIdx))
                 .orderBy(transaction.createdAt.asc())
                 .fetch();
+    }
+
+    @Override
+    public List<TransactionsByDateResDto> getTransactionsForStoryDetail(Long storyIdx) {
+
+        Map<String, List<DeptAccountTransactionResDto>> transactionsByDate =
+                queryFactory
+                        .from(transaction)
+                        .leftJoin(transactionDetail)
+                        .on(
+                                transaction.transactionIdx.eq(
+                                        transactionDetail.transaction.transactionIdx))
+                        .where(transactionDetail.story.storyIdx.eq(storyIdx))
+                        .orderBy(transaction.createdAt.asc())
+                        .transform(
+                                GroupBy.groupBy(
+                                                transaction
+                                                        .createdAt
+                                                        .stringValue()
+                                                        .substring(0, 10))
+                                        .as(
+                                                GroupBy.list(
+                                                        Projections.constructor(
+                                                                DeptAccountTransactionResDto.class,
+                                                                transaction.transactionIdx,
+                                                                transaction.transactionId,
+                                                                transaction.transactionName,
+                                                                transaction.transactionAmount,
+                                                                transaction.transactionBalance,
+                                                                transaction.transactionTypeEnumType,
+                                                                transactionDetail
+                                                                        .transactionDetailIdx
+                                                                        .isNotNull(),
+                                                                transaction.createdAt))));
+        return makeTransactionsByDate(transactionsByDate);
+    }
+
+    private List<TransactionsByDateResDto> makeTransactionsByDate(
+            Map<String, List<DeptAccountTransactionResDto>> transactionsByDate) {
+        return transactionsByDate.entrySet().stream()
+                .map(entry -> new TransactionsByDateResDto(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
     }
 }

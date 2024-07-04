@@ -1,6 +1,6 @@
 package hana.story.dto;
 
-import hana.account.dto.DeptAccountTransactionResDto;
+import hana.account.dto.TransactionsByDateResDto;
 import hana.common.dto.BaseResponse;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,7 +27,7 @@ public class StoryReadResDto extends BaseResponse {
         private final Boolean isLiked;
         private final StoryRepresentativeCommentResDto storyComment;
         private final List<String> storyImageList;
-        private final List<DeptAccountTransactionResDto> transactionList;
+        private final List<TransactionsByDateResDto> transactionList;
         private final LocalDateTime createdAt;
 
         @Builder
@@ -40,7 +40,7 @@ public class StoryReadResDto extends BaseResponse {
                 Boolean isLiked,
                 List<String> storyImageList,
                 StoryRepresentativeCommentResDto storyComment,
-                List<DeptAccountTransactionResDto> transactionList,
+                List<TransactionsByDateResDto> transactionList,
                 LocalDateTime createdAt) {
             this.storyIdx = storyIdx;
             this.storyTitle = storyTitle;

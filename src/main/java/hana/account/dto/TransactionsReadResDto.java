@@ -20,7 +20,7 @@ public class TransactionsReadResDto extends BaseResponse {
         private final String deptName;
         private final String deptAccountNumber;
         private final Long deptAccountBalance;
-        private final List<TransactionsByDateResDto> deptAccountTransactionsByDate;
+        private final List<TransactionsByDateResDto> transactionList;
 
         @Builder
         public Data(
@@ -32,7 +32,7 @@ public class TransactionsReadResDto extends BaseResponse {
             this.deptName = deptName;
             this.deptAccountNumber = deptAccountNumber;
             this.deptAccountBalance = deptAccountBalance;
-            this.deptAccountTransactionsByDate = deptAccountTransactions;
+            this.transactionList = deptAccountTransactions;
         }
     }
 }

@@ -108,6 +108,11 @@ public class TransactionService {
         return transactionRepository.getTransactionsByStory(storyIdx);
     }
 
+    @Transactional
+    public List<TransactionsByDateResDto> getTransactionsForStoryDetail(Long storyIdx) {
+        return transactionRepository.getTransactionsForStoryDetail(storyIdx);
+    }
+
     public Transaction findByTransactionIdx(Long transactionIdx) {
         return transactionRepository
                 .findById(transactionIdx)
