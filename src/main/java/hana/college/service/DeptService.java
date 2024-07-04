@@ -1,7 +1,10 @@
 package hana.college.service;
 
+import hana.account.domain.Account;
+import hana.account.dto.DeptAccountInfoDto;
 import hana.college.domain.Dept;
 import hana.college.domain.DeptRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,6 +29,23 @@ public class DeptService {
                 .orElseThrow()
                 .getAccount()
                 .getAccountIdx();
+    }
+
+    @Cacheable(
+            value = "DeptAccountInfoDto",
+            key = "'deptAccount' + #deptIdx",
+            unless = "#result == null",
+            cacheManager = "redisCacheManager")
+    public DeptAccountInfoDto getDeptAccountInfo(Long deptIdx) {
+        Dept dept = findDeptByDeptIdx(deptIdx);
+        Account account = dept.getAccount();
+        Long accountIdx = account.getAccountIdx();
+
+        return new DeptAccountInfoDto(
+                dept.getDeptName(),
+                account.getAccountNumber(),
+                account.getAccountBalance(),
+                accountIdx);
     }
 
     public DeptService(DeptRepository deptRepository) {

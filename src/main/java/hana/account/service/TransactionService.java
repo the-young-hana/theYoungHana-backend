@@ -5,7 +5,6 @@ import hana.account.domain.Transaction;
 import hana.account.domain.TransactionRepository;
 import hana.account.domain.TransactionTypeEnumType;
 import hana.account.dto.*;
-import hana.college.domain.Dept;
 import hana.college.service.DeptService;
 import hana.common.annotation.TypeInfo;
 import hana.common.exception.AccessDeniedCustomException;
@@ -14,7 +13,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -99,23 +97,6 @@ public class TransactionService {
 
         return transactionRepository.getTransactionsByDate(
                 accountIdx, startDate, endDate, type, sort, page);
-    }
-
-    @Cacheable(
-            value = "DeptAccountInfoDto",
-            key = "'deptAccount' + #deptIdx",
-            unless = "#result == null",
-            cacheManager = "redisCacheManager")
-    public DeptAccountInfoDto getDeptAccountInfo(Long deptIdx) {
-        Dept dept = deptService.findDeptByDeptIdx(deptIdx);
-        Account account = dept.getAccount();
-        Long accountIdx = account.getAccountIdx();
-
-        return new DeptAccountInfoDto(
-                dept.getDeptName(),
-                account.getAccountNumber(),
-                account.getAccountBalance(),
-                accountIdx);
     }
 
     @Transactional(readOnly = true)
