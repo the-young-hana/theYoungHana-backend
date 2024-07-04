@@ -20,4 +20,8 @@ public interface EventArrivalRepository extends JpaRepository<EventArrival, Long
     @Query(
             "SELECT ea FROM EventArrival ea JOIN FETCH ea.event e WHERE e.eventIdx = :eventIdx AND ea.student.studentIdx = :studentIdx")
     EventArrival findByEventIdxAndStudentIdx(Long eventIdx, Long studentIdx);
+
+    @MethodInfo(name = "countByEventIdx", description = "이벤트 인덱스로 이벤트 신청자 수를 조회합니다.")
+    @Query("SELECT COUNT(ea) FROM EventArrival ea JOIN ea.event e WHERE e.eventIdx = :eventIdx")
+    Long countByEventIdx(Long eventIdx);
 }

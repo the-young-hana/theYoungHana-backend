@@ -21,4 +21,9 @@ public interface EventWinnerRepository extends JpaRepository<EventWinner, Long> 
     @Query(
             "SELECT ew FROM EventWinner ew JOIN FETCH ew.eventPrize ep JOIN FETCH ep.event e WHERE e.eventIdx = :eventIdx AND ew.student.studentIdx = :studentIdx")
     EventWinner findByEventIdxAndStudentIdx(Long eventIdx, Long studentIdx);
+
+    @MethodInfo(name = "countByEventIdx", description = "이벤트 인덱스로 이벤트 당첨자 수를 조회합니다.")
+    @Query(
+            "SELECT COUNT(ew) FROM EventWinner ew JOIN ew.eventPrize ep JOIN ep.event e WHERE e.eventIdx = :eventIdx")
+    Long countByEventIdx(Long eventIdx);
 }
