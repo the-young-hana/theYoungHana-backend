@@ -510,9 +510,12 @@ public class EventController {
                                 .eventType(EventEnumType.valueOf(eventUpdateReqDto.getEventType()))
                                 .dept(eventService.readEvent(eventIdx).getDept())
                                 .eventImageList(
-                                        jsonUtils.convertListToJson(
-                                                imageUtils.createImages(
-                                                        "events/" + eventIdx, eventImageList)))
+                                        eventImageList != null
+                                                ? jsonUtils.convertListToJson(
+                                                        imageUtils.createImages(
+                                                                "events/" + eventIdx,
+                                                                eventImageList))
+                                                : "[]")
                                 .build());
 
         List<EventPrize> eventPrizes =
