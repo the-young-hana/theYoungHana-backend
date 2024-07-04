@@ -11,11 +11,10 @@ import hana.knowledge.dto.KnowledgePaginationDto;
 import hana.knowledge.dto.KnowledgeReadResDto;
 import hana.knowledge.dto.KnowledgesReadResDto;
 import hana.knowledge.exception.UnlistedKnowledgeException;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
 @TypeInfo(name = "KnowledgeService", description = "금융상식 서비스")
 @Service
@@ -26,14 +25,17 @@ public class KnowledgeService {
     public KnowledgesReadResDto readKnowledges(Long lastKnowledgeIdx) {
         List<KnowledgePaginationDto> knowledgesPage = paginationNoOffset(lastKnowledgeIdx, 10);
 
-        List<KnowledgesReadResDto.Data> knowledgeDataList = knowledgesPage.stream()
-                .map(knowledge -> KnowledgesReadResDto.Data.builder()
-                        .knowledgeIdx(knowledge.getKnowledgeIdx())
-                        .knowledgeTitle(knowledge.getKnowledgeTitle())
-                        .knowledgeSummary(knowledge.getKnowledgeSummary())
-                        .knowledgeImage(knowledge.getKnowledgeImage())
-                        .build())
-                .collect(Collectors.toCollection(ArrayList::new));
+        List<KnowledgesReadResDto.Data> knowledgeDataList =
+                knowledgesPage.stream()
+                        .map(
+                                knowledge ->
+                                        KnowledgesReadResDto.Data.builder()
+                                                .knowledgeIdx(knowledge.getKnowledgeIdx())
+                                                .knowledgeTitle(knowledge.getKnowledgeTitle())
+                                                .knowledgeSummary(knowledge.getKnowledgeSummary())
+                                                .knowledgeImage(knowledge.getKnowledgeImage())
+                                                .build())
+                        .collect(Collectors.toCollection(ArrayList::new));
 
         return KnowledgesReadResDto.builder().data(knowledgeDataList).build();
     }
@@ -41,12 +43,13 @@ public class KnowledgeService {
     private List<KnowledgePaginationDto> paginationNoOffset(Long lastKnowledgeIdx, int pageSize) {
         QKnowledge knowledge = QKnowledge.knowledge;
         return queryFactory
-                .select(Projections.constructor(
-                        KnowledgePaginationDto.class,
-                        knowledge.knowledgeIdx,
-                        knowledge.knowledgeTitle,
-                        knowledge.knowledgeSummary,
-                        knowledge.knowledgeImage))
+                .select(
+                        Projections.constructor(
+                                KnowledgePaginationDto.class,
+                                knowledge.knowledgeIdx,
+                                knowledge.knowledgeTitle,
+                                knowledge.knowledgeSummary,
+                                knowledge.knowledgeImage))
                 .from(knowledge)
                 .where(gteKnowledgeId(lastKnowledgeIdx), knowledge.deletedYn.isFalse())
                 .orderBy(knowledge.knowledgeIdx.asc())

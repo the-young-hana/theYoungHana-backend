@@ -11,7 +11,11 @@ public class KnowledgePaginationDto {
     private String knowledgeSummary;
     private String knowledgeImage;
 
-    public KnowledgePaginationDto(Long knowledgeIdx, String knowledgeTitle, String knowledgeSummary, String knowledgeImage) {
+    public KnowledgePaginationDto(
+            Long knowledgeIdx,
+            String knowledgeTitle,
+            String knowledgeSummary,
+            String knowledgeImage) {
         this.knowledgeIdx = knowledgeIdx;
         this.knowledgeTitle = knowledgeTitle;
         this.knowledgeSummary = knowledgeSummary;
