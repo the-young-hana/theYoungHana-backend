@@ -43,6 +43,47 @@ services:
     restart: ${DOCKER_RESTART_POLICY}
     labels:
       org.springframework.boot.service-connection: redis
+  prometheus:
+    image: prom/prometheus:${PROMETHEUS_VERSION}
+    container_name: prometheus
+    hostname: prometheus
+    ports:
+      - ${PROMETHEUS_PORT}:9090
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+    volumes:
+      - ${DOCKER_COMPOSE_VOLUME}/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:${PROMETHEUS_PORT}/-/healthy" ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
+    networks:
+      - hana-network
+    restart: ${DOCKER_RESTART_POLICY}
+    labels:
+      org.springframework.boot.service-connection: prometheus
+  grafana:
+    image: grafana/grafana:${GRAFANA_VERSION}
+    container_name: grafana
+    hostname: grafana
+    depends_on:
+      - prometheus
+    ports:
+      - ${GRAFANA_PORT}:3000
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_USERNAME}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD}
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:${GRAFANA_PORT}/api/health" ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
+    networks:
+      - hana-network
+    restart: ${DOCKER_RESTART_POLICY}
 networks:
   hana-network:
     driver: bridge
