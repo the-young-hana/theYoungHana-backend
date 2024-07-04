@@ -67,7 +67,10 @@ public class SecurityConfig extends AbstractHttpConfigurer<SecurityConfig, HttpS
                 Arrays.asList(
                         "http://localhost:3000",
                         "http://theyounghana.o-r.kr",
-                        "https://theyounghana.o-r.kr")); // 허용할 출처
+                        "https://theyounghana.o-r.kr",
+                        "http://theyounghana.or.kr",
+                        "http://theyounghana.r-e.kr",
+                        "https://theyounghana.r-e.kr"));
         config.setAllowCredentials(true); // 쿠키 인증 요청 허용
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
 
