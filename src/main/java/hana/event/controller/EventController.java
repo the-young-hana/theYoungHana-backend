@@ -476,9 +476,7 @@ public class EventController {
             })
     public ResponseEntity<EventReadResDto> updateEvent(
             @PathVariable("eventIdx") Long eventIdx,
-            @RequestPart("eventUpdateReqDto") EventUpdateReqDto eventUpdateReqDto,
-            @RequestPart(value = "eventImageList", required = false)
-                    List<MultipartFile> eventImageList)
+            @RequestBody EventUpdateReqDto eventUpdateReqDto)
             throws JsonProcessingException {
         if (LocalDateTime.now().isAfter(eventService.readEvent(eventIdx).getEventStartDatetime())) {
             throw new InProgressEventException();
@@ -504,8 +502,7 @@ public class EventController {
             throw new EventFeeEndInvalidException();
         }
 
-        imageUtils.deleteImagesByDirectory("events/" + eventIdx);
-
+        Event currentEvent = eventService.readEvent(eventIdx);
         Event updateEvent =
                 eventService.updateEvent(
                         eventIdx,
@@ -520,14 +517,8 @@ public class EventController {
                                 .eventFeeEndDatetime(eventUpdateReqDto.getEventFeeEnd())
                                 .eventLimit(eventUpdateReqDto.getEventLimit())
                                 .eventType(EventEnumType.valueOf(eventUpdateReqDto.getEventType()))
-                                .dept(eventService.readEvent(eventIdx).getDept())
-                                .eventImageList(
-                                        eventImageList != null
-                                                ? jsonUtils.convertListToJson(
-                                                        imageUtils.createImages(
-                                                                "events/" + eventIdx,
-                                                                eventImageList))
-                                                : "[]")
+                                .dept(currentEvent.getDept())
+                                .eventImageList(currentEvent.getEventImageList())
                                 .build());
 
         List<EventPrize> eventPrizes =
