@@ -2,6 +2,7 @@ package hana.account.controller;
 
 import hana.account.dto.*;
 import hana.account.service.TransactionService;
+import hana.college.service.DeptService;
 import hana.common.annotation.MethodInfo;
 import hana.common.annotation.TypeInfo;
 import hana.common.exception.AccessDeniedCustomException;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/v1")
 public class TransactionController {
     private final TransactionService transactionService;
+    private final DeptService deptService;
 
     @MethodInfo(name = "readTransactions", description = "거래 목록을 조회합니다.")
     @GetMapping("/transactions/{deptIdx}")
@@ -73,7 +75,7 @@ public class TransactionController {
             @RequestParam("type") String type,
             @RequestParam("sort") String sort,
             @RequestParam("page") Long page) {
-        DeptAccountInfoDto deptAccountInfo = transactionService.getDeptAccountInfo(deptIdx);
+        DeptAccountInfoDto deptAccountInfo = deptService.getDeptAccountInfo(deptIdx);
         List<TransactionsByDateResDto> transactions =
                 transactionService.getTransactions(
                         deptAccountInfo.getDeptAccountIdx(), start, end, type, sort, page);
@@ -149,7 +151,8 @@ public class TransactionController {
         return ResponseEntity.ok(returnDto);
     }
 
-    public TransactionController(TransactionService transactionService) {
+    public TransactionController(TransactionService transactionService, DeptService deptService) {
         this.transactionService = transactionService;
+        this.deptService = deptService;
     }
 }
