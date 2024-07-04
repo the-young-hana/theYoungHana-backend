@@ -390,7 +390,7 @@ public class EventController {
                                                                 ? 2
                                                                 : 1)
                                         .isMine(true)
-                                        .eventType(event.getEventType())
+                                        .eventType(updateEvent.getEventType())
                                         .eventTitle(updateEvent.getEventTitle())
                                         .eventStart(updateEvent.getEventStartDatetime())
                                         .eventEnd(updateEvent.getEventEndDatetime())
@@ -403,7 +403,14 @@ public class EventController {
                                         .eventImageList(
                                                 jsonUtils.convertJsonToList(
                                                         updateEvent.getEventImageList()))
-                                        .eventLimit(updateEvent.getEventLimit())
+                                        .eventLimit(
+                                                updateEvent.getEventType().equals(EventEnumType.응모)
+                                                        ? eventPrizes.stream()
+                                                                .mapToLong(
+                                                                        EventPrize
+                                                                                ::getEventPrizeLimit)
+                                                                .sum()
+                                                        : updateEvent.getEventLimit())
                                         .eventPrizeList(
                                                 eventPrizes.stream()
                                                         .map(
@@ -571,7 +578,14 @@ public class EventController {
                                         .eventImageList(
                                                 jsonUtils.convertJsonToList(
                                                         updateEvent.getEventImageList()))
-                                        .eventLimit(updateEvent.getEventLimit())
+                                        .eventLimit(
+                                                updateEvent.getEventType().equals(EventEnumType.응모)
+                                                        ? eventPrizes.stream()
+                                                                .mapToLong(
+                                                                        EventPrize
+                                                                                ::getEventPrizeLimit)
+                                                                .sum()
+                                                        : updateEvent.getEventLimit())
                                         .eventPrizeList(
                                                 eventPrizes.stream()
                                                         .map(
@@ -846,36 +860,73 @@ public class EventController {
     public ResponseEntity<EventJoinResDto> joinEvent(@PathVariable("eventIdx") Long eventIdx) {
         Student student = jwtUtils.getStudent();
         Event event = eventService.readEvent(eventIdx);
+
+        if (LocalDateTime.now().isBefore(event.getEventStartDatetime())) {
+            throw new NotStartEventException();
+        }
+
+        if (LocalDateTime.now().isAfter(event.getEventEndDatetime())) {
+            throw new AlreadyEndEventException();
+        }
+
         switch (event.getEventType().getDescription()) {
-            case "신청":
+            case "신청" -> {
                 if (eventService.isEventWinner(eventIdx, student.getStudentIdx())) {
                     throw new EventAlreadyApplyException();
                 }
-
                 eventService.createEventWinner(
                         EventWinner.builder()
                                 .eventPrize(eventService.readEventPrize(eventIdx))
                                 .student(student)
                                 .build());
-
-                break;
-            case "응모":
+                return ResponseEntity.ok(
+                        EventJoinResDto.builder()
+                                .data(
+                                        EventJoinResDto.Data.builder()
+                                                .eventCount(0L)
+                                                .eventLimit(0L)
+                                                .build())
+                                .build());
+            }
+            case "응모" -> {
                 if (eventService.isEventArrival(eventIdx, student.getStudentIdx())) {
                     throw new EventAlreadyApplyException();
                 }
-
                 eventService.createEventArrival(
                         EventArrival.builder()
                                 .isWinner(false)
                                 .event(event)
                                 .student(student)
                                 .build());
-                break;
-            case "선착":
-                // TODO: 선착 이벤트 참여 로직 구현
-                break;
+                return ResponseEntity.ok(
+                        EventJoinResDto.builder()
+                                .data(
+                                        EventJoinResDto.Data.builder()
+                                                .eventCount(
+                                                        eventService.countEventArrivals(eventIdx))
+                                                .eventLimit(event.getEventLimit())
+                                                .build())
+                                .build());
+            }
+            case "선착" -> {
+                // 이벤트 상품 찾기
+                EventPrize eventPrize = eventService.readEventPrize(eventIdx);
+
+                // 이벤트 참여자 수 찾기
+                Long eventWinnerCount = eventService.countEventWinners(eventIdx);
+
+                // 만약, 이벤트 참여자 수가 이벤트 참여 가능 인원보다 많다면
+                if (eventWinnerCount >= event.getEventLimit()) {
+                    throw new RuntimeException("이벤트 참여 가능 인원을 초과하였습니다.");
+                }
+
+                // 이벤트 참여자 수가 이벤트 참여 가능 인원보다 적다면, 당첨
+                eventService.createEventWinner(
+                        EventWinner.builder().eventPrize(eventPrize).student(student).build());
+                return ResponseEntity.ok(EventJoinResDto.builder().build());
+            }
+            default -> throw new RuntimeException("이벤트 타입이 잘못되었습니다.");
         }
-        return ResponseEntity.ok(EventJoinResDto.builder().build());
     }
 
     @MethodInfo(name = "createEventSchedule", description = "이벤트 일정을 생성합니다.")

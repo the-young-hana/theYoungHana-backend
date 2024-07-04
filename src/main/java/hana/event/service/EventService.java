@@ -202,6 +202,16 @@ public class EventService {
         return eventTokenRepository.findAllByDeptIdx(deptIdx);
     }
 
+    @MethodInfo(name = "countEventWinners", description = "이벤트 당첨자 수를 조회합니다.")
+    public Long countEventWinners(Long eventIdx) {
+        return eventWinnerRepository.countByEventIdx(eventIdx);
+    }
+
+    @MethodInfo(name = "countEventArrivals", description = "이벤트 신청자 수를 조회합니다.")
+    public Long countEventArrivals(Long eventIdx) {
+        return eventArrivalRepository.countByEventIdx(eventIdx);
+    }
+
     public EventService(
             EventRepository eventRepository,
             EventPrizeRepository eventPrizeRepository,
