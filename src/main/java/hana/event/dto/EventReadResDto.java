@@ -34,6 +34,7 @@ public class EventReadResDto extends BaseResponse {
         private final List<String> eventImageList;
         private final Long eventLimit;
         private final List<EventPrize> eventPrizeList;
+        private final LocalDateTime eventCreateAt;
 
         @Builder
         public Data(
@@ -51,7 +52,8 @@ public class EventReadResDto extends BaseResponse {
                 String eventContent,
                 List<String> eventImageList,
                 Long eventLimit,
-                List<EventPrize> eventPrizeList) {
+                List<EventPrize> eventPrizeList,
+                LocalDateTime eventCreateAt) {
             this.eventIdx = eventIdx;
             this.isEnd = isEnd;
             this.isMine = isMine;
@@ -67,6 +69,7 @@ public class EventReadResDto extends BaseResponse {
             this.eventImageList = eventImageList;
             this.eventLimit = eventLimit;
             this.eventPrizeList = eventPrizeList;
+            this.eventCreateAt = eventCreateAt;
         }
 
         @Getter

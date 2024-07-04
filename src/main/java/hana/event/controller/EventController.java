@@ -129,6 +129,7 @@ public class EventController {
                                                                                 .getEventStartDatetime())
                                                                 .eventEnd(
                                                                         event.getEventEndDatetime())
+                                                                .eventCreateAt(event.getCreatedAt())
                                                                 .build())
                                         .toList())
                         .build());
@@ -219,6 +220,7 @@ public class EventController {
                                         .eventFeeStart(event.getEventFeeStartDatetime())
                                         .eventFeeEnd(event.getEventFeeEndDatetime())
                                         .eventContent(event.getEventContent())
+                                        .eventCreateAt(event.getCreatedAt())
                                         .eventImageList(
                                                 jsonUtils.convertJsonToList(
                                                         event.getEventImageList()))
@@ -395,6 +397,7 @@ public class EventController {
                                         .eventFeeStart(updateEvent.getEventFeeStartDatetime())
                                         .eventFeeEnd(updateEvent.getEventFeeEndDatetime())
                                         .eventContent(updateEvent.getEventContent())
+                                        .eventCreateAt(event.getCreatedAt())
                                         .eventImageList(
                                                 jsonUtils.convertJsonToList(
                                                         updateEvent.getEventImageList()))
@@ -562,6 +565,7 @@ public class EventController {
                                         .eventFeeStart(updateEvent.getEventFeeStartDatetime())
                                         .eventFeeEnd(updateEvent.getEventFeeEndDatetime())
                                         .eventContent(updateEvent.getEventContent())
+                                        .eventCreateAt(updateEvent.getCreatedAt())
                                         .eventImageList(
                                                 jsonUtils.convertJsonToList(
                                                         updateEvent.getEventImageList()))
@@ -635,6 +639,7 @@ public class EventController {
         if (LocalDateTime.now().isAfter(eventService.readEvent(eventIdx).getEventStartDatetime())) {
             throw new InProgressEventException();
         }
+
         if (!eventService
                 .readEvent(eventIdx)
                 .getCreatedBy()
