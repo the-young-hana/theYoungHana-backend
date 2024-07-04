@@ -24,6 +24,7 @@ public class EventsReadResDto extends BaseResponse {
         private final String eventType;
         private final LocalDateTime eventStart;
         private final LocalDateTime eventEnd;
+        private final LocalDateTime eventCreateAt;
 
         @Builder
         public Data(
@@ -32,13 +33,15 @@ public class EventsReadResDto extends BaseResponse {
                 String eventSummary,
                 String eventType,
                 LocalDateTime eventStart,
-                LocalDateTime eventEnd) {
+                LocalDateTime eventEnd,
+                LocalDateTime eventCreateAt) {
             this.eventIdx = eventIdx;
             this.eventTitle = eventTitle;
             this.eventSummary = eventSummary;
             this.eventType = eventType;
             this.eventStart = eventStart;
             this.eventEnd = eventEnd;
+            this.eventCreateAt = eventCreateAt;
         }
     }
 }
