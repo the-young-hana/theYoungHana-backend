@@ -7,6 +7,8 @@ import hana.common.annotation.MethodInfo;
 import hana.common.annotation.TypeInfo;
 import hana.common.dto.notification.FcmMessageResDto;
 import hana.common.dto.notification.FcmSendReqDto;
+import hana.member.domain.Notice;
+import hana.member.service.MemberService;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -36,6 +38,8 @@ public class FCMService {
 
     private final ObjectMapper objectMapper;
 
+    private final MemberService memberService;
+
     // push 메세지 처리를 수행하는 비지니스 로직
     // return 성공(1), 실패(0)
     @MethodInfo(name = "sendMessageTo", description = "FCM 메세지를 전송합니다.")
@@ -58,7 +62,18 @@ public class FCMService {
 
         int responseCode = httpURLConnection.getResponseCode();
 
-        return responseCode == HttpURLConnection.HTTP_OK ? 1 : 0;
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            memberService.createNotice(
+                    Notice.builder()
+                            .member(memberService.findByMemberIdx(fcmSendReqDto.getMemberIdx()))
+                            .noticeTitle(fcmSendReqDto.getTitle())
+                            .noticeContent(fcmSendReqDto.getBody())
+                            .noticeCategory(fcmSendReqDto.getCategory())
+                            .build());
+            return responseCode;
+        } else {
+            return responseCode;
+        }
     }
 
     @MethodInfo(name = "getAccessToken", description = "FCM 액세스 토큰을 발급합니다.")

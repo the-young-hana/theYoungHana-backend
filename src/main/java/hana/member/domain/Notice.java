@@ -2,9 +2,9 @@ package hana.member.domain;
 
 import hana.common.annotation.TypeInfo;
 import hana.common.entity.BaseEntity;
-import hana.event.domain.Event;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,10 +23,6 @@ public class Notice extends BaseEntity {
     @JoinColumn(name = "member_idx", nullable = false)
     private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_idx", nullable = false)
-    private Event event;
-
     @Column(name = "notice_title", nullable = false, length = 50)
     private String noticeTitle;
 
@@ -35,4 +31,12 @@ public class Notice extends BaseEntity {
 
     @Column(name = "notice_category", nullable = false, length = 30)
     private String noticeCategory;
+
+    @Builder
+    public Notice(Member member, String noticeTitle, String noticeContent, String noticeCategory) {
+        this.member = member;
+        this.noticeTitle = noticeTitle;
+        this.noticeContent = noticeContent;
+        this.noticeCategory = noticeCategory;
+    }
 }
