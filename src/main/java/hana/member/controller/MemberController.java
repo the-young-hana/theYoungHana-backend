@@ -106,7 +106,7 @@ public class MemberController {
 
         fcmService.sendMessageTo(
                 FcmSendReqDto.builder()
-                        .memberIdx(jwtUtils.getMember().getMemberIdx())
+                        //                        .memberIdx(jwtUtils.getMember().getMemberIdx())
                         .token(memberLoginReqDto.getFcmToken())
                         .title("더영하나")
                         .body(
