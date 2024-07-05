@@ -2,12 +2,32 @@ package hana.account.service;
 
 import hana.account.domain.Account;
 import hana.account.domain.AccountRepository;
+import hana.account.dto.AccountReadResDto;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AccountService {
     private final AccountRepository accountRepository;
+
+    public AccountReadResDto getMyAccounts(Long memberIdx) {
+        List<Account> accounts =
+                accountRepository.findByMember_MemberIdxAndDeletedYnFalse(memberIdx);
+        List<AccountReadResDto.Data> myAccountInfoReadDtoList = new ArrayList<>();
+        for (Account account : accounts) {
+            myAccountInfoReadDtoList.add(
+                    AccountReadResDto.Data.builder()
+                            .accountNumber(account.getAccountNumber())
+                            .accountIdx(account.getAccountIdx())
+                            .accountName(account.getAccountName())
+                            .accountBalance(account.getAccountBalance())
+                            .build());
+        }
+
+        return AccountReadResDto.builder().data(myAccountInfoReadDtoList).build();
+    }
 
     public Account findByAccountIdx(Long accountIdx) {
         return accountRepository
