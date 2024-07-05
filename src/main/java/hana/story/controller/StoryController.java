@@ -164,7 +164,7 @@ public class StoryController {
                                                                 BaseExceptionResponse.class)))
             })
     public ResponseEntity<StoryReadResDto> createStory(
-            @RequestPart(value = "StoryCreateReqDto") StoryCreateReqDto storyCreateReqDto,
+            @RequestPart(value = "storyCreateReqDto") StoryCreateReqDto storyCreateReqDto,
             @RequestPart(value = "imgs", required = false) List<MultipartFile> imgs)
             throws AccessDeniedException {
         return ResponseEntity.ok(storyService.createStory(storyCreateReqDto, imgs));
