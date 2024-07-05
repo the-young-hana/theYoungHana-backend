@@ -51,17 +51,17 @@ public class KnowledgeService {
                                 knowledge.knowledgeSummary,
                                 knowledge.knowledgeImage))
                 .from(knowledge)
-                .where(gteKnowledgeId(lastKnowledgeIdx), knowledge.deletedYn.isFalse())
+                .where(gtKnowledgeId(lastKnowledgeIdx), knowledge.deletedYn.isFalse())
                 .orderBy(knowledge.knowledgeIdx.asc())
                 .limit(pageSize)
                 .fetch();
     }
 
-    private BooleanExpression gteKnowledgeId(Long knowledgeId) {
+    private BooleanExpression gtKnowledgeId(Long knowledgeId) {
         if (knowledgeId == null) {
             return null;
         }
-        return QKnowledge.knowledge.knowledgeIdx.goe(knowledgeId);
+        return QKnowledge.knowledge.knowledgeIdx.gt(knowledgeId);
     }
 
     public KnowledgeReadResDto getKnowledgeById(Long knowledgeIdx) {
