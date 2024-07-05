@@ -9,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 @TypeInfo(name = "Story", description = "스토리 엔티티")
 @Entity
@@ -35,15 +36,19 @@ public class Story extends BaseEntity {
     private Dept dept;
 
     @Column(name = "story_like_amount", columnDefinition = "bigint default 0")
+    @ColumnDefault("0")
     private Long storyLikeAmount;
 
     @Column(name = "story_comment_amount", columnDefinition = "bigint default 0")
+    @ColumnDefault("0")
     private Long storyCommentAmount;
 
     @Builder
     public Story(String storyTitle, String storyContent, Dept dept) {
         this.storyTitle = storyTitle;
         this.storyContent = storyContent;
+        this.storyLikeAmount = 0L;
+        this.storyCommentAmount = 0L;
         this.dept = dept;
     }
 
