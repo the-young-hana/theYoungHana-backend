@@ -42,6 +42,7 @@ public class SecurityConfig extends AbstractHttpConfigurer<SecurityConfig, HttpS
                                                 "/docs/**",
                                                 "/v3/api-docs/**",
                                                 "/plan/**",
+                                                "/erd/**",
                                                 "/prototype/**",
                                                 "/wireframe/**",
                                                 "/actuator/**",

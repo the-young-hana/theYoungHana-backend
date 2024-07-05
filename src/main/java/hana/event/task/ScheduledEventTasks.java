@@ -35,8 +35,10 @@ public class ScheduledEventTasks {
                 for (MemberToken memberToken : memberTokens) {
                     fcmService.sendMessageTo(
                             FcmSendReqDto.builder()
+                                    .memberIdx(memberToken.getMemberIdx())
                                     .token(memberToken.getFcmToken())
                                     .title("더영하나")
+                                    .category("이벤트 신청 시작")
                                     .body(
                                             "["
                                                     + scheduledEvent.getEventTitle()
@@ -69,8 +71,10 @@ public class ScheduledEventTasks {
                 for (MemberToken memberToken : memberTokens) {
                     fcmService.sendMessageTo(
                             FcmSendReqDto.builder()
+                                    .memberIdx(memberToken.getMemberIdx())
                                     .token(memberToken.getFcmToken())
                                     .title("더영하나")
+                                    .category("이벤트 신청 마감")
                                     .body(
                                             "["
                                                     + scheduledEvent.getEventTitle()
@@ -83,8 +87,10 @@ public class ScheduledEventTasks {
                 for (EventToken eventToken : eventTokens) {
                     fcmService.sendMessageTo(
                             FcmSendReqDto.builder()
+                                    .memberIdx(eventToken.getMemberIdx())
                                     .token(eventToken.getFcmToken())
                                     .title("더영하나")
+                                    .category("이벤트 입금 시작")
                                     .body(
                                             "["
                                                     + scheduledEvent.getEventTitle()
@@ -123,8 +129,10 @@ public class ScheduledEventTasks {
                 for (EventToken eventToken : eventTokens) {
                     fcmService.sendMessageTo(
                             FcmSendReqDto.builder()
+                                    .memberIdx(eventToken.getMemberIdx())
                                     .token(eventToken.getFcmToken())
                                     .title("더영하나")
+                                    .category("이벤트 입금 마감")
                                     .body(
                                             "["
                                                     + scheduledEvent.getEventTitle()
@@ -143,8 +151,10 @@ public class ScheduledEventTasks {
                 for (MemberToken memberToken : memberTokens) {
                     fcmService.sendMessageTo(
                             FcmSendReqDto.builder()
+                                    .memberIdx(memberToken.getMemberIdx())
                                     .token(memberToken.getFcmToken())
                                     .title("더영하나")
+                                    .category("이벤트 응모 시작")
                                     .body(
                                             "["
                                                     + scheduledEvent.getEventTitle()
@@ -157,8 +167,10 @@ public class ScheduledEventTasks {
                 for (MemberToken memberToken : memberTokens) {
                     fcmService.sendMessageTo(
                             FcmSendReqDto.builder()
+                                    .memberIdx(memberToken.getMemberIdx())
                                     .token(memberToken.getFcmToken())
                                     .title("더영하나")
+                                    .category("이벤트 선착순 신청 시작")
                                     .body(
                                             "["
                                                     + scheduledEvent.getEventTitle()
