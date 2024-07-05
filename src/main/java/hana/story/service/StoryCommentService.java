@@ -106,7 +106,7 @@ public class StoryCommentService {
                                 storyComment.createdAt))
                 .from(storyComment)
                 .where(
-                        gteCommentId(lastCommentIdx),
+                        gtCommentId(lastCommentIdx),
                         storyComment.story.storyIdx.eq(storyIdx),
                         storyComment.storyCommentParent.isNull(),
                         storyComment.deletedYn.isFalse())
@@ -115,11 +115,11 @@ public class StoryCommentService {
                 .fetch();
     }
 
-    private BooleanExpression gteCommentId(Long commentId) {
+    private BooleanExpression gtCommentId(Long commentId) {
         if (commentId == null) {
             return null;
         }
-        return QStoryComment.storyComment.storyCommentIdx.goe(commentId);
+        return QStoryComment.storyComment.storyCommentIdx.gt(commentId);
     }
 
     @Transactional
