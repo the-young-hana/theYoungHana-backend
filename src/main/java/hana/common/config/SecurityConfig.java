@@ -61,18 +61,10 @@ public class SecurityConfig extends AbstractHttpConfigurer<SecurityConfig, HttpS
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedHeaders(Collections.singletonList("*")); // 허용할 HTTP header
-        config.setAllowedMethods(Collections.singletonList("*")); // 허용할 HTTP method
-        config.setAllowedOrigins(
-                Arrays.asList(
-                        "http://localhost:3000",
-                        "http://theyounghana.o-r.kr",
-                        "https://theyounghana.o-r.kr",
-                        "http://theyounghana.or.kr",
-                        "http://theyounghana.r-e.kr",
-                        "https://theyounghana.r-e.kr"));
-        config.setAllowCredentials(true); // 쿠키 인증 요청 허용
+        config.setAllowedHeaders(Collections.singletonList("*"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+        config.setAllowedOriginPatterns(Collections.singletonList("*"));
+        config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
