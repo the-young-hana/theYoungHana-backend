@@ -101,6 +101,7 @@
     <button id="dark-mode-toggle" class="always-front fixed bottom-4 right-4 p-2 bg-gray-800 text-white rounded-full focus:outline-none">
         <i class="fas fa-moon"></i>
     </button>
+
     <section class="py-8 md:py-16">
         <div class="container mx-auto text-center px-4">
             <div class="flex justify-center mb-4 md:mb-8">
@@ -110,7 +111,15 @@
             <p class="text-base md:text-lg lg:text-xl">사회에 첫 발을 디딘 MZ세대 대학생들을 위한 맞춤형 금융 서비스</p>
         </div>
     </section>
-    <section class="py-8 md:py-16 bg-white shadow mb-4 md:mb-8 rounded-lg m-5">
+
+    <section class="tabs flex overflow-x-hidden overflow-x-auto whitespace-nowrap justify-center">
+        <button class="tab-link py-3 px-6 bg-hana-green text-white rounded-t-lg mx-1 text-sm sm:text-lg md:text-xl font-bold" data-target="tab1">기획</button>
+        <button class="tab-link py-3 px-6 bg-hana-green text-white rounded-t-lg mx-1 text-sm sm:text-lg md:text-xl font-bold" data-target="tab2">설계</button>
+        <button class="tab-link py-3 px-6 bg-hana-green text-white rounded-t-lg mx-1 text-sm sm:text-lg md:text-xl font-bold" data-target="tab3">구현</button>
+        <button class="tab-link py-3 px-6 bg-hana-green text-white rounded-t-lg mx-1 text-sm sm:text-lg md:text-xl font-bold" data-target="tab4">발표</button>
+    </section>
+
+    <section id="tab1" class="tab-content py-8 md:py-16 bg-white shadow mb-4 md:mb-8 rounded-lg mb-5 ml-5 mr-5">
         <div class="container mx-auto px-4">
             <h3 class="text-xl md:text-2xl font-bold mb-4">프로젝트 기획서</h3>
             <div class="slider">
@@ -133,7 +142,8 @@
             </div>
         </div>
     </section>
-    <section class="py-8 md:py-16 bg-white shadow mb-4 md:mb-8 rounded-lg m-5">
+
+    <section id="tab2" class="tab-content py-8 md:py-16 bg-white shadow mb-4 md:mb-8 rounded-lg m-5 hidden">
         <div class="container mx-auto px-4">
             <h3 class="text-xl md:text-2xl font-bold mb-4">화면 정의서</h3>
             <div class="slider">
@@ -170,8 +180,6 @@
                 <button class="next-slide">&gt;</button>
             </div>
         </div>
-    </section>
-    <section class="py-8 md:py-16 bg-white shadow mb-4 md:mb-8 rounded-lg m-5">
         <div class="container mx-auto px-4">
             <h3 class="text-xl md:text-2xl font-bold mb-4">프로토타입 영상</h3>
             <div class="embed-responsive">
@@ -180,8 +188,6 @@
                 </video>
             </div>
         </div>
-    </section>
-    <section class="py-8 md:py-16 bg-white shadow mb-4 md:mb-8 rounded-lg m-5">
         <div class="container mx-auto px-4">
             <h3 class="text-xl md:text-2xl font-bold mb-4"><a href="https://www.erdcloud.com/d/FKxt2HowhXXy7RP5i">ERD 설계</a></h3>
             <div class="embed-responsive">
@@ -189,14 +195,31 @@
             </div>
         </div>
     </section>
+
+    <section id="tab3" class="tab-content py-8 md:py-16 bg-white shadow mb-4 md:mb-8 rounded-lg m-5 hidden"></section>
+    <section id="tab4" class="tab-content py-8 md:py-16 bg-white shadow mb-4 md:mb-8 rounded-lg m-5 hidden"></section>
 </main>
 
 <script>
+    const sliders = document.querySelectorAll('.slider');
+    const tabLinks = document.querySelectorAll('.tab-link');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const tabContainer = document.querySelector('.tabs');
+        tabContainer.addEventListener('wheel', function (event) {
+            if (event.deltaY > 0) {
+                tabContainer.scrollLeft += 100;
+            } else {
+                tabContainer.scrollLeft -= 100;
+            }
+        });
+    });
+
     document.addEventListener('DOMContentLoaded', function () {
         const toggleButton = document.getElementById('dark-mode-toggle');
         const body = document.body;
 
-        const sliders = document.querySelectorAll('.slider');
         const lightModeIcon = '<i class="fas fa-sun"></i>';
         const darkModeIcon = '<i class="fas fa-moon"></i>';
 
@@ -219,34 +242,51 @@
             localStorage.setItem('dark-mode', body.classList.contains('dark-mode'));
             updateIcon();
         });
+    });
 
-        sliders.forEach((slider) => {
-            const slidesContainer = slider.querySelector('.slides');
-            const slides = slidesContainer.querySelectorAll('.slide');
-            const prevButton = slider.querySelector('.prev-slide');
-            const nextButton = slider.querySelector('.next-slide');
-            let currentIndex = 0;
+    sliders.forEach((slider) => {
+        const slidesContainer = slider.querySelector('.slides');
+        const slides = slidesContainer.querySelectorAll('.slide');
+        const prevButton = slider.querySelector('.prev-slide');
+        const nextButton = slider.querySelector('.next-slide');
+        let currentIndex = 0;
 
-            function showSlide(index) {
-                if (index < 0) {
-                    currentIndex = slides.length - 1;
-                } else if (index >= slides.length) {
-                    currentIndex = 0;
-                } else {
-                    currentIndex = index;
-                }
-                slidesContainer.style.transform = `translateX(-${currentIndex * 100}%)`;
+        function showSlide(index) {
+            if (index < 0) {
+                currentIndex = slides.length - 1;
+            } else if (index >= slides.length) {
+                currentIndex = 0;
+            } else {
+                currentIndex = index;
             }
+            slidesContainer.style.transform = `translateX(-${currentIndex * 100}%)`;
+        }
 
-            prevButton.addEventListener('click', function () {
-                showSlide(currentIndex - 1);
+        prevButton.addEventListener('click', function () {
+            showSlide(currentIndex - 1);
+        });
+
+        nextButton.addEventListener('click', function () {
+            showSlide(currentIndex + 1);
+        });
+
+        showSlide(currentIndex);
+    });
+
+    tabLinks.forEach(link => {
+        link.addEventListener('click', function () {
+            const target = this.getAttribute('data-target');
+
+            tabLinks.forEach(link => link.classList.remove('bg-hana-red'));
+            this.classList.add('bg-hana-red');
+
+            tabContents.forEach(content => {
+                if (content.getAttribute('id') === target) {
+                    content.classList.remove('hidden');
+                } else {
+                    content.classList.add('hidden');
+                }
             });
-
-            nextButton.addEventListener('click', function () {
-                showSlide(currentIndex + 1);
-            });
-
-            showSlide(currentIndex);
         });
     });
 </script>
