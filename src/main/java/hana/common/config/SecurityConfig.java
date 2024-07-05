@@ -2,7 +2,6 @@ package hana.common.config;
 
 import hana.common.annotation.MethodInfo;
 import hana.common.annotation.TypeInfo;
-import java.util.Arrays;
 import java.util.Collections;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -61,18 +60,10 @@ public class SecurityConfig extends AbstractHttpConfigurer<SecurityConfig, HttpS
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedHeaders(Collections.singletonList("*")); // 허용할 HTTP header
-        config.setAllowedMethods(Collections.singletonList("*")); // 허용할 HTTP method
-        config.setAllowedOrigins(
-                Arrays.asList(
-                        "http://localhost:3000",
-                        "http://theyounghana.o-r.kr",
-                        "https://theyounghana.o-r.kr",
-                        "http://theyounghana.or.kr",
-                        "http://theyounghana.r-e.kr",
-                        "https://theyounghana.r-e.kr"));
-        config.setAllowCredentials(true); // 쿠키 인증 요청 허용
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+        config.setAllowedHeaders(Collections.singletonList("*"));
+        config.setAllowedMethods(Collections.singletonList("*"));
+        config.setAllowedOrigins(Collections.singletonList("*"));
+        config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
