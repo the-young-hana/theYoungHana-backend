@@ -89,17 +89,9 @@ public class StoryService {
     @Transactional(readOnly = true)
     public StoryReadResDto getStory(Long storyIdx) {
         Story story = findByStoryIdx(storyIdx);
-
-        Matcher matcher =
-                Pattern.compile("https?://[^,\\s]+.png").matcher(story.getStoryImageList());
-
-        List<String> imageList = new ArrayList<>();
-
-        while (matcher.find()) {
-            imageList.add(matcher.group());
-        }
-
-        return makeStoryResDto(story, imageList);
+        return makeStoryResDto(
+                story,
+                story.getStoryImageList() == null ? null : makeImgList(story.getStoryImageList()));
     }
 
     @Transactional
@@ -133,23 +125,13 @@ public class StoryService {
         Story story = findByStoryIdx(storyIdx);
         story.update(reqDto);
 
-        String directory = "story/" + storyIdx;
-        imageUtils.deleteImagesByDirectory(directory);
-
-        Matcher matcher =
-                Pattern.compile("https?://[^,\\s]+.png").matcher(story.getStoryImageList());
-
-        List<String> imageList = new ArrayList<>();
-
-        while (matcher.find()) {
-            imageList.add(matcher.group());
-        }
-
         // 거래 삭제 및 저장
         transactionDetailService.deleteTransactionDetailsByStory(storyIdx);
         transactionDetailService.saveTransactionDetails(reqDto.getTransactionList(), story);
 
-        return makeStoryResDto(story, imageList);
+        return makeStoryResDto(
+                story,
+                story.getStoryImageList() == null ? null : makeImgList(story.getStoryImageList()));
     }
 
     @Transactional
@@ -177,6 +159,17 @@ public class StoryService {
         }
 
         return getStory(storyIdx);
+    }
+
+    private List<String> makeImgList(String storyImageList) {
+        Matcher matcher = Pattern.compile("https?://[^,\\s]+.png").matcher(storyImageList);
+
+        List<String> imageList = new ArrayList<>();
+
+        while (matcher.find()) {
+            imageList.add(matcher.group());
+        }
+        return imageList;
     }
 
     public Story findByStoryIdx(Long storyIdx) {
