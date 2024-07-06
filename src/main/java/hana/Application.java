@@ -2,6 +2,8 @@ package hana;
 
 import hana.common.annotation.MethodInfo;
 import hana.common.annotation.TypeInfo;
+import jakarta.annotation.PostConstruct;
+import java.util.TimeZone;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -15,5 +17,10 @@ public class Application {
     public static void main(String[] args) {
         SpringApplication springApplication = new SpringApplication(Application.class);
         springApplication.run(args);
+    }
+
+    @PostConstruct
+    public void init() {
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
     }
 }

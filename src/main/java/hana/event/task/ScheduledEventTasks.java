@@ -1,7 +1,5 @@
 package hana.event.task;
 
-import hana.common.annotation.MethodInfo;
-import hana.common.annotation.TypeInfo;
 import hana.common.dto.notification.FcmSendReqDto;
 import hana.common.service.FCMService;
 import hana.event.domain.*;
@@ -13,14 +11,14 @@ import java.util.List;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-@TypeInfo(name = "ScheduledEventTasks", description = "스케줄 이벤트 태스크")
+// @TypeInfo(name = "ScheduledEventTasks", description = "스케줄 이벤트 태스크")
 @Component
 public class ScheduledEventTasks {
     private final EventService eventService;
     private final MemberTokenService memberTokenService;
     private final FCMService fcmService;
 
-    @MethodInfo(name = "executeScheduledEventTasks", description = "스케줄된 이벤트 태스크를 실행합니다.")
+    // @MethodInfo(name = "executeScheduledEventTasks", description = "스케줄된 이벤트 태스크를 실행합니다.")
     @Scheduled(cron = "0 * * * * ?")
     public void scheduledEventTasks() throws IOException {
         List<ScheduledEvent> scheduledEvents = eventService.readScheduledEvents();
@@ -37,8 +35,8 @@ public class ScheduledEventTasks {
                             FcmSendReqDto.builder()
                                     .memberIdx(memberToken.getMemberIdx())
                                     .token(memberToken.getFcmToken())
-                                    .title("더영하나")
-                                    .category("이벤트 신청 시작")
+                                    .title("이벤트 신청 시작")
+                                    .category("더영하나")
                                     .body(
                                             "["
                                                     + scheduledEvent.getEventTitle()
@@ -73,8 +71,8 @@ public class ScheduledEventTasks {
                             FcmSendReqDto.builder()
                                     .memberIdx(memberToken.getMemberIdx())
                                     .token(memberToken.getFcmToken())
-                                    .title("더영하나")
-                                    .category("이벤트 신청 마감")
+                                    .title("이벤트 신청 마감")
+                                    .category("더영하나")
                                     .body(
                                             "["
                                                     + scheduledEvent.getEventTitle()
@@ -89,8 +87,8 @@ public class ScheduledEventTasks {
                             FcmSendReqDto.builder()
                                     .memberIdx(eventToken.getMemberIdx())
                                     .token(eventToken.getFcmToken())
-                                    .title("더영하나")
-                                    .category("이벤트 입금 시작")
+                                    .title("이벤트 입금 시작")
+                                    .category("더영하나")
                                     .body(
                                             "["
                                                     + scheduledEvent.getEventTitle()
@@ -131,8 +129,8 @@ public class ScheduledEventTasks {
                             FcmSendReqDto.builder()
                                     .memberIdx(eventToken.getMemberIdx())
                                     .token(eventToken.getFcmToken())
-                                    .title("더영하나")
-                                    .category("이벤트 입금 마감")
+                                    .title("이벤트 입금 마감")
+                                    .category("더영하나")
                                     .body(
                                             "["
                                                     + scheduledEvent.getEventTitle()
@@ -153,8 +151,8 @@ public class ScheduledEventTasks {
                             FcmSendReqDto.builder()
                                     .memberIdx(memberToken.getMemberIdx())
                                     .token(memberToken.getFcmToken())
-                                    .title("더영하나")
-                                    .category("이벤트 응모 시작")
+                                    .title("이벤트 응모 시작")
+                                    .category("더영하나")
                                     .body(
                                             "["
                                                     + scheduledEvent.getEventTitle()
@@ -169,8 +167,8 @@ public class ScheduledEventTasks {
                             FcmSendReqDto.builder()
                                     .memberIdx(memberToken.getMemberIdx())
                                     .token(memberToken.getFcmToken())
-                                    .title("더영하나")
-                                    .category("이벤트 선착순 신청 시작")
+                                    .title("이벤트 선착순 신청 시작")
+                                    .category("더영하나")
                                     .body(
                                             "["
                                                     + scheduledEvent.getEventTitle()
