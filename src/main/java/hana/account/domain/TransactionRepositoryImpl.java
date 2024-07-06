@@ -34,8 +34,12 @@ public class TransactionRepositoryImpl implements TransactionRepositoryCustom {
             String sort,
             Long page) {
 
-        OrderSpecifier<?> orderSpecifier =
+        OrderSpecifier<?> primaryOrderSpecifier =
                 sort.equals("오래된순") ? transaction.createdAt.asc() : transaction.createdAt.desc();
+        OrderSpecifier<?> secondaryOrderSpecifier =
+                sort.equals("오래된순")
+                        ? transaction.transactionIdx.asc()
+                        : transaction.transactionIdx.desc();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime startDateTime = LocalDateTime.parse(startDate + " 00:00:00", formatter);
@@ -62,7 +66,7 @@ public class TransactionRepositoryImpl implements TransactionRepositoryCustom {
                                                         : transaction.transactionTypeEnumType.eq(
                                                                 TransactionTypeEnumType.valueOf(
                                                                         type))))
-                        .orderBy(orderSpecifier)
+                        .orderBy(primaryOrderSpecifier, secondaryOrderSpecifier)
                         .offset((page - 1) * PAGE_SIZE)
                         .limit(PAGE_SIZE)
                         .transform(
