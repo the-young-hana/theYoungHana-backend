@@ -8,6 +8,7 @@ import hana.common.service.FCMService;
 import hana.common.utils.JwtUtils;
 import hana.common.vo.JwtToken;
 import hana.member.domain.MemberToken;
+import hana.member.domain.Notice;
 import hana.member.domain.Student;
 import hana.member.dto.*;
 import hana.member.service.MemberService;
@@ -20,6 +21,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -106,15 +109,15 @@ public class MemberController {
 
         fcmService.sendMessageTo(
                 FcmSendReqDto.builder()
-                        //                        .memberIdx(jwtUtils.getMember().getMemberIdx())
+                        .memberIdx(student.getMember().getMemberIdx())
                         .token(memberLoginReqDto.getFcmToken())
-                        .title("더영하나")
+                        .title("로그인 성공")
                         .body(
                                 student.getStudentName()
                                         + "님, 환영합니다. "
                                         + student.getDept().getDeptName()
                                         + "에서 진행 중인 이벤트를 확인하세요.")
-                        .category("회원 로그인")
+                        .category("더영하나")
                         .build());
 
         return ResponseEntity.ok(
@@ -195,7 +198,7 @@ public class MemberController {
                                         .getFcmToken())
                         .title(memberCreateNoticeReqDto.getNoticeTitle())
                         .body(memberCreateNoticeReqDto.getNoticeContent())
-                        .category("회원 알림")
+                        .category(memberCreateNoticeReqDto.getNoticeCategory())
                         .build());
 
         return ResponseEntity.ok(MemberCreateNoticeResDto.builder().build());
@@ -246,35 +249,51 @@ public class MemberController {
                                                                 BaseExceptionResponse.class)))
             })
     public ResponseEntity<MemberReadNoticesResDto> readNotices() {
-        return ResponseEntity.ok(
-                MemberReadNoticesResDto.builder()
-                        .data(
-                                MemberReadNoticesResDto.Data.builder()
-                                        .notices(
-                                                memberService
-                                                        .readNotices(
-                                                                jwtUtils.getMember().getMemberIdx())
-                                                        .stream()
-                                                        .map(
-                                                                notice ->
-                                                                        MemberReadNoticesResDto.Data
-                                                                                .Notice.builder()
-                                                                                .noticeIdx(
-                                                                                        notice
-                                                                                                .getNoticeIdx())
-                                                                                .noticeTitle(
-                                                                                        notice
-                                                                                                .getNoticeTitle())
-                                                                                .noticeContent(
-                                                                                        notice
-                                                                                                .getNoticeContent())
-                                                                                .noticeCategory(
-                                                                                        notice
-                                                                                                .getNoticeCategory())
-                                                                                .build())
-                                                        .toList())
-                                        .build())
-                        .build());
+        List<MemberReadNoticesResDto.Notices> noticesList =
+                memberService.readNotices(jwtUtils.getMember().getMemberIdx()).stream()
+                        .collect(
+                                Collectors.groupingBy(
+                                        notice -> notice.getCreatedAt().toLocalDate()))
+                        .entrySet()
+                        .stream()
+                        .map(
+                                entry ->
+                                        MemberReadNoticesResDto.Notices.builder()
+                                                .noticeCreatedAt(entry.getKey().toString())
+                                                .notices(
+                                                        entry.getValue().stream()
+                                                                .sorted(
+                                                                        Comparator.comparing(
+                                                                                        Notice
+                                                                                                ::getCreatedAt)
+                                                                                .reversed())
+                                                                .map(
+                                                                        notice ->
+                                                                                MemberReadNoticesResDto
+                                                                                        .Notices
+                                                                                        .Notice
+                                                                                        .builder()
+                                                                                        .noticeIdx(
+                                                                                                notice
+                                                                                                        .getNoticeIdx())
+                                                                                        .noticeTitle(
+                                                                                                notice
+                                                                                                        .getNoticeTitle())
+                                                                                        .noticeCategory(
+                                                                                                notice
+                                                                                                        .getNoticeCategory())
+                                                                                        .noticeContent(
+                                                                                                notice
+                                                                                                        .getNoticeContent())
+                                                                                        .noticeCreatedAt(
+                                                                                                notice
+                                                                                                        .getCreatedAt())
+                                                                                        .build())
+                                                                .collect(Collectors.toList()))
+                                                .build())
+                        .collect(Collectors.toList());
+
+        return ResponseEntity.ok(MemberReadNoticesResDto.builder().data(noticesList).build());
     }
 
     @MethodInfo(name = "deleteNotice", description = "회원 알림을 삭제합니다.")
