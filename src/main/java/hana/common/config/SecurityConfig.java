@@ -53,6 +53,7 @@ public class SecurityConfig extends AbstractHttpConfigurer<SecurityConfig, HttpS
                 .addFilterBefore(
                         new JwtAuthenticationFilter(jwtTokenProvider),
                         UsernamePasswordAuthenticationFilter.class)
+                .headers(headers -> headers.frameOptions().disable())
                 .formLogin(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable);
 
