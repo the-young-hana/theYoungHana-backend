@@ -2,11 +2,15 @@ package hana.account.service;
 
 import hana.account.domain.Account;
 import hana.account.domain.AccountRepository;
+import hana.account.dto.AccountPwCheckReqDto;
+import hana.account.dto.AccountPwCheckResDto;
 import hana.account.dto.AccountReadResDto;
+import hana.member.domain.Member;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AccountService {
@@ -65,6 +69,26 @@ public class AccountService {
             throw new IllegalArgumentException("잔액이 부족합니다.");
         }
         account.withdraw(amount); // dynamic update
+    }
+
+    @Transactional
+    public AccountPwCheckResDto checkAccountPw(Member member, AccountPwCheckReqDto dto) {
+        System.out.println(dto.getAccountIdx() + " " + dto.getAccountPw() + "~~~");
+        Account account = findByAccountIdx(dto.getAccountIdx());
+
+        System.out.println(
+                account.getMember().getMemberIdx() + " " + member.getMemberIdx() + "~~~");
+
+        if (!account.getMember().getMemberIdx().equals(member.getMemberIdx())) {
+            throw new IllegalArgumentException("본인 계좌에서만 출금이 가능합니다.");
+        }
+
+        return AccountPwCheckResDto.builder()
+                .data(
+                        AccountPwCheckResDto.Data.builder()
+                                .isPwCorrect(account.getAccountPw().equals(dto.getAccountPw()))
+                                .build())
+                .build();
     }
 
     public AccountService(AccountRepository accountRepository) {
