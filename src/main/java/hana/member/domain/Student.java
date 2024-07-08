@@ -49,4 +49,8 @@ public class Student extends BaseEntity {
 
     @Column(name = "student_grade", nullable = false)
     private int studentGrade;
+
+    public boolean getStudentIsAdmin() {
+        return studentIsAdmin;
+    }
 }

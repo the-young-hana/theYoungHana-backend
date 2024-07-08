@@ -59,7 +59,7 @@ public class StudentService {
     }
 
     public void checkIsAdmin() {
-        if (!jwtUtils.getStudent().isStudentIsAdmin()) throw new AccessDeniedCustomException();
+        if (!jwtUtils.getStudent().getStudentIsAdmin()) throw new AccessDeniedCustomException();
     }
 
     @Builder
