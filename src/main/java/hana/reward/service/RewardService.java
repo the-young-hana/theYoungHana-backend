@@ -2,6 +2,7 @@ package hana.reward.service;
 
 import hana.college.domain.DeptRepository;
 import hana.common.annotation.TypeInfo;
+import hana.common.entity.BaseTimeEntity;
 import hana.member.domain.Student;
 import hana.member.domain.StudentRepository;
 import hana.reward.domain.*;
@@ -146,6 +147,7 @@ public class RewardService {
         ZoneId koreaZoneId = ZoneId.of("Asia/Seoul");
         LocalDate date = LocalDate.now(koreaZoneId);
 
+
         Long findMyDeptPoints = deptRepository.findDeptPointByDeptIdx(deptIdx);
         Long findMyPoints = studentRepository.findStudentPointByStudentIdx(studentIdx);
 
@@ -182,6 +184,8 @@ public class RewardService {
     private boolean checkQuizHistory(Long studentIdx, LocalDate date) {
         List<RewardHistory> findRewardHistories =
                 rewardHistoryRepository.findHistoryByDate(studentIdx, date);
+
+
         return findRewardHistories.stream()
                 .anyMatch(
                         history -> history.getRewardCategory() == RewardHistoryCategoryEnumType.퀴즈);
@@ -190,6 +194,10 @@ public class RewardService {
     private boolean checkPresentHistory(Long studentIdx, LocalDate date) {
         List<RewardHistory> findRewardHistories =
                 rewardHistoryRepository.findHistoryByDate(studentIdx, date);
+        System.out.println("~~~date " + date);
+        System.out.println("~~~size " + findRewardHistories.size());
+        System.out.println("~~~createdAt " + findRewardHistories.get(0).getCreatedAt());
+        System.out.println("~~~");
         return findRewardHistories.stream()
                 .anyMatch(
                         history -> history.getRewardCategory() == RewardHistoryCategoryEnumType.선물);
