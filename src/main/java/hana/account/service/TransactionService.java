@@ -21,8 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class TransactionService {
     private final AccountService accountService;
-    private final DeptService deptService;
     private final TransactionRepository transactionRepository;
+    private final DeptService deptService;
     private final JwtUtils jwtUtils;
 
     @Transactional
@@ -30,15 +30,14 @@ public class TransactionService {
 
         // 내 계좌 출금, 거래 내역 생성(출금)
         Account myAccount = accountService.findByAccountIdx(dto.getMyAccountIdx());
+        Long deptIdx = jwtUtils.getStudent().getDept().getDeptIdx();
 
-        // 내 계좌인지 확인
+        // 내 계좌인지 확인 및 출금
         if (!Objects.equals(
                 myAccount.getMember().getMemberIdx(), jwtUtils.getMember().getMemberIdx())) {
-
             throw new AccessDeniedCustomException();
         }
-
-        accountService.withdraw(dto.getMyAccountIdx(), dto.getAmount(), dto.getDeptIdx());
+        accountService.withdraw(dto.getMyAccountIdx(), dto.getAmount(), deptIdx);
 
         // 학과 계좌 입금
         Account receiveAccount;
@@ -51,8 +50,7 @@ public class TransactionService {
             receiveAccount = accountService.findByAccountNumber(dto.getReceiveAccount());
         }
 
-        accountService.deposit(
-                receiveAccount.getAccountNumber(), dto.getAmount(), dto.getDeptIdx());
+        accountService.deposit(receiveAccount.getAccountNumber(), dto.getAmount(), deptIdx);
 
         // 거래 내역 생성(출금)
         transactionRepository.save(
@@ -81,7 +79,7 @@ public class TransactionService {
                         TransactionsRemitCreateResDto.Data.builder()
                                 .myAccountName(myAccount.getAccountName())
                                 .amount(dto.getAmount())
-                                .receiverName(receiveAccount.getMember().getMemberName())
+                                .receiverName(receiveAccount.getAccountName())
                                 .build())
                 .build();
     }

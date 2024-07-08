@@ -43,7 +43,7 @@ public class DeptService {
 
         return new DeptAccountInfoDto(
                 dept.getDeptName(),
-                account.getAccountNumber(),
+                dept.getDeptAccountNumber(), // 학과 가상 계좌번호
                 account.getAccountBalance(),
                 accountIdx);
     }

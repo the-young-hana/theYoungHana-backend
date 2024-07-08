@@ -92,7 +92,7 @@ public class TransactionController {
     @MethodInfo(name = "remit", description = "송금")
     @PostMapping("/transactions")
     @Operation(
-            summary = "입금",
+            summary = "학과 계좌 송금",
             description = "학과 이벤트 입금 요청에 따른 송금을 진행합니다.",
             method = "Post",
             requestBody =
