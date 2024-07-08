@@ -5,10 +5,10 @@ import hana.account.dto.DeptAccountTransactionResDto;
 import hana.account.service.TransactionService;
 import hana.college.service.DeptService;
 import hana.common.annotation.TypeInfo;
-import hana.common.exception.AccessDeniedCustomException;
 import hana.common.utils.ImageUtils;
 import hana.common.utils.JwtUtils;
 import hana.member.domain.Student;
+import hana.member.service.StudentService;
 import hana.story.domain.Story;
 import hana.story.domain.StoryRepository;
 import hana.story.dto.*;
@@ -32,6 +32,7 @@ public class StoryService {
     private final TransactionService transactionService;
     private final TransactionDetailService transactionDetailService;
     private final DeptService deptService;
+    private final StudentService studentService;
     private final ImageUtils imageUtils;
     private final JwtUtils jwtUtils;
 
@@ -97,7 +98,7 @@ public class StoryService {
     @Transactional
     public StoryReadResDto createStory(StoryCreateReqDto reqDto, List<MultipartFile> imgs) {
 
-        checkIsAdmin();
+        studentService.checkIsAdmin();
 
         Story story =
                 Story.builder()
@@ -121,7 +122,7 @@ public class StoryService {
 
     @Transactional
     public StoryReadResDto updateStory(Long storyIdx, StoryUpdateReqDto reqDto) {
-        checkIsAdmin();
+        studentService.checkIsAdmin();
         Story story = findByStoryIdx(storyIdx);
         story.update(reqDto);
 
@@ -136,7 +137,7 @@ public class StoryService {
 
     @Transactional
     public StoryDeleteResDto deleteStory(Long storyIdx) {
-        checkIsAdmin();
+        studentService.checkIsAdmin();
         // 스토리 삭제
         Story story = findByStoryIdx(storyIdx);
         story.delete();
@@ -199,10 +200,6 @@ public class StoryService {
                 .build();
     }
 
-    private void checkIsAdmin() {
-        if (!jwtUtils.getStudent().isStudentIsAdmin()) throw new AccessDeniedCustomException();
-    }
-
     public StoryService(
             StoryRepository storyRepository,
             JwtUtils jwtUtils,
@@ -211,6 +208,7 @@ public class StoryService {
             TransactionService transactionService,
             TransactionDetailService transactionDetailService,
             DeptService deptService,
+            StudentService studentService,
             ImageUtils imageUtils) {
         this.storyRepository = storyRepository;
         this.jwtUtils = jwtUtils;
@@ -219,6 +217,7 @@ public class StoryService {
         this.transactionService = transactionService;
         this.transactionDetailService = transactionDetailService;
         this.deptService = deptService;
+        this.studentService = studentService;
         this.imageUtils = imageUtils;
     }
 }
