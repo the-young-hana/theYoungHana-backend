@@ -1,6 +1,5 @@
 package hana.event.dto;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,12 +10,12 @@ import lombok.NoArgsConstructor;
 public class EventCreateReqDto {
     private String eventTitle;
     private String eventType;
-    private LocalDateTime eventStart;
-    private LocalDateTime eventEnd;
-    private LocalDateTime eventDt;
+    private String eventStart;
+    private String eventEnd;
+    private String eventDt;
     private Long eventFee;
-    private LocalDateTime eventFeeStart;
-    private LocalDateTime eventFeeEnd;
+    private String eventFeeStart;
+    private String eventFeeEnd;
     private String eventContent;
     private Long eventLimit;
     private List<EventPrize> eventPrizeList;
@@ -25,12 +24,12 @@ public class EventCreateReqDto {
     public EventCreateReqDto(
             String eventTitle,
             String eventType,
-            LocalDateTime eventStart,
-            LocalDateTime eventEnd,
-            LocalDateTime eventDt,
+            String eventStart,
+            String eventEnd,
+            String eventDt,
             Long eventFee,
-            LocalDateTime eventFeeStart,
-            LocalDateTime eventFeeEnd,
+            String eventFeeStart,
+            String eventFeeEnd,
             String eventContent,
             Long eventLimit,
             List<EventPrize> eventPrizeList) {
