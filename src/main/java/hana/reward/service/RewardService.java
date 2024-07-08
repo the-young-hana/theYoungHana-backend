@@ -140,7 +140,8 @@ public class RewardService {
     }
 
     public RewardReadResDto getMyContribution(Long studentIdx, Long deptIdx) {
-        LocalDate date = LocalDate.now();
+        ZoneId koreaZoneId = ZoneId.of("Asia/Seoul");
+        LocalDate date = LocalDate.now(koreaZoneId);
 
         Long findMyDeptPoints = deptRepository.findDeptPointByDeptIdx(deptIdx);
         Long findMyPoints = studentRepository.findStudentPointByStudentIdx(studentIdx);
