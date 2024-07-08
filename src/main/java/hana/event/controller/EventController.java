@@ -300,11 +300,26 @@ public class EventController {
             throw new EventCreateOnlyAdminException();
         }
 
-        LocalDateTime eventStart = LocalDateTime.parse(eventCreateReqDto.getEventStart());
-        LocalDateTime eventEnd = LocalDateTime.parse(eventCreateReqDto.getEventEnd());
-        LocalDateTime eventDt = LocalDateTime.parse(eventCreateReqDto.getEventDt());
-        LocalDateTime eventFeeStart = LocalDateTime.parse(eventCreateReqDto.getEventFeeStart());
-        LocalDateTime eventFeeEnd = LocalDateTime.parse(eventCreateReqDto.getEventFeeEnd());
+        LocalDateTime eventStart =
+                LocalDateTime.parse(
+                        eventCreateReqDto.getEventStart(),
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime eventEnd =
+                LocalDateTime.parse(
+                        eventCreateReqDto.getEventEnd(),
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime eventDt =
+                LocalDateTime.parse(
+                        eventCreateReqDto.getEventDt(),
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime eventFeeStart =
+                LocalDateTime.parse(
+                        eventCreateReqDto.getEventFeeStart(),
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime eventFeeEnd =
+                LocalDateTime.parse(
+                        eventCreateReqDto.getEventFeeEnd(),
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
         if (eventStart.isBefore(LocalDateTime.now())) {
             throw new EventStartInvalidException();
@@ -492,11 +507,26 @@ public class EventController {
             throw new InProgressEventException();
         }
 
-        LocalDateTime eventStart = LocalDateTime.parse(eventUpdateReqDto.getEventStart());
-        LocalDateTime eventEnd = LocalDateTime.parse(eventUpdateReqDto.getEventEnd());
-        LocalDateTime eventDt = LocalDateTime.parse(eventUpdateReqDto.getEventDt());
-        LocalDateTime eventFeeStart = LocalDateTime.parse(eventUpdateReqDto.getEventFeeStart());
-        LocalDateTime eventFeeEnd = LocalDateTime.parse(eventUpdateReqDto.getEventFeeEnd());
+        LocalDateTime eventStart =
+                LocalDateTime.parse(
+                        eventUpdateReqDto.getEventStart(),
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime eventEnd =
+                LocalDateTime.parse(
+                        eventUpdateReqDto.getEventEnd(),
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime eventDt =
+                LocalDateTime.parse(
+                        eventUpdateReqDto.getEventDt(),
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime eventFeeStart =
+                LocalDateTime.parse(
+                        eventUpdateReqDto.getEventFeeStart(),
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime eventFeeEnd =
+                LocalDateTime.parse(
+                        eventUpdateReqDto.getEventFeeEnd(),
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
         if (eventStart.isBefore(LocalDateTime.now())) {
             throw new EventStartInvalidException();
