@@ -2,7 +2,6 @@ package hana.reward.service;
 
 import hana.college.domain.DeptRepository;
 import hana.common.annotation.TypeInfo;
-import hana.common.entity.BaseTimeEntity;
 import hana.member.domain.Student;
 import hana.member.domain.StudentRepository;
 import hana.reward.domain.*;
@@ -147,7 +146,6 @@ public class RewardService {
         ZoneId koreaZoneId = ZoneId.of("Asia/Seoul");
         LocalDate date = LocalDate.now(koreaZoneId);
 
-
         Long findMyDeptPoints = deptRepository.findDeptPointByDeptIdx(deptIdx);
         Long findMyPoints = studentRepository.findStudentPointByStudentIdx(studentIdx);
 
@@ -184,7 +182,6 @@ public class RewardService {
     private boolean checkQuizHistory(Long studentIdx, LocalDate date) {
         List<RewardHistory> findRewardHistories =
                 rewardHistoryRepository.findHistoryByDate(studentIdx, date);
-
 
         return findRewardHistories.stream()
                 .anyMatch(
