@@ -45,7 +45,7 @@ public class AccountService {
                 .orElseThrow(() -> new IllegalArgumentException("올바르지 않은 계좌 정보입니다."));
     }
 
-    // 하나은행 입금
+    // 학과 계좌 입금
     @CacheEvict(
             value = "DeptAccountInfoDto",
             key = "'deptAccount' + #deptIdx",

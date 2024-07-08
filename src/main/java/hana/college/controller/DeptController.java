@@ -5,6 +5,7 @@ import hana.college.service.DeptService;
 import hana.common.annotation.MethodInfo;
 import hana.common.annotation.TypeInfo;
 import hana.common.exception.BaseExceptionResponse;
+import hana.common.utils.JwtUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/v1")
 public class DeptController {
     private final DeptService deptService;
+    private final JwtUtils jwtUtils;
 
     @MethodInfo(name = "readDeptInfo", description = "학과 계좌 정보를 조회합니다.")
     @GetMapping("/dept")
@@ -64,13 +66,17 @@ public class DeptController {
                                                         implementation =
                                                                 BaseExceptionResponse.class)))
             })
-    public ResponseEntity<DeptInfoReadResDto> readTransactions() {
-
+    public ResponseEntity<DeptInfoReadResDto> readDeptInfo() {
         return ResponseEntity.ok(
-                DeptInfoReadResDto.builder().data(deptService.getDeptAccountInfo(1L)).build());
+                DeptInfoReadResDto.builder()
+                        .data(
+                                deptService.getDeptAccountInfo(
+                                        jwtUtils.getStudent().getDept().getDeptIdx()))
+                        .build());
     }
 
-    public DeptController(DeptService deptService) {
+    public DeptController(DeptService deptService, JwtUtils jwtUtils) {
         this.deptService = deptService;
+        this.jwtUtils = jwtUtils;
     }
 }
