@@ -8,6 +8,7 @@ import hana.reward.domain.*;
 import hana.reward.dto.*;
 import hana.reward.exception.PresentException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
@@ -181,7 +182,8 @@ public class RewardService {
     // 참여 내역 조회
     private boolean checkQuizHistory(Long studentIdx, LocalDate date) {
         List<RewardHistory> findRewardHistories =
-                rewardHistoryRepository.findHistoryByDate(studentIdx, date);
+                rewardHistoryRepository.findHistoryByDate(
+                        studentIdx, date.atStartOfDay(), date.atTime(LocalTime.MAX));
 
         return findRewardHistories.stream()
                 .anyMatch(
@@ -189,8 +191,10 @@ public class RewardService {
     }
 
     private boolean checkPresentHistory(Long studentIdx, LocalDate date) {
+
         List<RewardHistory> findRewardHistories =
-                rewardHistoryRepository.findHistoryByDate(studentIdx, date);
+                rewardHistoryRepository.findHistoryByDate(
+                        studentIdx, date.atStartOfDay(), date.atTime(LocalTime.MAX));
         System.out.println("~~~date " + date);
         System.out.println("~~~size " + findRewardHistories.size());
         //        System.out.println("~~~createdAt " + findRewardHistories.get(0).getCreatedAt());
