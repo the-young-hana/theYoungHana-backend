@@ -163,7 +163,7 @@ public class StoryService {
     }
 
     private List<String> makeImgList(String storyImageList) {
-        Matcher matcher = Pattern.compile("https?://[^,\\s]+.png").matcher(storyImageList);
+        Matcher matcher = Pattern.compile("https?://[^,\\s]+\\.(png|jpg)").matcher(storyImageList);
 
         List<String> imageList = new ArrayList<>();
 
