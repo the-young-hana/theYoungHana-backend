@@ -300,23 +300,29 @@ public class EventController {
             throw new EventCreateOnlyAdminException();
         }
 
-        if (eventCreateReqDto.getEventStart().isBefore(LocalDateTime.now())) {
+        LocalDateTime eventStart = LocalDateTime.parse(eventCreateReqDto.getEventStart());
+        LocalDateTime eventEnd = LocalDateTime.parse(eventCreateReqDto.getEventEnd());
+        LocalDateTime eventDt = LocalDateTime.parse(eventCreateReqDto.getEventDt());
+        LocalDateTime eventFeeStart = LocalDateTime.parse(eventCreateReqDto.getEventFeeStart());
+        LocalDateTime eventFeeEnd = LocalDateTime.parse(eventCreateReqDto.getEventFeeEnd());
+
+        if (eventStart.isBefore(LocalDateTime.now())) {
             throw new EventStartInvalidException();
         }
 
-        if (eventCreateReqDto.getEventEnd().isBefore(eventCreateReqDto.getEventStart())) {
+        if (eventEnd.isBefore(eventStart)) {
             throw new EventEndInvalidException();
         }
 
-        if (eventCreateReqDto.getEventDt().isBefore(eventCreateReqDto.getEventEnd())) {
+        if (eventDt.isBefore(eventEnd)) {
             throw new EventDateInvalidException();
         }
 
-        if (eventCreateReqDto.getEventFeeStart().isBefore(LocalDateTime.now())) {
+        if (eventFeeStart.isBefore(LocalDateTime.now())) {
             throw new EventFeeStartInvalidException();
         }
 
-        if (eventCreateReqDto.getEventFeeEnd().isBefore(eventCreateReqDto.getEventFeeStart())) {
+        if (eventFeeEnd.isBefore(eventFeeStart)) {
             throw new EventFeeEndInvalidException();
         }
 
@@ -325,12 +331,12 @@ public class EventController {
                         Event.builder()
                                 .eventTitle(eventCreateReqDto.getEventTitle())
                                 .eventContent(eventCreateReqDto.getEventContent())
-                                .eventStartDatetime(eventCreateReqDto.getEventStart())
-                                .eventEndDatetime(eventCreateReqDto.getEventEnd())
-                                .eventDatetime(eventCreateReqDto.getEventDt())
+                                .eventStartDatetime(eventStart)
+                                .eventEndDatetime(eventEnd)
+                                .eventDatetime(eventDt)
                                 .eventFee(eventCreateReqDto.getEventFee())
-                                .eventFeeStartDatetime(eventCreateReqDto.getEventFeeStart())
-                                .eventFeeEndDatetime(eventCreateReqDto.getEventFeeEnd())
+                                .eventFeeStartDatetime(eventFeeStart)
+                                .eventFeeEndDatetime(eventFeeEnd)
                                 .eventLimit(eventCreateReqDto.getEventLimit())
                                 .eventType(EventEnumType.valueOf(eventCreateReqDto.getEventType()))
                                 .dept(jwtUtils.getStudent().getDept())
@@ -486,23 +492,29 @@ public class EventController {
             throw new InProgressEventException();
         }
 
-        if (eventUpdateReqDto.getEventStart().isBefore(LocalDateTime.now())) {
+        LocalDateTime eventStart = LocalDateTime.parse(eventUpdateReqDto.getEventStart());
+        LocalDateTime eventEnd = LocalDateTime.parse(eventUpdateReqDto.getEventEnd());
+        LocalDateTime eventDt = LocalDateTime.parse(eventUpdateReqDto.getEventDt());
+        LocalDateTime eventFeeStart = LocalDateTime.parse(eventUpdateReqDto.getEventFeeStart());
+        LocalDateTime eventFeeEnd = LocalDateTime.parse(eventUpdateReqDto.getEventFeeEnd());
+
+        if (eventStart.isBefore(LocalDateTime.now())) {
             throw new EventStartInvalidException();
         }
 
-        if (eventUpdateReqDto.getEventEnd().isBefore(eventUpdateReqDto.getEventStart())) {
+        if (eventEnd.isBefore(eventStart)) {
             throw new EventEndInvalidException();
         }
 
-        if (eventUpdateReqDto.getEventDt().isBefore(eventUpdateReqDto.getEventEnd())) {
+        if (eventDt.isBefore(eventEnd)) {
             throw new EventDateInvalidException();
         }
 
-        if (eventUpdateReqDto.getEventFeeStart().isBefore(LocalDateTime.now())) {
+        if (eventFeeStart.isBefore(LocalDateTime.now())) {
             throw new EventFeeStartInvalidException();
         }
 
-        if (eventUpdateReqDto.getEventFeeEnd().isBefore(eventUpdateReqDto.getEventFeeStart())) {
+        if (eventFeeEnd.isBefore(eventFeeStart)) {
             throw new EventFeeEndInvalidException();
         }
 
@@ -522,12 +534,12 @@ public class EventController {
                         Event.builder()
                                 .eventTitle(eventUpdateReqDto.getEventTitle())
                                 .eventContent(eventUpdateReqDto.getEventContent())
-                                .eventStartDatetime(eventUpdateReqDto.getEventStart())
-                                .eventEndDatetime(eventUpdateReqDto.getEventEnd())
-                                .eventDatetime(eventUpdateReqDto.getEventDt())
+                                .eventStartDatetime(eventStart)
+                                .eventEndDatetime(eventEnd)
+                                .eventDatetime(eventDt)
                                 .eventFee(eventUpdateReqDto.getEventFee())
-                                .eventFeeStartDatetime(eventUpdateReqDto.getEventFeeStart())
-                                .eventFeeEndDatetime(eventUpdateReqDto.getEventFeeEnd())
+                                .eventFeeStartDatetime(eventFeeStart)
+                                .eventFeeEndDatetime(eventFeeEnd)
                                 .eventLimit(eventUpdateReqDto.getEventLimit())
                                 .eventType(EventEnumType.valueOf(eventUpdateReqDto.getEventType()))
                                 .dept(currentEvent.getDept())
