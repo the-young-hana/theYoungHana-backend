@@ -21,7 +21,7 @@ public class DeptController {
     private final DeptService deptService;
 
     @MethodInfo(name = "readDeptInfo", description = "학과 계좌 정보를 조회합니다.")
-    @GetMapping("/dept/{deptIdx}")
+    @GetMapping("/dept")
     @Operation(
             summary = "학과 계좌 조회",
             description = "학과 계좌 정보를 조회합니다.",
@@ -64,10 +64,10 @@ public class DeptController {
                                                         implementation =
                                                                 BaseExceptionResponse.class)))
             })
-    public ResponseEntity<DeptInfoReadResDto> readTransactions(
-            @PathVariable("deptIdx") Long deptIdx) {
+    public ResponseEntity<DeptInfoReadResDto> readTransactions() {
+
         return ResponseEntity.ok(
-                DeptInfoReadResDto.builder().data(deptService.getDeptAccountInfo(deptIdx)).build());
+                DeptInfoReadResDto.builder().data(deptService.getDeptAccountInfo(1L)).build());
     }
 
     public DeptController(DeptService deptService) {
