@@ -182,6 +182,7 @@ public class RewardService {
     private boolean checkQuizHistory(Long studentIdx, LocalDate date) {
         List<RewardHistory> findRewardHistories =
                 rewardHistoryRepository.findHistoryByDate(studentIdx, date);
+
         return findRewardHistories.stream()
                 .anyMatch(
                         history -> history.getRewardCategory() == RewardHistoryCategoryEnumType.퀴즈);
@@ -190,6 +191,10 @@ public class RewardService {
     private boolean checkPresentHistory(Long studentIdx, LocalDate date) {
         List<RewardHistory> findRewardHistories =
                 rewardHistoryRepository.findHistoryByDate(studentIdx, date);
+        System.out.println("~~~date " + date);
+        System.out.println("~~~size " + findRewardHistories.size());
+        System.out.println("~~~createdAt " + findRewardHistories.get(0).getCreatedAt());
+        System.out.println("~~~");
         return findRewardHistories.stream()
                 .anyMatch(
                         history -> history.getRewardCategory() == RewardHistoryCategoryEnumType.선물);
