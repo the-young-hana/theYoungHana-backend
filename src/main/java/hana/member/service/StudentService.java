@@ -17,6 +17,7 @@ public class StudentService {
 
     @MethodInfo(name = "findStudentByMemberIdx", description = "회원 번호로 학생 정보를 조회합니다.")
     public Student findStudentByMemberIdx(Member member) {
+
         return studentRepository.findByMember(member);
     }
 

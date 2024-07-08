@@ -96,6 +96,17 @@ public class MemberController {
                 studentService.findStudentByMemberIdx(
                         memberService.findByMemberPw(memberLoginReqDto.getPassword()));
 
+        if (student == null) {
+            return ResponseEntity.ok(
+                    MemberLoginResDto.builder()
+                            .data(
+                                    MemberLoginResDto.Data.builder()
+                                            .accessToken(jwtToken.getAccessToken())
+                                            .refreshToken(jwtToken.getRefreshToken())
+                                            .build())
+                            .build());
+        }
+
         memberTokenService.save(
                 MemberToken.builder()
                         .memberIdx(student.getMember().getMemberIdx())
@@ -126,9 +137,56 @@ public class MemberController {
                                 MemberLoginResDto.Data.builder()
                                         .accessToken(jwtToken.getAccessToken())
                                         .refreshToken(jwtToken.getRefreshToken())
-                                        .deptIdx(student.getDept().getDeptIdx())
                                         .build())
                         .build());
+    }
+
+    @MethodInfo(name = "studentLogin", description = "더영하나 로그인을 실행합니다.")
+    @PostMapping("/student/login")
+    @Operation(
+            summary = "더영하나 로그인",
+            description = "더영하나 로그인을 실행합니다.",
+            method = "POST",
+            responses = {
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "더영하나 로그인 성공",
+                        content =
+                                @Content(
+                                        schema =
+                                                @Schema(
+                                                        implementation =
+                                                                StudentLoginResDto.class))),
+                @ApiResponse(
+                        responseCode = "400",
+                        description = "회원 간편 로그인 실패",
+                        content =
+                                @Content(
+                                        schema =
+                                                @Schema(
+                                                        implementation =
+                                                                BaseExceptionResponse.class))),
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "접근 권한 없음",
+                        content =
+                                @Content(
+                                        schema =
+                                                @Schema(
+                                                        implementation =
+                                                                BaseExceptionResponse.class))),
+                @ApiResponse(
+                        responseCode = "500",
+                        description = "서버 오류",
+                        content =
+                                @Content(
+                                        schema =
+                                                @Schema(
+                                                        implementation =
+                                                                BaseExceptionResponse.class)))
+            })
+    public ResponseEntity<StudentLoginResDto> theYoungHanaLogin() {
+        return ResponseEntity.ok(StudentLoginResDto.builder().build());
     }
 
     @MethodInfo(name = "createNotice", description = "회원 알림을 생성합니다.")
