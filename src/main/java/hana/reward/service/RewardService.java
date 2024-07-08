@@ -193,8 +193,12 @@ public class RewardService {
                 rewardHistoryRepository.findHistoryByDate(studentIdx, date);
         System.out.println("~~~date " + date);
         System.out.println("~~~size " + findRewardHistories.size());
-        System.out.println("~~~createdAt " + findRewardHistories.get(0).getCreatedAt());
+        //        System.out.println("~~~createdAt " + findRewardHistories.get(0).getCreatedAt());
         System.out.println("~~~");
+        List<RewardHistory> testList = rewardHistoryRepository.testList(studentIdx);
+        for (RewardHistory rewardHistory : testList) {
+            System.out.println("~~~" + rewardHistory.getCreatedAt());
+        }
         return findRewardHistories.stream()
                 .anyMatch(
                         history -> history.getRewardCategory() == RewardHistoryCategoryEnumType.선물);

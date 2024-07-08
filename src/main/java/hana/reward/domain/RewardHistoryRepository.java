@@ -16,4 +16,9 @@ public interface RewardHistoryRepository extends JpaRepository<RewardHistory, Lo
                     "SELECT * FROM reward_histories r WHERE student_idx = :studentIdx AND DATE(created_at) = :date",
             nativeQuery = true)
     List<RewardHistory> findHistoryByDate(Long studentIdx, LocalDate date);
+
+    @Query(
+            value = "SELECT * FROM reward_histories r WHERE student_idx = :studentIdx",
+            nativeQuery = true)
+    List<RewardHistory> testList(Long studentIdx);
 }
