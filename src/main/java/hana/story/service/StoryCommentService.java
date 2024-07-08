@@ -3,6 +3,9 @@ package hana.story.service;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import hana.common.utils.JwtUtils;
+import hana.member.domain.Student;
+import hana.member.domain.StudentRepository;
 import hana.story.domain.*;
 import hana.story.dto.*;
 import java.util.ArrayList;
@@ -16,15 +19,21 @@ import org.springframework.transaction.annotation.Transactional;
 public class StoryCommentService {
     private final StoryCommentRepository storyCommentRepository;
     private final StoryRepository storyRepository;
+    private final StudentRepository studentRepository;
     private final JPAQueryFactory queryFactory;
+    private final JwtUtils jwtUtils;
 
     public StoryCommentService(
             StoryCommentRepository storyCommentRepository,
             StoryRepository storyRepository,
-            JPAQueryFactory queryFactory) {
+            StudentRepository studentRepository,
+            JPAQueryFactory queryFactory,
+            JwtUtils jwtUtils) {
         this.storyCommentRepository = storyCommentRepository;
         this.storyRepository = storyRepository;
+        this.studentRepository = studentRepository;
         this.queryFactory = queryFactory;
+        this.jwtUtils = jwtUtils;
     }
 
     public StoryRepresentativeCommentResDto getStoryComment(Long storyIdx) {
@@ -51,7 +60,7 @@ public class StoryCommentService {
                                 comment -> {
                                     List<StoryReadCommentsResDto.Data.Reply> replies =
                                             storyCommentRepository
-                                                    .findAllByStoryCommentParent_StoryCommentIdxAndDeletedYnFalse(
+                                                    .findAllByStoryCommentParent_StoryCommentIdx(
                                                             comment.getCommentIdx())
                                                     .stream()
                                                     .map(
@@ -70,7 +79,20 @@ public class StoryCommentService {
                                                                                             : null)
                                                                             .commentContent(
                                                                                     reply
-                                                                                            .getStoryCommentContent())
+                                                                                                    .isDeletedYn()
+                                                                                            ? "삭제된 댓글입니다"
+                                                                                            : reply
+                                                                                                    .getStoryCommentContent())
+                                                                            .studentNickname(
+                                                                                    getStudentNicknameByMemberId(
+                                                                                            reply.getCreatedBy()
+                                                                                                    .getMemberIdx()))
+                                                                            .createdAt(
+                                                                                    reply
+                                                                                            .getCreatedAt())
+                                                                            .createdBy(
+                                                                                    reply.getCreatedBy()
+                                                                                            .getMemberIdx())
                                                                             .build())
                                                     .sorted(
                                                             (r1, r2) ->
@@ -84,8 +106,17 @@ public class StoryCommentService {
 
                                     return StoryReadCommentsResDto.Data.builder()
                                             .commentIdx(comment.getCommentIdx())
-                                            .commentContent(comment.getCommentContent())
+                                            .commentContent(
+                                                    comment.isDeletedYn()
+                                                            ? "삭제된 댓글입니다"
+                                                            : comment.getCommentContent())
                                             .replyList(replies)
+                                            .replyList(replies)
+                                            .studentNickname(
+                                                    getStudentNicknameByMemberId(
+                                                            comment.getCreatedBy()))
+                                            .createdAt(comment.getCreatedAt())
+                                            .createdBy(comment.getCreatedBy())
                                             .build();
                                 })
                         .sorted((c1, c2) -> c1.getCommentIdx().compareTo(c2.getCommentIdx()))
@@ -103,13 +134,14 @@ public class StoryCommentService {
                                 StoryCommentPaginationDto.class,
                                 storyComment.storyCommentIdx,
                                 storyComment.storyCommentContent,
-                                storyComment.createdAt))
+                                storyComment.createdAt,
+                                storyComment.createdBy.memberIdx,
+                                storyComment.deletedYn))
                 .from(storyComment)
                 .where(
                         gtCommentId(lastCommentIdx),
                         storyComment.story.storyIdx.eq(storyIdx),
-                        storyComment.storyCommentParent.isNull(),
-                        storyComment.deletedYn.isFalse())
+                        storyComment.storyCommentParent.isNull())
                 .orderBy(storyComment.storyCommentIdx.asc())
                 .limit(pageSize)
                 .fetch();
@@ -120,6 +152,11 @@ public class StoryCommentService {
             return null;
         }
         return QStoryComment.storyComment.storyCommentIdx.gt(commentId);
+    }
+
+    private String getStudentNicknameByMemberId(Long memberId) {
+        Student student = studentRepository.findByMember_MemberIdx(memberId);
+        return student != null ? student.getStudentNickname() : "Unknown";
     }
 
     @Transactional

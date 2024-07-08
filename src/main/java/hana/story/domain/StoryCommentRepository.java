@@ -18,6 +18,5 @@ public interface StoryCommentRepository extends JpaRepository<StoryComment, Long
     List<StoryComment> findAllByStory_StoryIdxAndStoryCommentParentIsNullAndDeletedYnFalse(
             Long storyIdx, Pageable pageable);
 
-    List<StoryComment> findAllByStoryCommentParent_StoryCommentIdxAndDeletedYnFalse(
-            Long storyCommentParentIdx);
+    List<StoryComment> findAllByStoryCommentParent_StoryCommentIdx(Long storyCommentParentIdx);
 }

@@ -8,6 +8,7 @@ import hana.reward.domain.*;
 import hana.reward.dto.*;
 import hana.reward.exception.PresentException;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -25,7 +26,8 @@ public class RewardService {
 
     // 퀴즈 보여주기
     public RewardQuestionQuizResDto getRandomQuiz(Long studentIdx) {
-        LocalDate date = LocalDate.now();
+        ZoneId koreaZoneId = ZoneId.of("Asia/Seoul");
+        LocalDate date = LocalDate.now(koreaZoneId);
 
         if (checkQuizHistory(studentIdx, date)) {
             throw new PresentException();
@@ -51,7 +53,8 @@ public class RewardService {
     // 퀴즈 참여
     public RewardAnswerQuizResDto isCollect(
             Long studentIdx, RewardAnswerQuizReqDto rewardAnswerQuizReqDto) {
-        LocalDate date = LocalDate.now();
+        ZoneId koreaZoneId = ZoneId.of("Asia/Seoul");
+        LocalDate date = LocalDate.now(koreaZoneId);
 
         if (checkQuizHistory(studentIdx, date)) {
             throw new PresentException();
@@ -110,7 +113,8 @@ public class RewardService {
 
     // 선물
     public RewardPresentResDto getPoints(Long studentIdx) {
-        LocalDate date = LocalDate.now();
+        ZoneId koreaZoneId = ZoneId.of("Asia/Seoul");
+        LocalDate date = LocalDate.now(koreaZoneId);
 
         Long points = (long) (Math.random() * 10 + 10);
 
@@ -122,6 +126,7 @@ public class RewardService {
         findStudent.ifPresent(
                 student -> {
                     deptRepository.updatePointByDeptIdx(student.getDept().getDeptIdx(), points);
+                    studentRepository.updatePointByStudentIdx(student.getStudentIdx(), points);
 
                     RewardHistory history =
                             RewardHistory.builder()
@@ -136,8 +141,10 @@ public class RewardService {
                 .build();
     }
 
+    // 리워드 내 기여도
     public RewardReadResDto getMyContribution(Long studentIdx, Long deptIdx) {
-        LocalDate date = LocalDate.now();
+        ZoneId koreaZoneId = ZoneId.of("Asia/Seoul");
+        LocalDate date = LocalDate.now(koreaZoneId);
 
         Long findMyDeptPoints = deptRepository.findDeptPointByDeptIdx(deptIdx);
         Long findMyPoints = studentRepository.findStudentPointByStudentIdx(studentIdx);
