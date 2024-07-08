@@ -38,6 +38,7 @@ public class SecurityConfig extends AbstractHttpConfigurer<SecurityConfig, HttpS
                         request ->
                                 request.requestMatchers(
                                                 "/",
+                                                "api/**",
                                                 "swagger-ui/**",
                                                 "/docs/**",
                                                 "/v3/api-docs/**",
