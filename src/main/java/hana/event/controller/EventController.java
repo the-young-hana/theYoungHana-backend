@@ -12,7 +12,7 @@ import hana.common.utils.JwtUtils;
 import hana.event.domain.*;
 import hana.event.dto.*;
 import hana.event.exception.*;
-import hana.event.exception.EventDeleteOnlyOwnerException;
+import hana.event.exception.EventDeleteOnlyAdminException;
 import hana.event.service.EventService;
 import hana.member.domain.Member;
 import hana.member.domain.Student;
@@ -296,6 +296,10 @@ public class EventController {
                     List<MultipartFile> eventImageList)
             throws JsonProcessingException {
 
+        if (!jwtUtils.getStudent().getStudentIsAdmin()) {
+            throw new EventCreateOnlyAdminException();
+        }
+
         if (eventCreateReqDto.getEventStart().isBefore(LocalDateTime.now())) {
             throw new EventStartInvalidException();
         }
@@ -502,6 +506,15 @@ public class EventController {
             throw new EventFeeEndInvalidException();
         }
 
+        Student student = jwtUtils.getStudent();
+
+        if (!student.getStudentIsAdmin()
+                || !(student.getDept()
+                        .getDeptIdx()
+                        .equals(eventService.readEvent(eventIdx).getDept().getDeptIdx()))) {
+            throw new EventUpdateOnlyAdminException();
+        }
+
         Event currentEvent = eventService.readEvent(eventIdx);
         Event updateEvent =
                 eventService.updateEvent(
@@ -646,13 +659,13 @@ public class EventController {
         if (LocalDateTime.now().isAfter(eventService.readEvent(eventIdx).getEventStartDatetime())) {
             throw new InProgressEventException();
         }
+        Student student = jwtUtils.getStudent();
 
-        if (!eventService
-                .readEvent(eventIdx)
-                .getCreatedBy()
-                .getMemberIdx()
-                .equals(jwtUtils.getMember().getMemberIdx())) {
-            throw new EventDeleteOnlyOwnerException();
+        if (!student.getStudentIsAdmin()
+                || !(student.getDept()
+                        .getDeptIdx()
+                        .equals(eventService.readEvent(eventIdx).getDept().getDeptIdx()))) {
+            throw new EventDeleteOnlyAdminException();
         }
 
         eventService.deleteEvent(eventIdx);
