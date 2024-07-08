@@ -186,7 +186,13 @@ public class MemberController {
                                                                 BaseExceptionResponse.class)))
             })
     public ResponseEntity<StudentLoginResDto> theYoungHanaLogin() {
-        return ResponseEntity.ok(StudentLoginResDto.builder().build());
+        return ResponseEntity.ok(
+                StudentLoginResDto.builder()
+                        .data(
+                                StudentLoginResDto.Data.builder()
+                                        .deptIdx(jwtUtils.getStudent().getDept().getDeptIdx())
+                                        .build())
+                        .build());
     }
 
     @MethodInfo(name = "createNotice", description = "회원 알림을 생성합니다.")
