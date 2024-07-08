@@ -34,6 +34,9 @@ public class Student extends BaseEntity {
     @Column(name = "student_name", nullable = false, length = 255)
     private String studentName;
 
+    @Column(name = "student_nickname", nullable = false, length = 50)
+    private String studentNickname;
+
     @Column(name = "student_id", nullable = false, length = 255)
     private String studentId;
 
