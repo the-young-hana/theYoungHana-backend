@@ -116,7 +116,7 @@ public class ScheduledEventTasks {
                                                     + scheduledEvent
                                                             .getEventFeeEndDatetime()
                                                             .getSecond()
-                                                    + "초까지"
+                                                    + "초까지 "
                                                     + scheduledEvent.getEventFee()
                                                     + "원을 입금해주세요.")
                                     .build());

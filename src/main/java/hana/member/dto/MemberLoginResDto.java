@@ -18,13 +18,11 @@ public class MemberLoginResDto extends BaseResponse {
     public static class Data {
         private final String accessToken;
         private final String refreshToken;
-        private final Long deptIdx;
 
         @Builder
-        public Data(String accessToken, String refreshToken, Long deptIdx) {
+        public Data(String accessToken, String refreshToken) {
             this.accessToken = accessToken;
             this.refreshToken = refreshToken;
-            this.deptIdx = deptIdx;
         }
     }
 }
