@@ -26,7 +26,8 @@ public class RewardService {
 
     // 퀴즈 보여주기
     public RewardQuestionQuizResDto getRandomQuiz(Long studentIdx) {
-        LocalDate date = LocalDate.now();
+        ZoneId koreaZoneId = ZoneId.of("Asia/Seoul");
+        LocalDate date = LocalDate.now(koreaZoneId);
 
         if (checkQuizHistory(studentIdx, date)) {
             throw new PresentException();
@@ -52,7 +53,8 @@ public class RewardService {
     // 퀴즈 참여
     public RewardAnswerQuizResDto isCollect(
             Long studentIdx, RewardAnswerQuizReqDto rewardAnswerQuizReqDto) {
-        LocalDate date = LocalDate.now();
+        ZoneId koreaZoneId = ZoneId.of("Asia/Seoul");
+        LocalDate date = LocalDate.now(koreaZoneId);
 
         if (checkQuizHistory(studentIdx, date)) {
             throw new PresentException();
@@ -139,6 +141,7 @@ public class RewardService {
                 .build();
     }
 
+    // 리워드 내 기여도
     public RewardReadResDto getMyContribution(Long studentIdx, Long deptIdx) {
         ZoneId koreaZoneId = ZoneId.of("Asia/Seoul");
         LocalDate date = LocalDate.now(koreaZoneId);
