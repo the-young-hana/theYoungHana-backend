@@ -85,13 +85,8 @@ public class JwtTokenProvider {
         if (claims.get("memberIdx") == null) {
             throw new TokenHasUnknownMemberException();
         }
-        Student student =
-                studentRepository.findByMember_MemberIdx(
-                        Long.valueOf(claims.get("memberIdx").toString()));
-        if (student != null) {
-            return student;
-        }
-        throw new TokenHasUnknownMemberException();
+        return studentRepository.findByMember_MemberIdx(
+                Long.valueOf(claims.get("memberIdx").toString()));
     }
 
     public boolean validateToken(String accessToken) {

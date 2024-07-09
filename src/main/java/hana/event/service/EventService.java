@@ -135,7 +135,6 @@ public class EventService {
         return scheduledEventRepository.save(scheduledEvent);
     }
 
-    @MethodInfo(name = "readScheduledEvents", description = "현재 시간의 예약 이벤트를 조회합니다.")
     public List<ScheduledEvent> readScheduledEvents() {
         return scheduledEventRepository.findAllByScheduledDatetime(
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));

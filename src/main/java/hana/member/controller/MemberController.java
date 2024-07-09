@@ -96,40 +96,31 @@ public class MemberController {
                 studentService.findStudentByMemberIdx(
                         memberService.findByMemberPw(memberLoginReqDto.getPassword()));
 
-        if (student == null) {
-            return ResponseEntity.ok(
-                    MemberLoginResDto.builder()
-                            .data(
-                                    MemberLoginResDto.Data.builder()
-                                            .accessToken(jwtToken.getAccessToken())
-                                            .refreshToken(jwtToken.getRefreshToken())
-                                            .build())
+        if (student != null) {
+            memberTokenService.save(
+                    MemberToken.builder()
+                            .memberIdx(student.getMember().getMemberIdx())
+                            .studentIdx(student.getStudentIdx())
+                            .deptIdx(student.getDept().getDeptIdx())
+                            .fcmToken(memberLoginReqDto.getFcmToken())
+                            .accessToken(jwtToken.getAccessToken())
+                            .refreshToken(jwtToken.getRefreshToken())
+                            .ttl(60L * 60L * 24L * 60L)
+                            .build());
+
+            fcmService.sendMessageTo(
+                    FcmSendReqDto.builder()
+                            .memberIdx(student.getMember().getMemberIdx())
+                            .token(memberLoginReqDto.getFcmToken())
+                            .title("로그인 성공")
+                            .body(
+                                    student.getStudentName()
+                                            + "님, 환영합니다. "
+                                            + student.getDept().getDeptName()
+                                            + "에서 진행 중인 이벤트를 확인하세요.")
+                            .category("더영하나")
                             .build());
         }
-
-        memberTokenService.save(
-                MemberToken.builder()
-                        .memberIdx(student.getMember().getMemberIdx())
-                        .studentIdx(student.getStudentIdx())
-                        .deptIdx(student.getDept().getDeptIdx())
-                        .fcmToken(memberLoginReqDto.getFcmToken())
-                        .accessToken(jwtToken.getAccessToken())
-                        .refreshToken(jwtToken.getRefreshToken())
-                        .ttl(60L * 60L * 24L * 60L)
-                        .build());
-
-        fcmService.sendMessageTo(
-                FcmSendReqDto.builder()
-                        .memberIdx(student.getMember().getMemberIdx())
-                        .token(memberLoginReqDto.getFcmToken())
-                        .title("로그인 성공")
-                        .body(
-                                student.getStudentName()
-                                        + "님, 환영합니다. "
-                                        + student.getDept().getDeptName()
-                                        + "에서 진행 중인 이벤트를 확인하세요.")
-                        .category("더영하나")
-                        .build());
 
         return ResponseEntity.ok(
                 MemberLoginResDto.builder()

@@ -202,11 +202,16 @@ public class EventController {
                                                                                 .getEventStartDatetime())
                                                         ? 0
                                                         : LocalDateTime.now()
-                                                                        .isAfter(
+                                                                        .isBefore(
                                                                                 event
                                                                                         .getEventEndDatetime())
-                                                                ? 2
-                                                                : 1)
+                                                                ? 1
+                                                                : LocalDateTime.now()
+                                                                                .isBefore(
+                                                                                        event
+                                                                                                .getEventDatetime())
+                                                                        ? 2
+                                                                        : 3)
                                         .isMine(
                                                 event.getCreatedBy()
                                                         .getMemberIdx()
@@ -405,15 +410,20 @@ public class EventController {
                                         .isEnd(
                                                 LocalDateTime.now()
                                                                 .isBefore(
-                                                                        updateEvent
+                                                                        event
                                                                                 .getEventStartDatetime())
                                                         ? 0
                                                         : LocalDateTime.now()
-                                                                        .isAfter(
-                                                                                updateEvent
+                                                                        .isBefore(
+                                                                                event
                                                                                         .getEventEndDatetime())
-                                                                ? 2
-                                                                : 1)
+                                                                ? 1
+                                                                : LocalDateTime.now()
+                                                                                .isBefore(
+                                                                                        event
+                                                                                                .getEventDatetime())
+                                                                        ? 2
+                                                                        : 3)
                                         .isMine(true)
                                         .eventType(updateEvent.getEventType())
                                         .eventTitle(updateEvent.getEventTitle())
@@ -605,11 +615,16 @@ public class EventController {
                                                                                 .getEventStartDatetime())
                                                         ? 0
                                                         : LocalDateTime.now()
-                                                                        .isAfter(
+                                                                        .isBefore(
                                                                                 updateEvent
                                                                                         .getEventEndDatetime())
-                                                                ? 2
-                                                                : 1)
+                                                                ? 1
+                                                                : LocalDateTime.now()
+                                                                                .isBefore(
+                                                                                        updateEvent
+                                                                                                .getEventDatetime())
+                                                                        ? 2
+                                                                        : 3)
                                         .isMine(true)
                                         .eventType(updateEvent.getEventType())
                                         .eventTitle(updateEvent.getEventTitle())
@@ -969,7 +984,14 @@ public class EventController {
                 // 이벤트 참여자 수가 이벤트 참여 가능 인원보다 적다면, 당첨
                 eventService.createEventWinner(
                         EventWinner.builder().eventPrize(eventPrize).student(student).build());
-                return ResponseEntity.ok(EventJoinResDto.builder().build());
+                return ResponseEntity.ok(
+                        EventJoinResDto.builder()
+                                .data(
+                                        EventJoinResDto.Data.builder()
+                                                .eventCount(eventWinnerCount + 1)
+                                                .eventLimit(event.getEventLimit())
+                                                .build())
+                                .build());
             }
             default -> throw new RuntimeException("이벤트 타입이 잘못되었습니다.");
         }
