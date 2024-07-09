@@ -17,9 +17,10 @@ public class MatchCountScheduler {
         logger.info("start MatchCountScheduler - update story counts");
         String sql =
                 "UPDATE stories s "
-                        + "SET s.story_like_amount = (SELECT COUNT(*) FROM story_likes l WHERE l.story_idx = s.story_idx), "
-                        + "s.story_comment_amount = (SELECT COUNT(*) FROM story_comments c WHERE c.story_idx = s.story_idx) "
-                        + "WHERE s.story_idx IN (SELECT DISTINCT story_idx FROM story_likes UNION SELECT DISTINCT story_idx FROM story_comments)";
+                        + "SET s.story_like_amount = (SELECT COUNT(*) FROM story_likes l WHERE l.story_idx = s.story_idx ), "
+                        + "s.story_comment_amount = (SELECT COUNT(*) FROM story_comments c WHERE c.story_idx = s.story_idx ) "
+                        + "WHERE s.story_idx IN (SELECT DISTINCT story_idx FROM story_likes UNION SELECT DISTINCT story_idx FROM story_comments) and s.deleted_yn=0";
+
         jdbcTemplate.update(sql);
         logger.info("end MatchCountScheduler - update story counts");
     }
