@@ -40,6 +40,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class EventController {
     private final EventService eventService;
     private final MemberTokenService memberTokenService;
+    private final FcfsAdapter fcfsAdapter;
     private final JwtUtils jwtUtils;
     private final ImageUtils imageUtils;
     private final JsonUtils jsonUtils;
@@ -971,27 +972,28 @@ public class EventController {
             }
             case "선착" -> {
                 // 이벤트 상품 찾기
-                EventPrize eventPrize = eventService.readEventPrize(eventIdx);
+                // EventPrize eventPrize = eventService.readEventPrize(eventIdx);
 
                 // 이벤트 참여자 수 찾기
-                Long eventWinnerCount = eventService.countEventWinners(eventIdx);
+                // Long eventWinnerCount = eventService.countEventWinners(eventIdx);
 
                 // 만약, 이벤트 참여자 수가 이벤트 참여 가능 인원보다 많다면
-                if (eventWinnerCount >= event.getEventLimit()) {
-                    throw new RuntimeException("이벤트 참여 가능 인원을 초과하였습니다.");
-                }
+                // if (eventWinnerCount >= event.getEventLimit()) {
+                //     throw new RuntimeException("이벤트 참여 가능 인원을 초과하였습니다.");
+                // }
 
                 // 이벤트 참여자 수가 이벤트 참여 가능 인원보다 적다면, 당첨
-                eventService.createEventWinner(
-                        EventWinner.builder().eventPrize(eventPrize).student(student).build());
-                return ResponseEntity.ok(
-                        EventJoinResDto.builder()
-                                .data(
-                                        EventJoinResDto.Data.builder()
-                                                .eventCount(eventWinnerCount + 1)
-                                                .eventLimit(event.getEventLimit())
-                                                .build())
-                                .build());
+                // eventService.createEventWinner(
+                //         EventWinner.builder().eventPrize(eventPrize).student(student).build());
+                // return ResponseEntity.ok(
+                //         EventJoinResDto.builder()
+                //                 .data(
+                //                       EventJoinResDto.Data.builder()
+                //                                 .eventCount(eventWinnerCount + 1)
+                //                                 .eventLimit(event.getEventLimit())
+                //                                 .build())
+                //                 .build());
+                return ResponseEntity.ok(fcfsAdapter.joinEvent(student, event));
             }
             default -> throw new RuntimeException("이벤트 타입이 잘못되었습니다.");
         }
@@ -1188,11 +1190,13 @@ public class EventController {
             MemberTokenService memberTokenService,
             JwtUtils jwtUtils,
             ImageUtils imageUtils,
-            JsonUtils jsonUtils) {
+            JsonUtils jsonUtils,
+            FcfsAdapter fcfsAdapter) {
         this.eventService = eventService;
         this.memberTokenService = memberTokenService;
         this.jwtUtils = jwtUtils;
         this.imageUtils = imageUtils;
         this.jsonUtils = jsonUtils;
+        this.fcfsAdapter = fcfsAdapter;
     }
 }
