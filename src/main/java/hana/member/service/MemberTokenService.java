@@ -35,6 +35,11 @@ public class MemberTokenService {
         return memberTokenRepository.findAllByDeptIdx(deptIdx);
     }
 
+    @MethodInfo(name = "findByAccessToken", description = "액세스 토큰으로 회원 토큰을 조회합니다.")
+    public MemberToken findByAccessToken(String accessToken) {
+        return memberTokenRepository.findByAccessToken(accessToken);
+    }
+
     @Builder
     public MemberTokenService(MemberTokenRepository memberTokenRepository) {
         this.memberTokenRepository = memberTokenRepository;

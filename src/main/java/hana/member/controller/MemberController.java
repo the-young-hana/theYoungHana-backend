@@ -99,7 +99,9 @@ public class MemberController {
         if (student != null) {
             memberTokenService.save(
                     MemberToken.builder()
+                            .member(student.getMember())
                             .memberIdx(student.getMember().getMemberIdx())
+                            .student(student)
                             .studentIdx(student.getStudentIdx())
                             .deptIdx(student.getDept().getDeptIdx())
                             .fcmToken(memberLoginReqDto.getFcmToken())

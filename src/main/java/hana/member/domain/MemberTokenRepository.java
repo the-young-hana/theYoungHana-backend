@@ -14,4 +14,7 @@ public interface MemberTokenRepository extends CrudRepository<MemberToken, Long>
 
     @MethodInfo(name = "findAllByDeptIdx", description = "부서 Idx로 회원 토큰 목록을 조회합니다.")
     List<MemberToken> findAllByDeptIdx(Long deptIdx);
+
+    @MethodInfo(name = "findByAccessToken", description = "액세스 토큰으로 회원 토큰을 조회합니다.")
+    MemberToken findByAccessToken(String accessToken);
 }
