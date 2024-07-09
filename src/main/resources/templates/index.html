@@ -110,7 +110,46 @@
             color: var(--hana-white);
             font-weight: bold;
         }
-
+        .accordion {
+            border: 1px solid var(--hana-silver);
+        }
+        body.dark-mode .accordion {
+            border-color: #444;
+        }
+        .accordion-item {
+            border-bottom: 1px solid var(--hana-silver);
+        }
+        body.dark-mode .accordion-item {
+            border-bottom-color: #444;
+        }
+        .accordion-item:last-child {
+            border-bottom: none;
+        }
+        .accordion-button {
+            font-weight: bold;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .accordion-button:hover {
+            background-color: var(--hana-pink);
+        }
+        body.dark-mode .accordion-button {
+            color: var(--hana-white);
+        }
+        body.dark-mode .accordion-button:hover {
+            background-color: #e40054;
+        }
+        .accordion-content {
+            display: none;
+            padding: 16px;
+            background-color: var(--hana-white);
+        }
+        body.dark-mode .accordion-content {
+            background-color: #333;
+            color: var(--hana-white);
+        }
+        .accordion-content p, .accordion-content ul, .accordion-content table {
+            margin-bottom: 16px;
+        }
         @media (max-width: 768px) {
             .hide-column {
                 display: none;
@@ -149,6 +188,615 @@
 
     <section id="tab1" class="tab-content py-8 md:py-16 bg-white shadow mb-4 md:mb-8 rounded-lg mb-5 ml-5 mr-5">
         <div class="container mx-auto px-4 mb-8">
+            <h3 class="text-xl md:text-2xl font-bold mb-4">📗 기획 회의</h3>
+            <div class="accordion">
+                <div class="accordion-item">
+                    <button class="accordion-button bg-hana-green text-hana-white px-4 py-2 w-full text-left">6월 13일</button>
+                    <div class="accordion-content bg-gray-100 p-4 hidden">
+                        <h4 class="text-lg font-semibold mb-2">참여자</h4>
+                        <p class="mb-2">최지웅, 김백규, 정재건, 문혜영, 임혜진, 이은수</p>
+
+                        <h4 class="text-lg font-semibold mb-2">회의 유형</h4>
+                        <p class="mb-2">아이디어 회의</p>
+
+                        <h4 class="text-lg font-semibold mb-2">사전 조사</h4>
+                        <div class="mb-4">
+                            <h5 class="font-semibold">지웅</h5>
+                            <ul class="list-disc list-inside">
+                                <li>이전 프로젝트에서 프론트엔드, 이번에도 프론트엔드 희망</li>
+                                <li>이전에 해본 것: iOS, watchOS, 크롤링</li>
+                                <li>storybook, swiper, 나머지는 직접 구현</li>
+                                <li>유산 : SwiftUI 차용한 확장 가능한 공통컴포넌트, 네비게이션 스택, 훅들 (useFetch, useFetchTrigger, useModal, useNavigation, … )</li>
+                                <li>사용하고 싶은 기술: 공유 문서 편집이나 채팅처럼 소켓 활용</li>
+                            </ul>
+                        </div>
+                        <div class="mb-4">
+                            <h5 class="font-semibold">은수</h5>
+                            <ul class="list-disc list-inside">
+                                <li>이전 프로젝트 프론트엔드 / 백엔드 해보고싶지만….</li>
+                                <li>프론트엔드를 한다면 리액트 네이티브 써보고싶은데 시간상 가능할지 모르겠음</li>
+                                <li>storybook 사용해보고싶어요</li>
+                            </ul>
+                        </div>
+                        <div class="mb-4">
+                            <h5 class="font-semibold">혜진</h5>
+                            <ul class="list-disc list-inside">
+                                <li>이전 프로젝트 : 프론트엔드와 백엔드 둘 다 했지만 프론트의 비중이 더 컸음</li>
+                                <li>이번 프로젝트 : 백엔드를 하고 싶지만 잘 모르겠음,,,</li>
+                                <li>사용하고 싶은 기술: HTTPS 환경, Story book, 앱으로 갈 경우 react native</li>
+                            </ul>
+                        </div>
+                        <div class="mb-4">
+                            <h5 class="font-semibold">재건</h5>
+                            <ul class="list-disc list-inside">
+                                <li>이전 프로젝트에서 백엔드, 이번에도 백엔드 희망</li>
+                                <li>전 프로젝트에서 한 것 : 데이터 수집, 전처리, EDA, 분석 / 백엔드 API 작성</li>
+                                <li>이외에 옛날에 해본 것 : 머신러닝 모델 구축</li>
+                                <li>사용하고 싶은 기술 : 아직은 딱히 없다</li>
+                            </ul>
+                        </div>
+                        <div class="mb-4">
+                            <h5 class="font-semibold">혜영</h5>
+                            <ul class="list-disc list-inside">
+                                <li>백엔드 개발 (Java + SpringBoot + MySQL + Github actions + Docker)</li>
+                                <li>백엔드 희망</li>
+                                <li>해보고 싶은 것: 깃헙 코드리뷰 사용, 성능개선, 레디스</li>
+                            </ul>
+                        </div>
+                        <div class="mb-4">
+                            <h5 class="font-semibold">백규</h5>
+                            <ul class="list-disc list-inside">
+                                <li>이전 프로젝트에서 BE 담당 (SpringBoot, MySQL, Redis, Github Actions, Docker)</li>
+                                <li>이번 프로젝트에서도 BE 희망</li>
+                                <li>사용하고 싶은 기술: AI 연동, 금융결제원 API 활용?</li>
+                            </ul>
+                        </div>
+
+                        <h4 class="text-lg font-semibold mb-2">프로젝트 브레인스토밍</h4>
+                        <table class="w-full text-left table-auto">
+                            <thead>
+                            <tr>
+                                <th class="px-4 py-2">훈련생</th>
+                                <th class="px-4 py-2">주제</th>
+                                <th class="px-4 py-2">비고</th>
+                                <th class="px-4 py-2">제휴 상품</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="border px-4 py-2">임혜진</td>
+                                <td class="border px-4 py-2">건강 관련 (만보기 등), 도전 365 적금은 존재</td>
+                                <td class="border px-4 py-2"></td>
+                                <td class="border px-4 py-2"></td>
+                            </tr>
+                            <tr>
+                                <td class="border px-4 py-2">임혜진</td>
+                                <td class="border px-4 py-2">소셜 미디어, 커뮤니케이션, 스토리 올리기 기능</td>
+                                <td class="border px-4 py-2"></td>
+                                <td class="border px-4 py-2"></td>
+                            </tr>
+                            <tr>
+                                <td class="border px-4 py-2">임혜진</td>
+                                <td class="border px-4 py-2">급여 명세서</td>
+                                <td class="border px-4 py-2"></td>
+                                <td class="border px-4 py-2"></td>
+                            </tr>
+                            <tr>
+                                <td class="border px-4 py-2">정재건</td>
+                                <td class="border px-4 py-2">스포츠(국가대표, K리그(대전하나시티즌), T1(하나은행*하나카드), 골프 등)와의 제휴</td>
+                                <td class="border px-4 py-2">실시간 응원채팅, 데이터를 통한 실시간 승부예측, 제휴or관련 카드or은행 추천</td>
+                                <td class="border px-4 py-2"></td>
+                            </tr>
+                            <tr>
+                                <td class="border px-4 py-2">이은수</td>
+                                <td class="border px-4 py-2">ott?</td>
+                                <td class="border px-4 py-2"></td>
+                                <td class="border px-4 py-2"></td>
+                            </tr>
+                            <tr>
+                                <td class="border px-4 py-2">문혜영</td>
+                                <td class="border px-4 py-2">앱테크</td>
+                                <td class="border px-4 py-2"></td>
+                                <td class="border px-4 py-2"></td>
+                            </tr>
+                            <tr>
+                                <td class="border px-4 py-2">문혜영</td>
+                                <td class="border px-4 py-2">하나 취업이룸 통장</td>
+                                <td class="border px-4 py-2"></td>
+                                <td class="border px-4 py-2"></td>
+                            </tr>
+                            <tr>
+                                <td class="border px-4 py-2">최지웅</td>
+                                <td class="border px-4 py-2">적립금/혜택 꿀팁 공유 플랫폼</td>
+                                <td class="border px-4 py-2">블로그 글로 수익 창출</td>
+                                <td class="border px-4 py-2"></td>
+                            </tr>
+                            <tr>
+                                <td class="border px-4 py-2">최지웅</td>
+                                <td class="border px-4 py-2">(고졸) 사회 초년생용 알바 급여 통장 앱</td>
+                                <td class="border px-4 py-2">알바천국같은거랑 제휴</td>
+                                <td class="border px-4 py-2">달달 하나 통장</td>
+                            </tr>
+                            <tr>
+                                <td class="border px-4 py-2">김백규</td>
+                                <td class="border px-4 py-2">급여 관리 서비스</td>
+                                <td class="border px-4 py-2">급여 → 달달 하나 통장, 급여 하나통장</td>
+                                <td class="border px-4 py-2"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="mt-4">
+                            <h5 class="font-semibold">스포츠 #국가대표 #K리그 #T1</h5>
+                            <p>스포츠 관련 제휴 및 기능 제공.</p>
+                        </div>
+                        <div class="mt-4">
+                            <h5 class="font-semibold">알바천국 연계</h5>
+                            <ul class="list-disc list-inside">
+                                <li>알바 명함(메인 페이지)</li>
+                                <li>달력</li>
+                                <li>월급 계산(시급 → 월급)</li>
+                                <li>급여 명세서 출력 (API 이용)</li>
+                                <li>월급 통장 → 통장 제한 자동으로 없어지도록(상품에 가깝다)</li>
+                                <li>다양한 금융 상품 추천</li>
+                                <li>금융 지식 보여주기</li>
+                                <li>목표 세우기 및 달성 기능</li>
+                                <li>급여 : 개인 보다는 사업체일 것 (기업도 대출이 필요, 대출 부서로 가서 요구를 함)</li>
+                                <li>창구에 있던 걸 디지털화 하니 너무 복잡하다 → 그래서 조금 간소화를 해야한다</li>
+                                <li>저번 4팀의 경우 볼륨이 크다는 피드백이 있었음</li>
+                            </ul>
+                        </div>
+                        <div class="mt-4">
+                            <h5 class="font-semibold">알바 구체화</h5>
+                            <ul class="list-disc list-inside">
+                                <li>알바비 계산: 시급을 월급으로, 세금 / 주휴수당 계산, 요일 반복 + 셀프 등</li>
+                                <li>알바 달력: 근무 일정 표시, 이번달 총인</li>
+                                <li>목표 계산: 달성률 게이지로 표시, 굴비 달랑달랑</li>
+                                <li>금융 상품 추천</li>
+                                <li>금융지식 → 체크리스트 + 퀴즈?</li>
+                                <li>급여명세서</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-button bg-hana-green text-hana-white px-4 py-2 w-full text-left">6월 14일</button>
+                    <div class="accordion-content bg-gray-100 p-4 hidden">
+                        <h4 class="text-lg font-semibold mb-2">참여자</h4>
+                        <p class="mb-2">최지웅, 김백규, 정재건, 문혜영, 임혜진, 이은수</p>
+
+                        <h4 class="text-lg font-semibold mb-2">회의 유형</h4>
+                        <p class="mb-2">아이디어 회의</p>
+
+                        <h4 class="text-lg font-semibold mb-2">아이부자 확대</h4>
+                        <ul class="list-disc list-inside mb-4">
+                            <li>부모-아이 금융서비스</li>
+                            <li>금융 교육
+                                <ul class="list-disc list-inside">
+                                    <li>간단한 퀴즈</li>
+                                    <li>퀴즈를 풀고 맞추면 포인트 제공</li>
+                                </ul>
+                            </li>
+                            <li>용돈 요청이나 부모와 소통
+                                <ul class="list-disc list-inside">
+                                    <li>아이가 계획 → 부모에게 요청</li>
+                                    <li>텍스트로도 소통 가능 (이모티콘 포함)</li>
+                                    <li>부모-자녀 간의 채팅방</li>
+                                </ul>
+                            </li>
+                            <li>목표 세우기</li>
+                            <li>미션하기</li>
+                            <li>지갑 공유
+                                <ul class="list-disc list-inside">
+                                    <li>부모가 아이의 잔액 또는 잔액+사용 내역 확인 가능</li>
+                                </ul>
+                            </li>
+                            <li>자동 거래내역 생성
+                                <ul class="list-disc list-inside">
+                                    <li>수입 대비 지출 그래프 제공</li>
+                                </ul>
+                            </li>
+                            <li>부모와 아이가 함께하는 저축
+                                <ul class="list-disc list-inside">
+                                    <li>아이를 위한 저축 통장 개설</li>
+                                    <li>저축 목표 설정 (예: 닌텐도 구입)</li>
+                                    <li>부모가 주는 미션 클리어 시 저축 통장에 돈 적립</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <h4 class="text-lg font-semibold mb-2">취업</h4>
+                        <p class="mb-2">하나 취업이룸통장 확장</p>
+
+                        <h4 class="text-lg font-semibold mb-2">대학생</h4>
+                        <p class="mb-2">영하나 디벨롭</p>
+
+                        <h4 class="text-lg font-semibold mb-2">도파민 디톡스</h4>
+                        <p class="mb-2">관련 기사: <a href="https://letter.wepick.kr/510/4402562/">도파민 둘러싼 MZ의 밀당</a></p>
+
+                        <h4 class="text-lg font-semibold mb-2">친구들과 함께 금융 목표 설정 및 경쟁</h4>
+                        <ul class="list-disc list-inside mb-4">
+                            <li>공동 목표 설정 및 가장 먼저 도달한 사람에게 보상
+                                <ul class="list-disc list-inside">
+                                    <li>보상 방법: 은행 차원의 금리 인상, 친구들끼리 미리 정한 금액 지급</li>
+                                </ul>
+                            </li>
+                            <li>부가 기능
+                                <ul class="list-disc list-inside">
+                                    <li>실현 가능한 목표 금액 자동 추천</li>
+                                    <li>앱테크와 연동 (걸음수, 출석퀴즈, 금융퀴즈, 광고보기 등)</li>
+                                    <li>카드 사용 내역 자동 공유 or 선택 공유 (금액만, 개인정보 보호)</li>
+                                    <li>목표 달성 가이드 제공 (저축 방법, 소비 절약 팁 등)</li>
+                                    <li>리더보드 및 성과 배지 제공 (경쟁 촉진)</li>
+                                    <li>분석 기능 제공 (어느 분야에 가장 많은 돈을 썼는지 자동 공유)</li>
+                                    <li>상황 알림 ("김영희님이 50% 목표 달성!")</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <h4 class="text-lg font-semibold mb-2">계좌 연동되는 카카오톡 챗봇</h4>
+                        <p class="mb-2">거지방) ㅇㅇ님이 아이스크림에 돈을 낭비했습니다 → 박제</p>
+
+                        <h4 class="text-lg font-semibold mb-2">1인가구</h4>
+                        <p class="mb-2">관련 링크: <a href="https://www.kebhana.com/cont/mall/mall08/mall0801/mall080103/1455930_115188.jsp">주거래하나 통장</a></p>
+
+                        <h4 class="text-lg font-semibold mb-2">소비 카드 만들기</h4>
+                        <ul class="list-disc list-inside mb-4">
+                            <li>소비내역 선택해서 이미지화하고 공유 (내돈내산 인플루언서)</li>
+                            <li>AI 이용한 카테고리별 배지 제공 (에코, 건강, 플렉스 등)</li>
+                            <li>공유 플랫폼에 맞는 규격 (인스타-정사각형)</li>
+                            <li>찍은 사진 적용해 커스텀</li>
+                            <li>메타버스) 캐릭터 커스텀</li>
+                            <li>경쟁) 배지나 지출내역으로 랭킹</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-button bg-hana-green text-hana-white px-4 py-2 w-full text-left">6월 16일</button>
+                    <div class="accordion-content bg-gray-100 p-4 hidden">
+                        <h4 class="text-lg font-semibold mb-2">참여자</h4>
+                        <p class="mb-2">최지웅, 김백규, 정재건, 문혜영, 임혜진, 이은수</p>
+
+                        <h4 class="text-lg font-semibold mb-2">회의 유형</h4>
+                        <p class="mb-2">아이디어 회의</p>
+
+                        <h4 class="text-lg font-semibold mb-2">임혜진</h4>
+                        <h5 class="text-md font-semibold mb-2">참고 자료</h5>
+                        <ul class="list-disc list-inside mb-4">
+                            <li><a href="https://blog.naver.com/z_one210/223199045978">자료 1</a></li>
+                            <li><a href="https://m.blog.naver.com/z_one210/223365737679">자료 2</a></li>
+                            <li><a href="https://yozm.wishket.com/magazine/detail/2283/">자료 3</a></li>
+                        </ul>
+                        <h5 class="text-md font-semibold mb-2">결론</h5>
+                        <ul class="list-disc list-inside mb-4">
+                            <li>부모님의 주거래 은행이 알파세대 자식들의 주거래 은행이 될 확률이 높음 → 부모의 영향을 많이 받는다, 부모세대를 노려야 한다.</li>
+                            <li>알파세대는 어릴때부터 금융, 경제 이슈에 관심이 많다. → 앱테크를 자주 사용</li>
+                        </ul>
+
+                        <h4 class="text-lg font-semibold mb-2">김백규</h4>
+                        <h5 class="text-md font-semibold mb-2">A안. 하나 Developers</h5>
+                        <ul class="list-disc list-inside mb-4">
+                            <li>기: <a href="https://news.mt.co.kr/mtview.php?no=2021052115360696421">관련 기사 1</a></li>
+                            <li>승: <a href="https://m.ddaily.co.kr/page/view/2023080414110975323">관련 기사 2</a></li>
+                            <li>전: <a href="https://www.hanafnapimarket.com/#/">관련 플랫폼</a></li>
+                            <li>결: <a href="https://developers.tosspayments.com/">참고 1</a>, <a href="https://developers.kakao.com/">참고 2</a></li>
+                        </ul>
+                        <ul class="list-disc list-inside mb-4">
+                            <li>제안 1: <a href="https://developers.tosspayments.com/sandbox">샌드박스 환경 제공</a></li>
+                            <li>제안 2: <a href="https://techblog.woowahan.com/">블로그 커뮤니티 제공</a></li>
+                            <li>제안 3: <a href="https://hanaro.recruiter.co.kr/career/home">채용 플랫폼 제공</a></li>
+                        </ul>
+
+                        <h5 class="text-md font-semibold mb-2">B안. 투자의 마블 시즌 3</h5>
+                        <ul class="list-disc list-inside mb-4">
+                            <li>기: <a href="https://m.g-enews.com/view.php?ud=202110201523281689c5fa75ef86_1">관련 기사 1</a></li>
+                            <li>승: <a href="https://www.bizwnews.com/news/articleView.html?idxno=47245">관련 기사 2</a>, <a href="https://www.kgnews.co.kr/news/article.html?no=766043">관련 기사 3</a>, <a href="https://www.newscj.com/news/articleView.html?idxno=3138252">관련 기사 4</a></li>
+                            <li>전: <a href="https://www.newsquest.co.kr/news/articleView.html?idxno=222907">관련 기사 5</a></li>
+                        </ul>
+                        <p class="mb-2">결: 투자의 마블의 기본 개념 (모의투자게임)을 가져오고 이를 더 develop하자.</p>
+
+                        <h5 class="text-md font-semibold mb-2">C안. 대전 하나 시티즌 & ESG</h5>
+                        <ul class="list-disc list-inside mb-4">
+                            <li>기: 하나은행이 K리그에 진심인 건 유명함 (기사 너무 많아 생략)</li>
+                            <li>승: <a href="https://www.dailycc.net/news/articleView.html?idxno=764413">관련 기사 1</a></li>
+                            <li>전: <a href="https://www.starnewskorea.com/stview.php?no=2021042115200943574">관련 기사 2</a></li>
+                        </ul>
+                        <p class="mb-2">결: 대전 하나 시티즌을 홍보하면서 다양한 친환경 캠페인을 홍보할 수 있는 플랫폼을 만드는 것을 제안.</p>
+                        <ul class="list-disc list-inside mb-4">
+                            <li>제안 1: 국가대표, 혹은 올스타전 투표와 관련하여 티켓팅 및 투표를 할 수 있는 플랫폼</li>
+                            <li>제안 2: 축구하나를 더 빌드업 → 대전 하나 시티즌의 성적을 예측하는 AI 모델 (축구 적금 상품과 연동될 여지 있음)</li>
+                            <li>제안 3: 대전 러버즈는 하나은행을 주거래로, 하나카드를 주사용으로 변경할 정도의 애정을 가지고 있으므로, ESG 또한 적극적으로 홍보할 필요성 있음</li>
+                        </ul>
+
+                        <h5 class="text-md font-semibold mb-2">D안. 하나골프</h5>
+                        <ul class="list-disc list-inside mb-4">
+                            <li>기: 현재 MZ세대들의 골프 이탈은 골프웨어 등 골프 업계의 핫이슈</li>
+                            <li>승: 하나은행 인비테이셔널 등을 주최하는 하나금융그룹으로써는 다소 아쉬운 상황일 수 밖에 없음</li>
+                            <li>전: <a href="https://m.hanabank.com/cont/event/new/event01/1484705_152465.jsp">관련 이벤트</a></li>
+                        </ul>
+                        <p class="mb-2">결: 하나원큐에 MZ 세대와 골프를 연결시킬 수 있는 서비스를 제공하고자 제안.</p>
+
+                        <h4 class="text-lg font-semibold mb-2">정재건</h4>
+                        <ul class="list-disc list-inside mb-4">
+                            <li><a href="https://www.sedaily.com/NewsView/2D915G4STW">관련 기사 1</a></li>
+                            <li><a href="https://www.businesspost.co.kr/BP?command=article_view&num=345778">관련 기사 2</a></li>
+                        </ul>
+                        <p class="mb-2">하나은행 - T1 카드, 하나은행 - 국가대표, 대전하나시티즌, 하나은행 - 임영웅 등 후원하는 가수, 스포츠 팀 등을 위한 플랫폼</p>
+                        <ul class="list-disc list-inside mb-4">
+                            <li>T1 - 체크카드 등 관련 상품 및 경기 일정, 경기 결과, 관련 응원 서비스 등 추가</li>
+                            <li>대한민국 축구 국가대표팀, 대전 하나 시티즌 - 경기 결과 예측 및 일정 확인 / 티켓 예매</li>
+                            <li>임영웅 - 일정 확인 및 콘서트 예매</li>
+                        </ul>
+                        <p class="mb-2">앞으로 후원하는 다양한 가수/스포츠 팀을 위한 응원 플랫폼 개발.</p>
+
+                        <h4 class="text-lg font-semibold mb-2">문혜영</h4>
+                        <h5 class="text-md font-semibold mb-2">1. 영하나 + 취업(하나 취업이룸통장)</h5>
+                        <p class="mb-2">상태를 세가지로 나눠서 상태에 따라 다른 서비스를 제공하면 어떨까</p>
+                        <ul class="list-disc list-inside mb-4">
+                            <li>대학생때부터 이 서비스를 이용했으면 취업을 했을 때 좀 더 높은 혜택 제공</li>
+                            <li>캐릭터가 성장</li>
+                            <li>공통으로 제공하는 기능과 아닌 기능으로 나눌 것
+                                <ul class="list-disc list-inside">
+                                    <li>공통: 금융 교육, 예산 관리</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <h5 class="text-md font-semibold mb-2">대학생</h5>
+                        <ul class="list-disc list-inside mb-4">
+                            <li>이메일 인증으로 대학생 확인</li>
+                            <li>장학금 및 학비 관리
+                                <ul class="list-disc list-inside">
+                                    <li>학생들이 받는 장학금이나 학비 관리</li>
+                                    <li>장학금이 입금되면 자동으로 특정 계좌로 이체되도록 설정</li>
+                                </ul>
+                            </li>
+                            <li>학생용 금융 교육
+                                <ul class="list-disc list-inside">
+                                    <li>학생들에게 필요한 금융 지식을 교육하는 콘텐츠 제공</li>
+                                    <li>신용 점수 관리 방법, 대출 이자 계산 방법 등</li>
+                                </ul>
+                            </li>
+                            <li>돈 관리
+                                <ul class="list-disc list-inside">
+                                    <li>알바비 또는 용돈 관리. 입금 예정액 계산 후 예산 관리</li>
+                                    <li>월별 예상 소비 예측 (개강/종강에 따른)</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <h5 class="text-md font-semibold mb-2">취준생</h5>
+                        <ul class="list-disc list-inside mb-4">
+                            <li>취업 준비 경비 관리
+                                <ul class="list-disc list-inside">
+                                    <li>취업 준비 관련 비용을 관리하고 추적할 수 있는 기능 제공</li>
+                                    <li>이력서 인쇄비용, 면접 준비서적 구매 등의 지출 기록 및 분석</li>
+                                </ul>
+                            </li>
+                            <li>특별 혜택 및 할인 정보 제공
+                                <ul class="list-disc list-inside">
+                                    <li>정부 지원 정보 제공</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <h5 class="text-md font-semibold mb-2">사회초년생</h5>
+                        <ul class="list-disc list-inside mb-4">
+                            <li>자산 관리 및 투자 교육
+                                <ul class="list-disc list-inside">
+                                    <li>주식, 채권, 펀드 등의 기본적인 투자 상품에 대한 교육 제공</li>
+                                    <li>연봉(월급)을 입력하여 추천하는 저축 및 투자 금액, 상품 제시</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <h5 class="text-md font-semibold mb-2">2. 챌린지</h5>
+                        <ul class="list-disc list-inside mb-4">
+                            <li>공동의 목표를 설정하고, 가장 먼저 도달하는 사람에게 보상
+                                <ul class="list-disc list-inside">
+                                    <li>친구들끼리 미리 정해놓은 금액을 머니박스에 모아두고, 기간 종료시 지급</li>
+                                </ul>
+                            </li>
+                            <li>부가 기능
+                                <ul class="list-disc list-inside">
+                                    <li>실현 가능한 목표 금액 자동 추천</li>
+                                    <li>앱테크와 연동 (걸음수, 출석퀴즈, 금융퀴즈, 광고보기 등)</li>
+                                    <li>사용자 데이터 분석
+                                        <ul class="list-disc list-inside">
+                                            <li>사용자의 지출 패턴을 분석 → 효율적인 저축 전략 추천</li>
+                                        </ul>
+                                    </li>
+                                    <li>리더보드 및 성과 배지 제공
+                                        <ul class="list-disc list-inside">
+                                            <li>사용자 간의 경쟁을 촉진하기 위해 리더보드를 제공</li>
+                                            <li>목표 달성 또는 특정 조건을 만족할 때 성과 배지 제공</li>
+                                        </ul>
+                                    </li>
+                                    <li>분석 기능 제공
+                                        <ul class="list-disc list-inside">
+                                            <li>어느 분야에 가장 많은 돈을 썼는지 자동 공유</li>
+                                        </ul>
+                                    </li>
+                                    <li>상황 알림
+                                        <ul class="list-disc list-inside">
+                                            <li>"김영희님이 50% 목표 달성!”</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <h5 class="text-md font-semibold mb-2">3. 당근마켓 제휴</h5>
+                        <ul class="list-disc list-inside mb-4">
+                            <li>중고 거래를 했을 때, 얼마 이상 아끼면 하나머니 제공</li>
+                            <li>몇 회 이상 중고 거래를 했을 때 하나머니 제공</li>
+                            <li>중고거래 + 환경 엮어서
+                                <ul class="list-disc list-inside">
+                                    <li><a href="https://blog.toss.im/article/tinyquestions-environment-3">관련 기사</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <h4 class="text-lg font-semibold mb-2">이은수</h4>
+                        <h5 class="text-md font-semibold mb-2">1. 무지출 챌린지 + 짠테크</h5>
+                        <ul class="list-disc list-inside mb-4">
+                            <li><a href="https://m.sports.chosun.com/life/2022-08-02/202208030100011220000434">관련 기사</a></li>
+                            <li>무지출 챌린지
+                                <ul class="list-disc list-inside">
+                                    <li>자신에게 꼭 필요한 비용을 설정하고 그 외의 지출을 하지 않으면 포인트 지급</li>
+                                    <li>지출에 관해 스토리를 올려 친구들끼리 거지방처럼 이용</li>
+                                    <li>걸음수, 출석체크 → 앱테크</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <p class="mb-2">무지출 챌린지는 돈을 소비해야하는 은행의 입장과는 다르다? → 무지출 챌린지와 앱테크를 함께 진행함으로써 앱의 사용성을 늘리고 하나은행 계좌를 만들게 한다는 이점이 있음. 친구들과 함께 공유함으로써 흥미와 재미를 불러일으킬 수 있음.</p>
+
+                        <h5 class="text-md font-semibold mb-2">2. 건강</h5>
+                        <ul class="list-disc list-inside mb-4">
+                            <li>건강관리하고 포인트 받기 (손목닥터 어플)</li>
+                            <li>운동에 관련된 적금 or 입출금 통장 상품 만들기
+                                <ul class="list-disc list-inside">
+                                    <li>헬스, 필라테스, 요가 등 운동에 관련된 지출을 하면 금리 or 혜택 제공</li>
+                                </ul>
+                            </li>
+                            <li>오운완 인증?</li>
+                        </ul>
+
+                        <h4 class="text-lg font-semibold mb-2">최지웅</h4>
+                        <h5 class="text-md font-semibold mb-2">하나은행 API</h5>
+                        <ul class="list-disc list-inside mb-4">
+                            <li>본인의 소비내역을 공개할 수 있는 API Key 발급 및 관리</li>
+                            <li>권한은 상세 설정(Git 생각하면 됨)</li>
+                            <li>만들어 놓으면 개발자들이 이걸 이용해서 서비스든 플랫폼이든 만들어줄 것 (소비성향 소개팅, 커뮤니티 등)</li>
+                            <li>자연스럽게 홍보 효과</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-button bg-hana-green text-hana-white px-4 py-2 w-full text-left">6월 17일</button>
+                    <div class="accordion-content bg-gray-100 p-4 hidden">
+                        <h4 class="text-lg font-semibold mb-2">참여자</h4>
+                        <p class="mb-2">최지웅, 김백규, 정재건, 문혜영, 임혜진, 이은수</p>
+
+                        <h4 class="text-lg font-semibold mb-2">회의 유형</h4>
+                        <p class="mb-2">아이디어 회의</p>
+
+                        <h4 class="text-lg font-semibold mb-2">프로젝트 브레인스토밍</h4>
+                        <table class="w-full text-left table-auto">
+                            <thead>
+                            <tr>
+                                <th class="px-4 py-2">훈련생</th>
+                                <th class="px-4 py-2">주제</th>
+                                <th class="px-4 py-2">비고</th>
+                                <th class="px-4 py-2">제휴 상품</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="border px-4 py-2">정재건</td>
+                                <td class="border px-4 py-2">스포츠(국가대표, K리그(대전하나시티즌), T1(하나은행*하나카드), 골프 등), 콘서트와의 제휴</td>
+                                <td class="border px-4 py-2">실시간 응원채팅, 데이터를 통한 실시간 승부예측, 제휴or관련 카드or은행 추천, 콘서트 티켓팅 등 각종 멀티 플랫폼 기능 제공</td>
+                                <td class="border px-4 py-2"></td>
+                            </tr>
+                            <tr>
+                                <td class="border px-4 py-2">이은수</td>
+                                <td class="border px-4 py-2">무지출 챌린지 + 앱테크</td>
+                                <td class="border px-4 py-2">무지출 챌린지를 성공하면 하나머니를 받고 친구들과 함께 지출을 공유하는 서비스(스토리뱅크) + 걷기, 출석체크 등 앱테크 기능을 추가해 사용자를 늘림</td>
+                                <td class="border px-4 py-2"></td>
+                            </tr>
+                            <tr>
+                                <td class="border px-4 py-2">이은수</td>
+                                <td class="border px-4 py-2">건강</td>
+                                <td class="border px-4 py-2">자신의 건강을 관리(운동, 식단기록 등)하며 포인트를 쌓고, 헬스, 필라테스 등 운동과 관련된 지출을 하면 혜택을 주는 상품 제공</td>
+                                <td class="border px-4 py-2"></td>
+                            </tr>
+                            <tr>
+                                <td class="border px-4 py-2">문혜영</td>
+                                <td class="border px-4 py-2">앱테크</td>
+                                <td class="border px-4 py-2"></td>
+                                <td class="border px-4 py-2"></td>
+                            </tr>
+                            <tr>
+                                <td class="border px-4 py-2">문혜영</td>
+                                <td class="border px-4 py-2">영하나 디벨롭</td>
+                                <td class="border px-4 py-2">대학생~취준생~사회초년생까지 쓸 수 있도록 영하나 디벨롭 (돈 모을 수 있도록 가이드 제공, 관련 혜택 및 정보 제공)</td>
+                                <td class="border px-4 py-2">하나 취업이룸 통장 / 영하나</td>
+                            </tr>
+                            <tr>
+                                <td class="border px-4 py-2">문혜영</td>
+                                <td class="border px-4 py-2">환경+중고거래</td>
+                                <td class="border px-4 py-2">당근마켓 제휴 통장을 이용해서 환경 관련 서비스 제공</td>
+                                <td class="border px-4 py-2"></td>
+                            </tr>
+                            <tr>
+                                <td class="border px-4 py-2">김백규</td>
+                                <td class="border px-4 py-2">하나원큐 내에서 제공하는 게이미피케이션 기반 모의투자 게임</td>
+                                <td class="border px-4 py-2"></td>
+                                <td class="border px-4 py-2"></td>
+                            </tr>
+                            <tr>
+                                <td class="border px-4 py-2">김백규</td>
+                                <td class="border px-4 py-2">하나은행의 MZ한 개발자들을 위한 차세대 금융 개발 플랫폼, 하나 Developers</td>
+                                <td class="border px-4 py-2"></td>
+                                <td class="border px-4 py-2"></td>
+                            </tr>
+                            <tr>
+                                <td class="border px-4 py-2">최지웅</td>
+                                <td class="border px-4 py-2">아이부자 앱 확대</td>
+                                <td class="border px-4 py-2">추가 서비스, watchOS</td>
+                                <td class="border px-4 py-2"></td>
+                            </tr>
+                            <tr>
+                                <td class="border px-4 py-2">최지웅</td>
+                                <td class="border px-4 py-2">개인 소비내역 공개 API</td>
+                                <td class="border px-4 py-2">Key 발급 및 관리 → 다른 개발자가 서비스 개발 (커뮤니티, 소개팅 등)</td>
+                                <td class="border px-4 py-2"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <h4 class="text-lg font-semibold mb-2">더영하나 (TheYoungHana)</h4>
+
+                        <h5 class="text-md font-semibold mb-2">대학생</h5>
+
+                        <h6 class="text-sm font-semibold mb-2">학생증 (IdCard)</h6>
+                        <ul class="list-disc list-inside mb-4">
+                            <li>메인 페이지에서 학생증 확인 (시연할 때 명지대/덕성여대)</li>
+                            <li>탭 1번: 학생증 및 QR 보여주기 + 밑으로 내리면 금융상식</li>
+                            <li>결제 말고, 학생임을 증명할 수 있는 정도</li>
+                        </ul>
+
+                        <h6 class="text-sm font-semibold mb-2">스토리 (Story)</h6>
+                        <ul class="list-disc list-inside mb-4">
+                            <li>학과, 동아리 등 자신 소속의 거래내역을 투명하게 확인할 수 있음</li>
+                            <li>계좌가 하나은행 계좌</li>
+                            <li>스토리 없는 거래내역, 스토리 있는 거래내역, 거래내역 없는 스토리 (공지사항이나 뻘글)</li>
+                        </ul>
+
+                        <h6 class="text-sm font-semibold mb-2">공지사항 (Notice)</h6>
+                        <ul class="list-disc list-inside mb-4">
+                            <li>공지사항 작성 : 아이템은 돈과 관련된 기능들을 제공하는 것
+                                <ul class="list-disc list-inside">
+                                    <li>축제라면 선착순 또는 응모, 간식행사면 응모, 추가 납부는 입금요청</li>
+                                    <li>[응모, 선착순, 입금요청, 지출 보고서 (.pdf/.xlsx)] → 공지 항목 (Notice Item)</li>
+                                    <li>상단 고정(Pinned)</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <h6 class="text-sm font-semibold mb-2">상품 추천 (Product)</h6>
+                        <ul class="list-disc list-inside mb-4">
+                            <li>대학생들 돈 모으기 가이드 : 20고개 → 상품의 정의? : 카드, 예적금,…</li>
+                        </ul>
+
+                        <h6 class="text-sm font-semibold mb-2">리워드 (Reward) : 앱테크 + 혜택</h6>
+                        <ul class="list-disc list-inside mb-4">
+                            <li>앱테크 자체를 넣자. (리워드 제공)</li>
+                            <li>포인트 쌓임</li>
+                            <li>혜택은 앱테크의 영역?</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container mx-auto px-4 mb-8">
             <h3 class="text-xl md:text-2xl font-bold mb-4">📗 프로젝트 기획서</h3>
             <div class="slider">
                 <div class="slides">
@@ -173,7 +821,7 @@
 
     <section id="tab2" class="tab-content py-8 md:py-16 bg-white shadow mb-4 md:mb-8 rounded-lg mb-5 ml-5 mr-5 hidden">
         <div class="container mx-auto px-4 mb-8">
-            <h3 class="text-xl md:text-2xl font-bold mb-4">📗 화면 정의서</h3>
+            <h3 class="text-xl md:text-2xl font-bold mb-4">📕 화면 정의서</h3>
             <div class="slider">
                 <div class="slides">
                     <img src="wireframe/slide1.png" alt="화면 정의서 1" class="slide">
@@ -226,6 +874,12 @@
             <h3 class="text-xl md:text-2xl font-bold mb-4">📃 API 설계</h3>
             <div class="embed-responsive">
                 <img src="api/api.png" alt="API 설계">
+            </div>
+        </div>
+        <div class="container mx-auto px-4 mb-8">
+            <h3 class="text-xl md:text-2xl font-bold mb-4">📃 시스템 설계</h3>
+            <div class="embed-responsive">
+                <img src="system/system.png" alt="시스템 설계">
             </div>
         </div>
     </section>
@@ -424,7 +1078,7 @@
             </table>
         </div>
         <div class="container mx-auto px-4 mb-8">
-            <h3 class="text-xl md:text-2xl font-bold mb-4">📕 React 프로젝트 패키지 목록</h3>
+            <h3 class="text-xl md:text-2xl font-bold mb-4">📘 React 프로젝트 패키지 목록</h3>
             <table>
                 <thead>
                 <tr>
@@ -544,7 +1198,18 @@
             </table>
         </div>
     </section>
-    <section id="tab4" class="tab-content py-8 md:py-16 bg-white shadow mb-4 md:mb-8 rounded-lg mb-5 ml-5 mr-5 hidden"></section>
+    <section id="tab4" class="tab-content py-8 md:py-16 bg-white shadow mb-4 md:mb-8 rounded-lg mb-5 ml-5 mr-5 hidden">
+        <div class="container mx-auto px-4 mb-8">
+            <h3 class="text-xl md:text-2xl font-bold mb-4">📺️ 프로젝트 발표</h3>
+        </div>
+        <div class="container mx-auto px-4 mb-8">
+            <h3 class="text-xl md:text-2xl font-bold mb-4">🎬 시연 영상</h3>
+        </div>
+        <div class="container mx-auto px-4 mb-8">
+            <h3 class="text-xl md:text-2xl font-bold mb-4">🖥️ 사이트</h3>
+
+        </div>
+    </section>
 </main>
 
 <script>
@@ -632,6 +1297,28 @@
                     content.classList.remove('hidden');
                 } else {
                     content.classList.add('hidden');
+                }
+            });
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const accordionButtons = document.querySelectorAll('.accordion-button');
+
+        accordionButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const content = this.nextElementSibling;
+
+                document.querySelectorAll('.accordion-content').forEach(item => {
+                    if (item !== content) {
+                        item.style.display = 'none';
+                    }
+                });
+
+                if (content.style.display === 'block') {
+                    content.style.display = 'none';
+                } else {
+                    content.style.display = 'block';
                 }
             });
         });
