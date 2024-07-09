@@ -2,6 +2,7 @@ package hana.common.config;
 
 import hana.common.annotation.MethodInfo;
 import hana.common.annotation.TypeInfo;
+import hana.member.service.MemberTokenService;
 import java.util.Arrays;
 import java.util.Collections;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +23,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class SecurityConfig extends AbstractHttpConfigurer<SecurityConfig, HttpSecurity> {
     private final JwtTokenProvider jwtTokenProvider;
+    private final MemberTokenService memberTokenService;
 
     @MethodInfo(name = "filterChain", description = "스프링 시큐리티 필터 체인을 설정합니다.")
     @Bean
@@ -54,9 +56,8 @@ public class SecurityConfig extends AbstractHttpConfigurer<SecurityConfig, HttpS
                                         .anyRequest()
                                         .authenticated())
                 .addFilterBefore(
-                        new JwtAuthenticationFilter(jwtTokenProvider),
+                        new JwtAuthenticationFilter(jwtTokenProvider, memberTokenService),
                         UsernamePasswordAuthenticationFilter.class)
-                .headers(headers -> headers.frameOptions().disable())
                 .formLogin(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable);
 
@@ -76,7 +77,9 @@ public class SecurityConfig extends AbstractHttpConfigurer<SecurityConfig, HttpS
         return source;
     }
 
-    public SecurityConfig(JwtTokenProvider jwtTokenProvider) {
+    public SecurityConfig(
+            JwtTokenProvider jwtTokenProvider, MemberTokenService memberTokenService) {
         this.jwtTokenProvider = jwtTokenProvider;
+        this.memberTokenService = memberTokenService;
     }
 }

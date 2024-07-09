@@ -21,6 +21,10 @@ public class MemberToken {
 
     @Indexed private Long studentIdx;
 
+    @Indexed private Member member;
+
+    @Indexed private Student student;
+
     @Indexed private Long deptIdx;
 
     @Indexed private String fcmToken;
@@ -35,7 +39,9 @@ public class MemberToken {
     public MemberToken(
             Long memberTokenIdx,
             Long memberIdx,
+            Member member,
             Long studentIdx,
+            Student student,
             Long deptIdx,
             String fcmToken,
             String accessToken,
@@ -43,7 +49,9 @@ public class MemberToken {
             Long ttl) {
         this.memberTokenIdx = memberTokenIdx;
         this.memberIdx = memberIdx;
+        this.member = member;
         this.studentIdx = studentIdx;
+        this.student = student;
         this.deptIdx = deptIdx;
         this.fcmToken = fcmToken;
         this.accessToken = accessToken;

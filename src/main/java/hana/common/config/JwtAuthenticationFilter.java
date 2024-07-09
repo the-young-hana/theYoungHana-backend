@@ -1,6 +1,8 @@
 package hana.common.config;
 
 import hana.common.vo.UserDetails;
+import hana.member.domain.MemberToken;
+import hana.member.service.MemberTokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
@@ -16,6 +18,7 @@ import org.springframework.web.filter.GenericFilterBean;
 
 public class JwtAuthenticationFilter extends GenericFilterBean {
     private final JwtTokenProvider jwtTokenProvider;
+    private final MemberTokenService memberTokenService;
 
     @Override
     public void doFilter(
@@ -25,6 +28,17 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
         if (token != null) {
             try {
+                MemberToken memberToken = memberTokenService.findByAccessToken(token);
+
+                if (memberToken != null) {
+                    UserDetails userDetails =
+                            new UserDetails(memberToken.getMember(), memberToken.getStudent());
+                    SecurityContextHolder.getContext()
+                            .setAuthentication(
+                                    new UsernamePasswordAuthenticationToken(
+                                            userDetails, "", userDetails.getAuthorities()));
+                }
+
                 UserDetails userDetails =
                         new UserDetails(
                                 jwtTokenProvider.getMember(token),
@@ -55,7 +69,9 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         return null;
     }
 
-    public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {
+    public JwtAuthenticationFilter(
+            JwtTokenProvider jwtTokenProvider, MemberTokenService memberTokenService) {
         this.jwtTokenProvider = jwtTokenProvider;
+        this.memberTokenService = memberTokenService;
     }
 }
