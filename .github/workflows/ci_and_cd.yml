@@ -96,18 +96,3 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/theyounghana-backend:latest
-
-      - name: 어플리케이션 배포
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_KEY }}
-          script: |
-            sudo docker stop theyounghana-backend
-            sudo docker rm theyounghana-backend
-            sudo docker image prune -a -f
-            sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/theyounghana-backend:latest
-            sudo docker run -p ${{ secrets.SERVER_PORT }}:8080 \
-              --name theyounghana-backend \
-              -d ${{ secrets.DOCKER_HUB_USERNAME }}/theyounghana-backend
