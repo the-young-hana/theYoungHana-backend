@@ -28,6 +28,7 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -981,17 +982,22 @@ public class EventController {
                     throw new RuntimeException("이벤트 참여 가능 인원을 초과하였습니다.");
                 }
 
-                // 이벤트 참여자 수가 이벤트 참여 가능 인원보다 적다면, 당첨
-                eventService.createEventWinner(
-                        EventWinner.builder().eventPrize(eventPrize).student(student).build());
-                return ResponseEntity.ok(
-                        EventJoinResDto.builder()
-                                .data(
-                                        EventJoinResDto.Data.builder()
-                                                .eventCount(eventWinnerCount + 1)
-                                                .eventLimit(event.getEventLimit())
-                                                .build())
-                                .build());
+                try {
+                    // 이벤트 참여자 수가 이벤트 참여 가능 인원보다 적다면, 당첨
+                    eventService.createEventWinner(
+                            EventWinner.builder().eventPrize(eventPrize).student(student).build());
+                    return ResponseEntity.ok(
+                            EventJoinResDto.builder()
+                                    .data(
+                                            EventJoinResDto.Data.builder()
+                                                    .eventCount(eventWinnerCount + 1)
+                                                    .eventLimit(event.getEventLimit())
+                                                    .build())
+                                    .build());
+                } catch (DataIntegrityViolationException e) {
+                    // 만약, 당첨자가 중복되었다면
+                    throw new EventAlreadyApplyException();
+                }
             }
             default -> throw new RuntimeException("이벤트 타입이 잘못되었습니다.");
         }
